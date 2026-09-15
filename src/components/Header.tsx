@@ -6,7 +6,6 @@ import {
   ZoomIn, 
   ZoomOut, 
   ChevronDown,
-  Layers,
   HelpCircle,
   Share2,
   Sparkles,
@@ -79,9 +78,7 @@ export const Header: React.FC<Props> = ({
           </button>
         )}
 
-        <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white shrink-0">
-          <Layers className="w-5 h-5" />
-        </div>
+        <img src="./yuwbrndr-logo.svg" alt="" className="w-9 h-9 shrink-0" />
         <div>
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-slate-100 tracking-tight text-lg">YuwBrndr</span>

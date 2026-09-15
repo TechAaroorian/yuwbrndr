@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">YuwBrndr</title>
+  <desc id="desc">A framed letter Y representing a code-powered graphic canvas.</desc>
+  <defs>
+    <linearGradient id="surface" x1="10" y1="8" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8b7cf6"/>
+      <stop offset="1" stop-color="#6355d8"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="url(#surface)"/>
+  <path d="M18 17h-3a5 5 0 0 0-5 5v5M46 17h3a5 5 0 0 1 5 5v5M18 47h-3a5 5 0 0 1-5-5v-5M46 47h3a5 5 0 0 0 5-5v-5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+  <path d="m21 20 11 14 11-14M32 34v12" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="50" cy="13" r="4" fill="#67e8f9"/>
+</svg>
