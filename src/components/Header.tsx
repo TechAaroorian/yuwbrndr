@@ -15,7 +15,9 @@ import {
   Sparkles,
   Maximize2,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Type,
+  Smile
 } from 'lucide-react';
 import { ASPECT_PRESETS, COLOR_THEMES, AspectPreset, ColorTheme } from '../types/studio';
 import { EditorDockMode } from './FullCodeEditor';
@@ -33,6 +35,8 @@ interface Props {
   onCopyImage: () => void;
   onOpenCode: () => void;
   onOpenExamples: () => void;
+  onOpenFonts?: () => void;
+  onOpenStickers?: () => void;
   onOpenPlatformGuide: () => void;
   isExporting: boolean;
   copiedImage: boolean;
@@ -56,6 +60,8 @@ export const Header: React.FC<Props> = ({
   onCopyImage,
   onOpenCode,
   onOpenExamples,
+  onOpenFonts,
+  onOpenStickers,
   onOpenPlatformGuide,
   isExporting,
   copiedImage,
@@ -269,6 +275,30 @@ export const Header: React.FC<Props> = ({
           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
           <span className="hidden sm:inline">Examples</span>
         </button>
+
+        {/* 10 Open-Source Fonts Catalog Button */}
+        {onOpenFonts && (
+          <button
+            onClick={onOpenFonts}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
+            title="Browse 10 Curated Open-Source Fonts"
+          >
+            <Type className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden sm:inline">Fonts</span>
+          </button>
+        )}
+
+        {/* Vectors, Lucide Icons & Stickers Button */}
+        {onOpenStickers && (
+          <button
+            onClick={onOpenStickers}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
+            title="Browse Open-Source Vectors, Lucide Icons & Stickers"
+          >
+            <Smile className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">Stickers</span>
+          </button>
+        )}
 
         {/* Interactive Code Workbench Toggle */}
         <button

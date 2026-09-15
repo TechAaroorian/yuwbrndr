@@ -600,6 +600,135 @@ ctx.fillText('HIGH PRECISION 2D CANVAS GRAPHIC', cx, 140);
   </div>
 </div>`
   },
+  {
+    id: 'it-works-on-my-machine',
+    name: 'Meme: "It Works On My Machine"',
+    category: 'Meme & Social',
+    type: 'html',
+    description: 'Hilarious developer meme styled in Comic Neue with comparison cards and funny quotes.',
+    code: `<div class="w-full h-full p-8 md:p-10 bg-[#090b14] text-slate-100 flex flex-col justify-between relative overflow-hidden font-comic select-none border border-white/10"
+  style="
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.15), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(239, 68, 68, 0.15), transparent 40%),
+      radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: auto, auto, 24px 24px;
+  ">
+  
+  <!-- Ambient top glow -->
+  <div class="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+
+  <!-- Meme Rubber Stamp Sticker (Top-Right) -->
+  <div class="absolute top-6 right-6 rotate-12 z-20 pointer-events-none select-none">
+    <div class="px-4 py-1.5 rounded-xl bg-amber-400 text-black border-2 border-black font-black text-xs uppercase tracking-widest shadow-2xl drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] flex items-center gap-1.5">
+      <svg class="w-3.5 h-3.5 fill-black" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>100% LOCALHOST CERTIFIED</span>
+    </div>
+  </div>
+
+  <!-- Header Badge & Comic Title -->
+  <div class="text-center space-y-2 relative z-10">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 border-2 border-amber-500/40 text-amber-300 font-bold text-xs shadow-md">
+      <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+      <span>OFFICIAL ISO-404 SPECIFICATION</span>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
+      "IT WORKS ON MY MACHINE"
+    </h1>
+    <p class="text-base text-amber-200/90 font-bold">
+      The gold standard of software verification since 1995.
+    </p>
+  </div>
+
+  <!-- 2-Column Comparison with Lucide SVGs -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 my-3">
+    <!-- Localhost Card -->
+    <div class="p-5 rounded-2xl bg-emerald-950/40 border-2 border-emerald-500/50 space-y-3 shadow-xl backdrop-blur-sm">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-300">
+            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+          </div>
+          <span class="text-lg font-black text-emerald-300">Localhost (My MacBook)</span>
+        </div>
+        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">0 BUGS</span>
+      </div>
+      <ul class="space-y-2 text-sm text-slate-200 font-bold">
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          <span>120 FPS ultra-smooth animations</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          <span>Hardcoded database credentials work</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          <span>Node v18.2.1 installed globally in 2022</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+          <span>Zero latency (127.0.0.1 is very close)</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Production Card -->
+    <div class="p-5 rounded-2xl bg-rose-950/40 border-2 border-rose-500/50 space-y-3 shadow-xl backdrop-blur-sm">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-300 animate-pulse">
+            <svg class="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          </div>
+          <span class="text-lg font-black text-rose-300">Production (Cloud K8s)</span>
+        </div>
+        <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/30 animate-pulse">FIRE ALERT</span>
+      </div>
+      <ul class="space-y-2 text-sm text-slate-200 font-bold">
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>HTTP 502 Bad Gateway Everywhere</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Out Of Memory (Exit code 137)</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>CEO tagging everyone in #general</span>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>Postgres DB locked in perpetual panic</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Big Speech Bubble Takeaway with Lucide Vector Package -->
+  <div class="relative z-10 p-4 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-center shadow-lg">
+    <div class="flex items-center justify-center gap-2 text-xl md:text-2xl font-black text-amber-300">
+      <svg class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      <span>Recommended Solution:</span>
+    </div>
+    <div class="text-lg md:text-xl font-bold text-white mt-1.5 flex items-center justify-center gap-2">
+      <svg class="w-5 h-5 text-amber-400 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+      <span>"Then we will ship your laptop to the client!"</span>
+      <svg class="w-5 h-5 text-cyan-300 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/></svg>
+    </div>
+  </div>
+
+  <!-- Footer Stamps -->
+  <div class="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-bold">
+    <span>Verified by: Senior Dev</span>
+    <span class="text-amber-400 flex items-center gap-1">
+      <span>Written with Comic Neue</span>
+      <svg class="w-3.5 h-3.5 fill-rose-500 text-rose-500 inline" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+    </span>
+    <span>Ticket Closed: Won't Fix</span>
+  </div>
+</div>`
+  },
 
   // ==========================================
   // 5. STARTERS

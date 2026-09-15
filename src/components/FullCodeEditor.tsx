@@ -315,6 +315,87 @@ export const FullCodeEditor: React.FC<Props> = ({
                   >
                     ✨ Ambient Glow Blur
                   </button>
+
+                  <div className="px-2 pt-2 pb-1 text-[10px] font-mono uppercase text-cyan-400 font-bold border-t border-white/10">
+                    Typography Headings
+                  </div>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<h2 class="font-jakarta text-3xl font-extrabold text-white tracking-tight">Next-Gen Developer Platform</h2>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>🚀 Modern Tech (Jakarta)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-jakarta</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<h2 class="font-space text-3xl font-bold uppercase tracking-wider text-cyan-400">DECENTRALIZED PROTOCOL</h2>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>⚡ Cyber / Web3 (Space)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-space</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<blockquote class="font-playfair text-2xl italic text-slate-200 border-l-2 border-indigo-400 pl-4 my-2">“Simplicity is prerequisite for reliability.”</blockquote>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>📰 Editorial Quote (Playfair)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-playfair</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<h1 class="font-bebas text-5xl tracking-wide text-white uppercase meme-text-stroke">10X PERFORMANCE MULTIPLIER</h1>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>📢 Punchy Poster (Bebas)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-bebas</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<h2 class="font-cinzel text-2xl font-bold uppercase tracking-widest text-amber-300">HONORIS CAUSA</h2>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>🏛️ Classical Serif (Cinzel)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-cinzel</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<h2 class="font-syne text-3xl font-black text-white tracking-tight">CREATIVE INTELLIGENCE</h2>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>🎨 Avant-Garde (Syne)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-syne</span>
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleInsertSnippet(
+                        `<div class="font-comic p-6 rounded-2xl bg-amber-500/10 border-2 border-amber-500/40 text-amber-200">\n  <h2 class="text-3xl font-black text-white">"It works on my machine!" 🤷‍♂️</h2>\n  <p class="text-base font-bold mt-1 text-slate-200">Then we will ship your laptop to the client!</p>\n</div>`
+                      )
+                    }
+                    className="w-full text-left p-1.5 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white flex items-center justify-between"
+                  >
+                    <span>🤪 Funny Comic (Comic Neue)</span>
+                    <span className="text-[10px] font-mono text-slate-500">.font-comic</span>
+                  </button>
                   {uploadedAssets.length > 0 && onInsertImage ? (
                     <div className="pt-1 border-t border-white/10 space-y-1">
                       <div className="px-2 py-0.5 text-[10px] font-mono uppercase text-indigo-400 font-bold">

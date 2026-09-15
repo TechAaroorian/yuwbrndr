@@ -13,6 +13,8 @@ import { CustomCodeCanvas } from './components/templates/custom/CustomCodeCanvas
 import { CodeInspector } from './components/CodeInspector';
 import { PlatformResolutionGuide } from './components/PlatformResolutionGuide';
 import { ExamplesModal } from './components/ExamplesModal';
+import { FontsModal } from './components/FontsModal';
+import { StickersModal } from './components/StickersModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
@@ -36,6 +38,8 @@ export function App() {
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
   const [isCodeOpen, setIsCodeOpen] = useState<boolean>(false);
   const [isExamplesOpen, setIsExamplesOpen] = useState<boolean>(false);
+  const [isFontsOpen, setIsFontsOpen] = useState<boolean>(false);
+  const [isStickersOpen, setIsStickersOpen] = useState<boolean>(false);
   const [userImage, setUserImage] = useState<string | null>(null);
   const [useAsBackground, setUseAsBackground] = useState<boolean>(false);
   const [isPlatformGuideOpen, setIsPlatformGuideOpen] = useState<boolean>(false);
@@ -223,6 +227,8 @@ export function App() {
         onCopyImage={handleCopyImage}
         onOpenCode={() => setIsCodeOpen(true)}
         onOpenExamples={() => setIsExamplesOpen(true)}
+        onOpenFonts={() => setIsFontsOpen(true)}
+        onOpenStickers={() => setIsStickersOpen(true)}
         onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
         isExporting={isExporting}
         copiedImage={copiedImage}
@@ -240,6 +246,8 @@ export function App() {
           customCodeType={customCodeType}
           onLoadSample={handleLoadSample}
           onOpenExamples={() => setIsExamplesOpen(true)}
+          onOpenFonts={() => setIsFontsOpen(true)}
+          onOpenStickers={() => setIsStickersOpen(true)}
           onSelectPreset={handleSelectPreset}
           onClearCode={() => setCustomCode('')}
           userImage={userImage}
@@ -414,6 +422,20 @@ export function App() {
         isOpen={isExamplesOpen}
         onClose={() => setIsExamplesOpen(false)}
         onSelectPreset={handleSelectPreset}
+      />
+
+      {/* 10 Curated Open-Source Fonts Catalog Modal */}
+      <FontsModal
+        isOpen={isFontsOpen}
+        onClose={() => setIsFontsOpen(false)}
+        onInsertSnippet={(snippet) => setCustomCode((prev) => prev ? `${prev}\n\n${snippet}` : snippet)}
+      />
+
+      {/* Vectors, Lucide Icons & Meme Stickers Modal */}
+      <StickersModal
+        isOpen={isStickersOpen}
+        onClose={() => setIsStickersOpen(false)}
+        onInsertSnippet={(snippet) => setCustomCode((prev) => prev ? `${prev}\n\n${snippet}` : snippet)}
       />
 
       {/* Developer Code Inspector Modal */}

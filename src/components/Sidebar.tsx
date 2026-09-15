@@ -10,7 +10,9 @@ import {
   Code2,
   AlertCircle,
   X,
-  PanelLeftClose
+  PanelLeftClose,
+  Type,
+  Smile
 } from 'lucide-react';
 import { CODE_PRESETS, CodePreset } from '../utils/codePresets';
 import { UploadedAsset } from '../types/studio';
@@ -19,6 +21,8 @@ interface Props {
   customCodeType: 'html' | 'canvas';
   onLoadSample: (type: 'html' | 'canvas') => void;
   onOpenExamples: () => void;
+  onOpenFonts?: () => void;
+  onOpenStickers?: () => void;
   onSelectPreset: (preset: CodePreset) => void;
   onClearCode: () => void;
   userImage: string | null;
@@ -39,6 +43,8 @@ export const Sidebar: React.FC<Props> = ({
   customCodeType,
   onLoadSample,
   onOpenExamples,
+  onOpenFonts,
+  onOpenStickers,
   onSelectPreset,
   onClearCode,
   userImage,
@@ -131,6 +137,28 @@ export const Sidebar: React.FC<Props> = ({
             <FolderOpen className="w-4 h-4" />
             <span>Open Examples Gallery</span>
           </button>
+
+          {onOpenFonts && (
+            <button
+              onClick={onOpenFonts}
+              className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+              title="Browse 10 Curated Open-Source Fonts"
+            >
+              <Type className="w-4 h-4 text-cyan-400" />
+              <span>10 Open Fonts Catalog</span>
+            </button>
+          )}
+
+          {onOpenStickers && (
+            <button
+              onClick={onOpenStickers}
+              className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+              title="Browse Open-Source Vectors, Lucide Icons & Stickers"
+            >
+              <Smile className="w-4 h-4 text-amber-400" />
+              <span>Vectors & Lucide Stickers</span>
+            </button>
+          )}
 
           {/* Quick Example Presets */}
           <div className="space-y-1.5 pt-1">
