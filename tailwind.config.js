@@ -25,12 +25,12 @@ export default {
     extend: {
       colors: {
         studio: {
-          950: '#07080b',
-          900: '#0d0e15',
-          850: '#12141e',
-          800: '#181b28',
-          700: '#23273a',
-          600: '#323750',
+          950: '#090b10',
+          900: '#11141b',
+          850: '#171b24',
+          800: '#1d222d',
+          700: '#2a303d',
+          600: '#3b4352',
           accent: '#6366f1',
           cyan: '#06b6d4',
           emerald: '#10b981',
@@ -56,10 +56,10 @@ export default {
         arcade: ['"Press Start 2P"', 'monospace'],
       },
       boxShadow: {
-        'glow-indigo': '0 0 50px -10px rgba(99, 102, 241, 0.3)',
-        'glow-cyan': '0 0 50px -10px rgba(6, 182, 212, 0.3)',
-        'glow-rose': '0 0 50px -10px rgba(244, 63, 94, 0.3)',
-        'glow-emerald': '0 0 50px -10px rgba(16, 185, 129, 0.3)',
+        'glow-indigo': '0 8px 24px rgba(0, 0, 0, 0.24)',
+        'glow-cyan': '0 8px 24px rgba(0, 0, 0, 0.24)',
+        'glow-rose': '0 8px 24px rgba(0, 0, 0, 0.24)',
+        'glow-emerald': '0 8px 24px rgba(0, 0, 0, 0.24)',
       },
       backgroundImage: {
         'grid-pattern': 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',

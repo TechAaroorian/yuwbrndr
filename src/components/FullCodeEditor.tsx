@@ -244,7 +244,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Canvas JS
+              Canvas JS · Advanced
             </button>
           </div>
 

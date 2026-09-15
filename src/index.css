@@ -24,8 +24,9 @@
   }
 
   body {
-    background-color: #07080b;
+    background-color: #090b10;
     color: #f1f5f9;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 }
 
@@ -47,9 +48,9 @@
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(18, 20, 30, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(23, 27, 36, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -57,7 +58,7 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .glass-panel-hover:hover {
-  background: rgba(24, 27, 40, 0.85);
+  background: rgba(29, 34, 45, 0.96);
   border-color: rgba(255, 255, 255, 0.15);
 }
 

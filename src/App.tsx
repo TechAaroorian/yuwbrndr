@@ -36,6 +36,7 @@ export function App() {
   const [zoom, setZoom] = useState<number>(0.55);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
+  const [exportNotice, setExportNotice] = useState<string | null>(null);
   const [isCodeOpen, setIsCodeOpen] = useState<boolean>(false);
   const [isExamplesOpen, setIsExamplesOpen] = useState<boolean>(false);
   const [isFontsOpen, setIsFontsOpen] = useState<boolean>(false);
@@ -185,10 +186,18 @@ export function App() {
         scale,
         fileName: `yuwbrndr-${scale}x.png`,
       });
+      setExportNotice(`PNG exported at ${currentPreset.width * scale} × ${currentPreset.height * scale}px`);
+      setTimeout(() => setExportNotice(null), 3000);
     } catch (err) {
       alert('Export failed. Please check browser console.');
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  const handleClearCode = () => {
+    if (!customCode.trim() || window.confirm('Clear the current canvas code? This cannot be undone.')) {
+      setCustomCode('');
     }
   };
 
@@ -237,7 +246,7 @@ export function App() {
           onOpenExamples={() => setIsExamplesOpen(true)}
           onOpenFonts={() => setIsFontsOpen(true)}
           onOpenStickers={() => setIsStickersOpen(true)}
-          onClearCode={() => setCustomCode('')}
+          onClearCode={handleClearCode}
           userImage={userImage}
           setUserImage={setUserImage}
           useAsBackground={useAsBackground}
@@ -280,7 +289,7 @@ export function App() {
                 setCodeType={setCustomCodeType}
                 code={customCode}
                 onChange={setCustomCode}
-                onClear={() => setCustomCode('')}
+                onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
                 onDockModeChange={setDockMode}
@@ -305,7 +314,7 @@ export function App() {
                 setCodeType={setCustomCodeType}
                 code={customCode}
                 onChange={setCustomCode}
-                onClear={() => setCustomCode('')}
+                onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
                 onDockModeChange={setDockMode}
@@ -361,7 +370,7 @@ export function App() {
                 setCodeType={setCustomCodeType}
                 code={customCode}
                 onChange={setCustomCode}
-                onClear={() => setCustomCode('')}
+                onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
                 onDockModeChange={setDockMode}
@@ -441,6 +450,12 @@ export function App() {
         currentPreset={currentPreset}
         onSelectPreset={setCurrentPreset}
       />
+
+      {exportNotice && (
+        <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-lg border border-emerald-500/30 bg-studio-850 px-4 py-2.5 text-sm font-medium text-emerald-300 shadow-xl">
+          {exportNotice}
+        </div>
+      )}
     </div>
   );
 }

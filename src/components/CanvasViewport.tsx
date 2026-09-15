@@ -93,7 +93,7 @@ export const CanvasViewport: React.FC<Props> = ({
   const canvasHeight = Math.round(currentPreset.height * zoom);
 
   return (
-    <main className="flex-1 h-[calc(100vh-4rem)] bg-studio-950 overflow-hidden flex flex-col items-center justify-between p-4 relative select-none min-w-0">
+    <main className="flex-1 h-[calc(100vh-4rem)] bg-[#0c0f15] overflow-hidden flex flex-col items-center justify-between p-4 relative select-none min-w-0">
       {/* Floating Expand Sidebar Button when sidebar is collapsed */}
       {!isSidebarOpen && onToggleSidebar && (
         <button
@@ -102,14 +102,13 @@ export const CanvasViewport: React.FC<Props> = ({
           title="Expand Left Panel (Ctrl+B)"
         >
           <PanelLeftOpen className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-          <span>Assets & Examples</span>
+          <span>Templates & Assets</span>
         </button>
       )}
 
       {/* Top Floating Platform Info & Resolution Banner */}
-      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl border border-white/10 bg-studio-900/90 backdrop-blur-md text-xs font-mono shadow-xl shrink-0">
+      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-3 px-3.5 py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0">
         <div className="flex items-center gap-2 truncate">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block animate-pulse shrink-0" />
           <div className="flex items-center gap-1.5 truncate text-[11px]">
             <span className="font-bold text-slate-100 truncate">{currentPreset.name}</span>
             <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold shrink-0">
@@ -144,7 +143,7 @@ export const CanvasViewport: React.FC<Props> = ({
 
       {/* Platform Optimization Tip Pill */}
       {showTip && currentPreset.tip && (
-        <div className="w-full max-w-2xl mt-2 px-3.5 py-1.5 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-[11px] text-slate-300 flex items-center justify-between gap-2 shadow-sm font-sans shrink-0">
+        <div className="w-full max-w-2xl mt-2 px-3.5 py-1.5 rounded-lg bg-studio-900 border border-white/10 text-[11px] text-slate-400 flex items-center justify-between gap-2 font-sans shrink-0">
           <div className="flex items-center gap-1.5 truncate">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
             <span className="truncate">{currentPreset.tip}</span>
@@ -183,7 +182,7 @@ export const CanvasViewport: React.FC<Props> = ({
           }}
         >
           <div 
-            className="origin-top-left shadow-2xl rounded-3xl overflow-hidden border border-white/15"
+            className="origin-top-left shadow-2xl rounded-xl overflow-hidden border border-white/15"
             style={{
               transform: `scale(${zoom})`,
               width: `${currentPreset.width}px`,

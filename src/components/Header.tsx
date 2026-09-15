@@ -58,16 +58,16 @@ export const Header: React.FC<Props> = ({
   const [showPresetMenu, setShowPresetMenu] = useState(false);
 
   return (
-    <header className="h-16 border-b border-white/10 bg-studio-900/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between z-30 select-none">
+    <header className="h-16 border-b border-white/10 bg-studio-900 px-4 sm:px-5 flex items-center justify-between z-30 select-none">
       {/* Brand Title & Sidebar Toggle */}
       <div className="flex items-center gap-3">
         {onToggleSidebar && (
           <button
             onClick={onToggleSidebar}
-            className={`p-2 rounded-xl border transition-all ${
+            className={`p-2 rounded-lg border transition-colors ${
               isSidebarOpen
                 ? 'border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
-                : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25 shadow-glow-indigo'
+                : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25'
             }`}
             title={isSidebarOpen ? "Collapse Left Panel (Ctrl+B)" : "Expand Left Panel (Ctrl+B)"}
           >
@@ -79,14 +79,14 @@ export const Header: React.FC<Props> = ({
           </button>
         )}
 
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 flex items-center justify-center text-white shadow-glow-indigo shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white shrink-0">
           <Layers className="w-5 h-5" />
         </div>
         <div>
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-slate-100 tracking-tight text-lg">YuwBrndr</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase">
-              Dev Studio
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
+              Studio
             </span>
           </div>
           <p className="text-[11px] text-slate-400 hidden sm:block">Create social graphics from code</p>
@@ -94,12 +94,12 @@ export const Header: React.FC<Props> = ({
       </div>
 
       {/* Center Controls: Platform Selector, Resolution Guide & Zoom */}
-      <div className="hidden lg:flex items-center gap-2 bg-studio-950/80 p-1.5 rounded-xl border border-white/10">
+      <div className="hidden lg:flex items-center gap-2 bg-studio-950 p-1 rounded-lg border border-white/10">
         {/* Platform Preset Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowPresetMenu(!showPresetMenu)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-xs font-mono font-semibold text-indigo-300 transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-white/5 text-xs font-medium text-slate-200 transition-colors"
           >
             <Share2 className="w-3.5 h-3.5 text-indigo-400" />
             <span>{currentPreset.platform}: {currentPreset.aspectRatio}</span>
@@ -239,7 +239,7 @@ export const Header: React.FC<Props> = ({
         {/* Browse Examples Button */}
         <button
           onClick={onOpenExamples}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-600/20 hover:bg-indigo-600/30 text-xs font-semibold text-indigo-300 transition-all shadow-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
           title="Browse templates"
         >
           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
@@ -250,7 +250,7 @@ export const Header: React.FC<Props> = ({
         <button
           onClick={onCopyImage}
           disabled={isExporting}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
           title="Copy rendered PNG to clipboard"
         >
           {copiedImage ? (
@@ -266,7 +266,7 @@ export const Header: React.FC<Props> = ({
           <button
             onClick={() => setShowExportMenu(!showExportMenu)}
             disabled={isExporting}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs shadow-glow-indigo transition-all"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs transition-colors"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{isExporting ? 'Rendering...' : 'Export'}</span>
@@ -298,8 +298,7 @@ export const Header: React.FC<Props> = ({
               >
                 <div>
                   <div className="font-semibold text-indigo-300 flex items-center gap-1">
-                    <span>Retina (Recommended)</span>
-                    <span className="text-[9px] px-1 rounded bg-indigo-500 text-white font-bold">PRO</span>
+                    <span>Recommended</span>
                   </div>
                   <div className="text-[10px] text-indigo-400/80 font-mono">2x ({currentPreset.width * 2}×{currentPreset.height * 2})</div>
                 </div>

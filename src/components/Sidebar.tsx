@@ -6,7 +6,6 @@ import {
   Check,
   Sparkles,
   FolderOpen,
-  Lightbulb,
   AlertCircle,
   X,
   PanelLeftClose,
@@ -58,6 +57,7 @@ export const Sidebar: React.FC<Props> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<'templates' | 'assets'>('templates');
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && onAddAssets) {
@@ -115,7 +115,12 @@ export const Sidebar: React.FC<Props> = ({
       />
 
       <div className="p-4 space-y-4">
-        <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-studio-950 to-studio-950 border border-indigo-500/30 shadow-lg space-y-2">
+        <div className="grid grid-cols-2 gap-1 rounded-lg border border-white/10 bg-studio-950 p-1">
+          <button onClick={() => setActiveTab('templates')} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'templates' ? 'bg-studio-700 text-white' : 'text-slate-400 hover:text-white'}`}>Templates</button>
+          <button onClick={() => setActiveTab('assets')} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'assets' ? 'bg-studio-700 text-white' : 'text-slate-400 hover:text-white'}`}>Assets</button>
+        </div>
+
+        {activeTab === 'templates' && <div className="p-3 rounded-xl bg-studio-850 border border-white/10 space-y-3">
           <div className="flex items-center gap-2 text-indigo-300 font-bold text-xs font-mono">
             <Sparkles className="w-4 h-4 text-indigo-400" />
             <span>TEMPLATES</span>
@@ -123,14 +128,15 @@ export const Sidebar: React.FC<Props> = ({
 
           <button
             onClick={onOpenExamples}
-            className="w-full py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-glow-indigo transition-all"
+            className="w-full py-2.5 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
           >
             <FolderOpen className="w-4 h-4" />
             <span>Browse templates</span>
           </button>
-        </div>
+          <button onClick={() => onLoadSample(customCodeType)} className="w-full py-2 px-3 rounded-lg border border-white/10 bg-studio-800 hover:bg-studio-700 text-xs font-semibold transition-colors">Start with a sample</button>
+        </div>}
 
-        <div className="grid grid-cols-2 gap-2">
+        {activeTab === 'assets' && <><div className="grid grid-cols-2 gap-2">
           {onOpenFonts && (
             <button onClick={onOpenFonts} className="py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold flex items-center justify-center gap-2">
               <Type className="w-4 h-4 text-cyan-400" /> Fonts
@@ -144,7 +150,7 @@ export const Sidebar: React.FC<Props> = ({
         </div>
 
         {/* CUSTOM ASSET UPLOAD & GALLERY (MAX 2MB, MAX 5 FILES) */}
-        <div className="p-4 rounded-2xl bg-studio-900/90 border border-white/10 space-y-3 shadow-md">
+        <div className="p-4 rounded-xl bg-studio-850 border border-white/10 space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-xs font-mono uppercase text-indigo-400 font-bold flex items-center gap-1.5">
               <ImagePlus className="w-3.5 h-3.5" />
@@ -270,7 +276,7 @@ export const Sidebar: React.FC<Props> = ({
               })}
             </div>
           )}
-        </div>
+        </div></>}
 
         {/* Canvas Quick Actions */}
         <div className="pt-2 border-t border-white/10 space-y-2">
@@ -298,16 +304,6 @@ export const Sidebar: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Helpful Tip */}
-        <div className="p-3 rounded-xl bg-studio-950 border border-white/10 text-[11px] text-slate-400 leading-relaxed font-sans flex items-start gap-2">
-          <Lightbulb className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-semibold text-slate-200">Editor on Right: </span>
-            <span>
-              Edit HTML, Tailwind CSS, or Canvas JS on the right panel with real-time syntax highlighting, error linting, and instant preview.
-            </span>
-          </div>
-        </div>
       </div>
     </aside>
   );
