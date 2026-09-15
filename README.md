@@ -1,32 +1,31 @@
-# React + TypeScript + Vite
+# YuwBrndr
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+YuwBrndr is a browser-based studio for creating social graphics from HTML, Tailwind CSS, and Canvas JavaScript. It combines a live code editor, platform-sized canvases, reusable templates, image assets, and PNG export in one workspace.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Live HTML/Tailwind and Canvas preview
+- Presets for social posts, thumbnails, banners, and article covers
+- Templates, fonts, stickers, and uploaded image assets
+- Syntax highlighting, formatting, and lint feedback
+- PNG export at 1x, 2x, or 4x and clipboard copy
+- Responsive, focused dark workspace
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Requirements: Node.js 20 or newer and npm.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Create a production build with `npm run build` and run the linter with `npm run lint`.
+
+## Security note
+
+Canvas JavaScript entered in the editor currently executes in the browser page. Only run code you wrote or fully trust. Do not paste unknown templates or scripts. Preview sandboxing is planned before this project is positioned for broader third-party use.
+
+## Repository status
+
+This repository is publicly available as a portfolio and educational reference project. It is not currently offered as an open-source project or reusable starter template. All rights are reserved unless otherwise stated.
