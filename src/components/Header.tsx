@@ -3,24 +3,18 @@ import {
   Download, 
   Copy, 
   Check, 
-  Code2, 
   ZoomIn, 
   ZoomOut, 
-  RotateCcw, 
   ChevronDown,
   Layers,
   HelpCircle,
   Share2,
-  SlidersHorizontal,
   Sparkles,
   Maximize2,
   PanelLeftClose,
-  PanelLeftOpen,
-  Type,
-  Smile
+  PanelLeftOpen
 } from 'lucide-react';
 import { ASPECT_PRESETS, COLOR_THEMES, AspectPreset, ColorTheme } from '../types/studio';
-import { EditorDockMode } from './FullCodeEditor';
 
 interface Props {
   currentPreset: AspectPreset;
@@ -33,16 +27,10 @@ interface Props {
   onToggleAutoFit?: () => void;
   onExport: (scale: 1 | 2 | 4) => void;
   onCopyImage: () => void;
-  onOpenCode: () => void;
   onOpenExamples: () => void;
-  onOpenFonts?: () => void;
-  onOpenStickers?: () => void;
   onOpenPlatformGuide: () => void;
   isExporting: boolean;
   copiedImage: boolean;
-  dockMode: EditorDockMode;
-  onDockModeChange: (mode: EditorDockMode) => void;
-  onToggleCodeEditor: () => void;
   isSidebarOpen?: boolean;
   onToggleSidebar?: () => void;
 }
@@ -58,16 +46,10 @@ export const Header: React.FC<Props> = ({
   onToggleAutoFit,
   onExport,
   onCopyImage,
-  onOpenCode,
   onOpenExamples,
-  onOpenFonts,
-  onOpenStickers,
   onOpenPlatformGuide,
   isExporting,
   copiedImage,
-  dockMode,
-  onDockModeChange,
-  onToggleCodeEditor,
   isSidebarOpen = true,
   onToggleSidebar,
 }) => {
@@ -107,9 +89,7 @@ export const Header: React.FC<Props> = ({
               Dev Studio
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 font-mono hidden sm:block">
-            100% Open-Source • Pure Web Engine
-          </p>
+          <p className="text-[11px] text-slate-400 hidden sm:block">Create social graphics from code</p>
         </div>
       </div>
 
@@ -171,16 +151,6 @@ export const Header: React.FC<Props> = ({
             </div>
           )}
         </div>
-
-        {/* Dedicated Resolution Guide Trigger */}
-        <button
-          onClick={onOpenPlatformGuide}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-white/5 border-r border-white/10 pr-3 transition-colors"
-          title="View optimal resolution, safe zones & compression guide for all platforms"
-        >
-          <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Resolution Guide</span>
-        </button>
 
         {/* Zoom & Auto-Fit Controls */}
         <div className="flex items-center gap-1 pl-1">
@@ -270,61 +240,10 @@ export const Header: React.FC<Props> = ({
         <button
           onClick={onOpenExamples}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-indigo-500/30 bg-indigo-600/20 hover:bg-indigo-600/30 text-xs font-semibold text-indigo-300 transition-all shadow-sm"
-          title="Browse All Code Examples & Templates"
+          title="Browse templates"
         >
           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-          <span className="hidden sm:inline">Examples</span>
-        </button>
-
-        {/* 10 Open-Source Fonts Catalog Button */}
-        {onOpenFonts && (
-          <button
-            onClick={onOpenFonts}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
-            title="Browse 10 Curated Open-Source Fonts"
-          >
-            <Type className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden sm:inline">Fonts</span>
-          </button>
-        )}
-
-        {/* Vectors, Lucide Icons & Stickers Button */}
-        {onOpenStickers && (
-          <button
-            onClick={onOpenStickers}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
-            title="Browse Open-Source Vectors, Lucide Icons & Stickers"
-          >
-            <Smile className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden sm:inline">Stickers</span>
-          </button>
-        )}
-
-        {/* Interactive Code Workbench Toggle */}
-        <button
-          onClick={onToggleCodeEditor}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
-            dockMode !== 'sidebar'
-              ? 'border-indigo-500 bg-indigo-600/30 text-indigo-200 shadow-glow-indigo'
-              : 'border-white/10 bg-white/5 hover:bg-white/10 text-slate-200'
-          }`}
-          title="Toggle Full Code Workbench (Split Screen)"
-        >
-          <Code2 className="w-3.5 h-3.5 text-indigo-400" />
-          <span className="hidden sm:inline">Code Workbench</span>
-          {dockMode !== 'sidebar' && (
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          )}
-        </button>
-
-        {/* View Code Inspector Button */}
-        <button
-          onClick={onOpenCode}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-200 transition-colors"
-          title="Inspect HTML/SVG/Three.js Code"
-        >
-          <span className="text-slate-400 font-mono text-[10px]">&lt;/&gt;</span>
-          <span className="hidden sm:inline">Inspect Code</span>
+          <span className="hidden sm:inline">Templates</span>
         </button>
 
         {/* Copy Image Button */}

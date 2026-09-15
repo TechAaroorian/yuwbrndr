@@ -3,18 +3,16 @@ import {
   Trash2, 
   ImagePlus, 
   Upload, 
-  Check, 
+  Check,
   Sparkles,
   FolderOpen,
   Lightbulb,
-  Code2,
   AlertCircle,
   X,
   PanelLeftClose,
   Type,
   Smile
 } from 'lucide-react';
-import { CODE_PRESETS, CodePreset } from '../utils/codePresets';
 import { UploadedAsset } from '../types/studio';
 
 interface Props {
@@ -23,7 +21,6 @@ interface Props {
   onOpenExamples: () => void;
   onOpenFonts?: () => void;
   onOpenStickers?: () => void;
-  onSelectPreset: (preset: CodePreset) => void;
   onClearCode: () => void;
   userImage: string | null;
   setUserImage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -45,7 +42,6 @@ export const Sidebar: React.FC<Props> = ({
   onOpenExamples,
   onOpenFonts,
   onOpenStickers,
-  onSelectPreset,
   onClearCode,
   userImage,
   setUserImage,
@@ -95,7 +91,7 @@ export const Sidebar: React.FC<Props> = ({
       {/* Top Header Row with Collapse Button */}
       <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-studio-950/40">
         <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400">
-          Assets & Examples
+          Templates & Assets
         </span>
         {onToggle && (
           <button
@@ -119,78 +115,32 @@ export const Sidebar: React.FC<Props> = ({
       />
 
       <div className="p-4 space-y-4">
-        {/* EXAMPLES GALLERY LAUNCHER CARD */}
-        <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-studio-950 to-studio-950 border border-indigo-500/30 shadow-lg space-y-3">
+        <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-studio-950 to-studio-950 border border-indigo-500/30 shadow-lg space-y-2">
           <div className="flex items-center gap-2 text-indigo-300 font-bold text-xs font-mono">
             <Sparkles className="w-4 h-4 text-indigo-400" />
-            <span>CODE EXAMPLES</span>
+            <span>TEMPLATES</span>
           </div>
-
-          <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
-            Browse ready-made Infographics, 3D Canvas, SVG, or Memes:
-          </p>
 
           <button
             onClick={onOpenExamples}
             className="w-full py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center justify-center gap-2 shadow-glow-indigo transition-all"
           >
             <FolderOpen className="w-4 h-4" />
-            <span>Open Examples Gallery</span>
+            <span>Browse templates</span>
           </button>
+        </div>
 
+        <div className="grid grid-cols-2 gap-2">
           {onOpenFonts && (
-            <button
-              onClick={onOpenFonts}
-              className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
-              title="Browse 10 Curated Open-Source Fonts"
-            >
-              <Type className="w-4 h-4 text-cyan-400" />
-              <span>10 Open Fonts Catalog</span>
+            <button onClick={onOpenFonts} className="py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold flex items-center justify-center gap-2">
+              <Type className="w-4 h-4 text-cyan-400" /> Fonts
             </button>
           )}
-
           {onOpenStickers && (
-            <button
-              onClick={onOpenStickers}
-              className="w-full py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
-              title="Browse Open-Source Vectors, Lucide Icons & Stickers"
-            >
-              <Smile className="w-4 h-4 text-amber-400" />
-              <span>Vectors & Lucide Stickers</span>
+            <button onClick={onOpenStickers} className="py-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-semibold flex items-center justify-center gap-2">
+              <Smile className="w-4 h-4 text-amber-400" /> Stickers
             </button>
           )}
-
-          {/* Quick Example Presets */}
-          <div className="space-y-1.5 pt-1">
-            <button
-              onClick={() => onSelectPreset(CODE_PRESETS[0])}
-              className="w-full px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-mono text-left flex items-center justify-between transition-colors"
-            >
-              <span>📊 Promise Cheatsheet</span>
-              <span className="text-[10px] text-cyan-400 font-bold">INFO</span>
-            </button>
-            <button
-              onClick={() => onSelectPreset(CODE_PRESETS[1])}
-              className="w-full px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-mono text-left flex items-center justify-between transition-colors"
-            >
-              <span>📦 Bento Grid Metrics</span>
-              <span className="text-[10px] text-cyan-400 font-bold">BENTO</span>
-            </button>
-            <button
-              onClick={() => onSelectPreset(CODE_PRESETS[3])}
-              className="w-full px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-mono text-left flex items-center justify-between transition-colors"
-            >
-              <span>🧊 3D Isometric Cube</span>
-              <span className="text-[10px] text-indigo-400 font-bold">CANVAS</span>
-            </button>
-            <button
-              onClick={() => onSelectPreset(CODE_PRESETS[5])}
-              className="w-full px-2.5 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-mono text-left flex items-center justify-between transition-colors"
-            >
-              <span>🎨 Vector Mesh Card</span>
-              <span className="text-[10px] text-emerald-400 font-bold">SVG</span>
-            </button>
-          </div>
         </div>
 
         {/* CUSTOM ASSET UPLOAD & GALLERY (MAX 2MB, MAX 5 FILES) */}
@@ -198,17 +148,13 @@ export const Sidebar: React.FC<Props> = ({
           <div className="flex items-center justify-between">
             <label className="text-xs font-mono uppercase text-indigo-400 font-bold flex items-center gap-1.5">
               <ImagePlus className="w-3.5 h-3.5" />
-              <span>CUSTOM ASSETS</span>
+              <span>IMAGES</span>
             </label>
             <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
               {uploadedAssets.length}/5
             </span>
           </div>
 
-          <div className="text-[11px] text-slate-400 flex items-center justify-between">
-            <span>In-memory RAM</span>
-            <span className="text-cyan-400 font-mono font-semibold">Max 2 MB / file</span>
-          </div>
 
           {/* Upload Error Alert */}
           {uploadError && (

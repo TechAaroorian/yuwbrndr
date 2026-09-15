@@ -206,11 +206,6 @@ export function App() {
     }
   };
 
-  // Toggle Right Code Editor Panel
-  const handleToggleCodeEditor = () => {
-    setIsEditorOpen((prev) => !prev);
-  };
-
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-studio-950 text-slate-100">
       {/* Top Navigation Bar */}
@@ -225,16 +220,10 @@ export function App() {
         onToggleAutoFit={() => setAutoFit((prev) => !prev)}
         onExport={handleExport}
         onCopyImage={handleCopyImage}
-        onOpenCode={() => setIsCodeOpen(true)}
         onOpenExamples={() => setIsExamplesOpen(true)}
-        onOpenFonts={() => setIsFontsOpen(true)}
-        onOpenStickers={() => setIsStickersOpen(true)}
         onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
         isExporting={isExporting}
         copiedImage={copiedImage}
-        dockMode={isEditorOpen ? 'split' : 'sidebar'}
-        onDockModeChange={setDockMode}
-        onToggleCodeEditor={handleToggleCodeEditor}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={handleToggleSidebar}
       />
@@ -248,7 +237,6 @@ export function App() {
           onOpenExamples={() => setIsExamplesOpen(true)}
           onOpenFonts={() => setIsFontsOpen(true)}
           onOpenStickers={() => setIsStickersOpen(true)}
-          onSelectPreset={handleSelectPreset}
           onClearCode={() => setCustomCode('')}
           userImage={userImage}
           setUserImage={setUserImage}
