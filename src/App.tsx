@@ -358,10 +358,12 @@ export function App() {
         {dockMode !== 'bottom' && (
           isEditorOpen ? (
             <div
-              className={`h-[calc(100vh-4rem)] pb-14 lg:pb-0 bg-studio-900 shrink-0 flex-col z-20 shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
+              className={`h-[calc(100vh-4rem)] pb-14 lg:pb-0 bg-studio-900 shrink-0 flex-col shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
                 mobileTab === 'code' ? 'flex w-full lg:w-[500px]' : 'hidden lg:flex'
               } ${
-                isEditorWide ? 'lg:w-[680px] xl:w-[740px]' : 'lg:w-[500px] xl:w-[580px]'
+                isEditorWide
+                  ? 'fixed inset-0 z-50 h-screen w-screen pb-0 lg:relative lg:inset-auto lg:h-[calc(100vh-4rem)] lg:w-[680px] xl:w-[740px]'
+                  : 'z-20 lg:w-[500px] xl:w-[580px]'
               }`}
             >
               <FullCodeEditor
@@ -380,6 +382,7 @@ export function App() {
                 onToggleWide={() => setIsEditorWide(!isEditorWide)}
                 onToggleCollapse={() => {
                   setIsEditorOpen(false);
+                  setIsEditorWide(false);
                   setMobileTab('canvas');
                 }}
               />
@@ -401,12 +404,15 @@ export function App() {
         )}
       </div>
 
-      {/* 4. MOBILE BOTTOM NAVIGATION BAR (< lg) */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-studio-900/95 backdrop-blur-md border-t border-white/10 flex items-center justify-around px-2 z-40 select-none">
+      {/* 4. MOBILE BOTTOM NAVIGATION BAR (< lg) - Hidden when editor is expanded fullscreen on mobile */}
+      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-studio-900/95 backdrop-blur-md border-t border-white/10 items-center justify-around px-2 z-40 select-none ${
+        mobileTab === 'code' && isEditorWide ? 'hidden' : 'flex'
+      }`}>
         <button
           onClick={() => {
             setMobileTab('canvas');
             setIsSidebarOpen(false);
+            setIsEditorWide(false);
           }}
           className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
             mobileTab === 'canvas' && !isSidebarOpen

@@ -121,6 +121,11 @@ export const FullCodeEditor: React.FC<Props> = ({
           color: '#475569 !important',
           borderRight: '1px solid rgba(255, 255, 255, 0.08) !important',
         },
+        '.cm-lineNumbers .cm-gutterElement': {
+          padding: '0 4px 0 2px !important',
+          minWidth: '18px !important',
+          textAlign: 'right !important',
+        },
         '.cm-activeLine': {
           backgroundColor: 'rgba(99, 102, 241, 0.09) !important',
         },
@@ -221,8 +226,31 @@ export const FullCodeEditor: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col h-full w-full bg-studio-900 border-l border-white/10 overflow-hidden shadow-2xl select-none">
-      {/* TOP HEADER TOOLBAR */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-studio-850 border-b border-white/10 text-xs">
+      {/* MOBILE EXPANDED FULLSCREEN BAR (only show editor with minimize option on mobile) */}
+      {isWide && (
+        <div className="lg:hidden flex items-center justify-between px-3.5 py-2.5 bg-studio-950 border-b border-white/10 select-none shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+            <span className="font-mono text-xs font-semibold text-slate-200">
+              {codeType === 'html' ? 'HTML + CSS' : 'Canvas JS'} Editor
+            </span>
+          </div>
+
+          <button
+            onClick={onToggleWide}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-glow-indigo transition-all active:scale-95"
+            title="Minimize Editor"
+          >
+            <Minimize2 className="w-3.5 h-3.5" />
+            <span>Minimize</span>
+          </button>
+        </div>
+      )}
+
+      {/* TOP HEADER TOOLBAR (Hidden on mobile when expanded) */}
+      <div className={`flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-studio-850 border-b border-white/10 text-xs shrink-0 ${
+        isWide ? 'hidden lg:flex' : 'flex'
+      }`}>
         {/* Left: Engine Switcher & Presets */}
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-black/50 p-0.5 rounded-lg border border-white/10">
@@ -425,7 +453,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                   ? 'border-indigo-500/50 bg-indigo-500/20 text-indigo-300'
                   : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
               }`}
-              title={isWide ? 'Restore Normal Width (520px)' : 'Expand Editor Width (680px)'}
+              title={isWide ? 'Minimize Editor View' : 'Expand Editor Fullscreen'}
             >
               {isWide ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
@@ -472,8 +500,10 @@ export const FullCodeEditor: React.FC<Props> = ({
         />
       </div>
 
-      {/* BOTTOM STATUS & LINTING DIAGNOSTICS BAR */}
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-studio-850 border-t border-white/10 text-[11px] font-mono text-slate-400 select-none">
+      {/* BOTTOM STATUS & LINTING DIAGNOSTICS BAR (Hidden on mobile when expanded) */}
+      <div className={`flex items-center justify-between px-3.5 py-1.5 bg-studio-850 border-t border-white/10 text-[11px] font-mono text-slate-400 select-none shrink-0 ${
+        isWide ? 'hidden lg:flex' : 'flex'
+      }`}>
         <div className="flex items-center gap-3">
           {/* Real-time Lint Diagnostic Status */}
           {diagnosticsCount === 0 ? (
