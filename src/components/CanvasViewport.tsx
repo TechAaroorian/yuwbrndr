@@ -93,7 +93,7 @@ export const CanvasViewport: React.FC<Props> = ({
   const canvasHeight = Math.round(currentPreset.height * zoom);
 
   return (
-    <main className="flex-1 h-[calc(100vh-4rem)] bg-[#0c0f15] overflow-hidden flex flex-col items-center justify-between p-4 relative select-none min-w-0">
+    <main className="flex-1 h-[calc(100vh-4rem)] bg-studio-950 overflow-hidden flex flex-col items-center justify-between p-4 relative select-none min-w-0">
       {/* Floating Expand Sidebar Button when sidebar is collapsed */}
       {!isSidebarOpen && onToggleSidebar && (
         <button

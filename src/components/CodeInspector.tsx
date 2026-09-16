@@ -45,7 +45,7 @@ export const CodeInspector: React.FC<Props> = ({
             <div>
               <h2 className="text-base font-bold text-white tracking-tight">Inspect Pure Code</h2>
               <p className="text-[11px] text-slate-400 font-mono">
-                {customCodeType === 'html' ? 'HTML / Tailwind CSS Markup' : 'Canvas 2D / WebGL JavaScript'}
+                {customCodeType === 'html' ? 'HTML + CSS Markup' : 'Canvas 2D JavaScript'}
               </p>
             </div>
           </div>

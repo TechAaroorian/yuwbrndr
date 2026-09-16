@@ -34,7 +34,7 @@ export const ExamplesModal: React.FC<Props> = ({
             </div>
             <div>
               <h2 className="text-lg font-bold text-white tracking-tight">Code Examples & Templates Gallery</h2>
-              <p className="text-xs text-slate-400 font-mono">Load any design as editable pure HTML/Tailwind or Canvas JS</p>
+              <p className="text-xs text-slate-400">Load an editable HTML/CSS or Canvas design</p>
             </div>
           </div>
           <button
@@ -75,7 +75,7 @@ export const ExamplesModal: React.FC<Props> = ({
                     {preset.category}
                   </span>
                   <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold">
-                    {preset.type === 'html' ? 'HTML / Tailwind' : 'Canvas 2D JS'}
+                    {preset.type === 'html' ? 'HTML + CSS' : 'Canvas 2D JS'}
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors">

@@ -25,12 +25,12 @@ export default {
     extend: {
       colors: {
         studio: {
-          950: '#090b10',
-          900: '#11141b',
-          850: '#171b24',
-          800: '#1d222d',
-          700: '#2a303d',
-          600: '#3b4352',
+          950: 'rgb(var(--studio-950) / <alpha-value>)',
+          900: 'rgb(var(--studio-900) / <alpha-value>)',
+          850: 'rgb(var(--studio-850) / <alpha-value>)',
+          800: 'rgb(var(--studio-800) / <alpha-value>)',
+          700: 'rgb(var(--studio-700) / <alpha-value>)',
+          600: 'rgb(var(--studio-600) / <alpha-value>)',
           accent: '#6366f1',
           cyan: '#06b6d4',
           emerald: '#10b981',

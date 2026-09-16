@@ -6,6 +6,40 @@ export interface ExportOptions {
   transparent?: boolean;
 }
 
+function findPreviewFrame(element: HTMLElement): HTMLIFrameElement | null {
+  return element.querySelector('iframe[data-yuwbrndr-preview]');
+}
+
+async function canvasFrameDataUrl(frame: HTMLIFrameElement, scale: number): Promise<string> {
+  const requestId = crypto.randomUUID();
+  const frameId = frame.dataset.frameId;
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      window.removeEventListener('message', receive);
+      reject(new Error('Sandboxed canvas export timed out.'));
+    }, 5000);
+    const receive = (event: MessageEvent) => {
+      if (event.source !== frame.contentWindow || event.data?.requestId !== requestId) return;
+      if (event.data?.type !== 'export-result' && event.data?.type !== 'export-error') return;
+      window.clearTimeout(timeout);
+      window.removeEventListener('message', receive);
+      if (event.data.type === 'export-error') reject(new Error(event.data.message));
+      else resolve(event.data.dataUrl);
+    };
+    window.addEventListener('message', receive);
+    frame.contentWindow?.postMessage({ type: 'yuwbrndr-export', requestId, frameId, scale }, '*');
+  });
+}
+
+async function renderElement(element: HTMLElement, scale: number): Promise<string> {
+  const frame = findPreviewFrame(element);
+  if (!frame) return toPng(element, { pixelRatio: scale, cacheBust: true });
+  if (frame.dataset.yuwbrndrPreview === 'canvas') return canvasFrameDataUrl(frame, scale);
+  const body = frame.contentDocument?.body;
+  if (!body) throw new Error('HTML preview is not ready for export.');
+  return toPng(body, { pixelRatio: scale, cacheBust: true });
+}
+
 /**
  * Downloads a DOM element as a high-DPI PNG image
  */
@@ -13,14 +47,10 @@ export async function exportElementAsPng(
   element: HTMLElement,
   options: ExportOptions = {}
 ): Promise<void> {
-  const { scale = 2, fileName = 'yuwbrndr-export.png', transparent = false } = options;
+  const { scale = 2, fileName = 'yuwbrndr-export.png' } = options;
 
   try {
-    const dataUrl = await toPng(element, {
-      pixelRatio: scale,
-      cacheBust: true,
-      backgroundColor: transparent ? undefined : undefined,
-    });
+    const dataUrl = await renderElement(element, scale);
 
     const link = document.createElement('a');
     link.download = fileName;
@@ -40,10 +70,16 @@ export async function copyElementToClipboard(
   scale: 1 | 2 = 2
 ): Promise<boolean> {
   try {
-    const blob = await toBlob(element, {
-      pixelRatio: scale,
-      cacheBust: true,
-    });
+    const frame = findPreviewFrame(element);
+    let blob: Blob | null;
+    if (frame) {
+      const dataUrl = frame.dataset.yuwbrndrPreview === 'canvas'
+        ? await canvasFrameDataUrl(frame, scale)
+        : await renderElement(element, scale);
+      blob = await fetch(dataUrl).then((response) => response.blob());
+    } else {
+      blob = await toBlob(element, { pixelRatio: scale, cacheBust: true });
+    }
 
     if (!blob) throw new Error('Blob generation failed');
 

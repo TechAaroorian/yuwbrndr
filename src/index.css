@@ -19,16 +19,60 @@
 .font-cinzel, [class*="font-cinzel"] { font-family: 'Cinzel', serif !important; }
 
 @layer base {
+  :root,
+  [data-theme='dark'] {
+    --studio-950: 9 11 16;
+    --studio-900: 17 20 27;
+    --studio-850: 23 27 36;
+    --studio-800: 29 34 45;
+    --studio-700: 42 48 61;
+    --studio-600: 59 67 82;
+    color-scheme: dark;
+  }
+
+  [data-theme='light'] {
+    --studio-950: 242 244 247;
+    --studio-900: 255 255 255;
+    --studio-850: 247 248 250;
+    --studio-800: 238 241 245;
+    --studio-700: 220 225 232;
+    --studio-600: 196 203 214;
+    color-scheme: light;
+  }
+
   * {
     border-color: rgba(255, 255, 255, 0.08);
   }
 
   body {
-    background-color: #090b10;
+    background-color: rgb(var(--studio-950));
     color: #f1f5f9;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 }
+
+[data-theme='light'] body,
+[data-theme='light'] #root {
+  color: #1f2937;
+}
+
+[data-theme='light'] .text-slate-100,
+[data-theme='light'] .text-slate-200,
+[data-theme='light'] .text-white { color: #1f2937 !important; }
+[data-theme='light'] .text-slate-300 { color: #374151 !important; }
+[data-theme='light'] .text-slate-400 { color: #64748b !important; }
+[data-theme='light'] .text-slate-500 { color: #7c8798 !important; }
+[data-theme='light'] .bg-indigo-600.text-white,
+[data-theme='light'] .bg-rose-600.text-white { color: #fff !important; }
+[data-theme='light'] .border-white\/10,
+[data-theme='light'] .border-white\/15,
+[data-theme='light'] .border-white\/20 { border-color: rgba(15, 23, 42, .12) !important; }
+[data-theme='light'] .bg-white\/5 { background-color: rgba(15, 23, 42, .04) !important; }
+[data-theme='light'] .bg-white\/10 { background-color: rgba(15, 23, 42, .07) !important; }
+[data-theme='light'] .hover\:bg-white\/5:hover { background-color: rgba(15, 23, 42, .06) !important; }
+[data-theme='light'] .hover\:bg-white\/10:hover { background-color: rgba(15, 23, 42, .09) !important; }
+[data-theme='light'] .bg-black\/50,
+[data-theme='light'] .bg-black\/40 { background-color: rgba(15, 23, 42, .06) !important; }
 
 /* Custom modern scrollbars */
 ::-webkit-scrollbar {

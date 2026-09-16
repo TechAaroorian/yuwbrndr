@@ -4,6 +4,7 @@ import {
   ASPECT_PRESETS, 
   COLOR_THEMES, 
   ColorTheme,
+  AppTheme,
   UploadedAsset
 } from './types/studio';
 import { Header } from './components/Header';
@@ -15,6 +16,7 @@ import { PlatformResolutionGuide } from './components/PlatformResolutionGuide';
 import { ExamplesModal } from './components/ExamplesModal';
 import { FontsModal } from './components/FontsModal';
 import { StickersModal } from './components/StickersModal';
+import { CapabilitiesModal } from './components/CapabilitiesModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
@@ -46,6 +48,11 @@ export function App() {
   const [isPlatformGuideOpen, setIsPlatformGuideOpen] = useState<boolean>(false);
   const [uploadedAssets, setUploadedAssets] = useState<UploadedAsset[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [appTheme, setAppTheme] = useState<AppTheme>(() => {
+    const saved = localStorage.getItem('yuwbrndr-theme');
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+  });
+  const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -60,6 +67,19 @@ export function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const applyTheme = () => {
+      const resolved = appTheme === 'system' ? (media.matches ? 'dark' : 'light') : appTheme;
+      document.documentElement.dataset.theme = resolved;
+      document.documentElement.classList.toggle('dark', resolved === 'dark');
+      localStorage.setItem('yuwbrndr-theme', appTheme);
+    };
+    applyTheme();
+    media.addEventListener('change', applyTheme);
+    return () => media.removeEventListener('change', applyTheme);
+  }, [appTheme]);
 
   // When preset changes, re-enable autoFit
   const handleSelectPresetFormat = (preset: AspectPreset) => {
@@ -231,6 +251,9 @@ export function App() {
         onCopyImage={handleCopyImage}
         onOpenExamples={() => setIsExamplesOpen(true)}
         onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
+        onOpenCapabilities={() => setIsCapabilitiesOpen(true)}
+        appTheme={appTheme}
+        onAppThemeChange={setAppTheme}
         isExporting={isExporting}
         copiedImage={copiedImage}
         isSidebarOpen={isSidebarOpen}
@@ -305,7 +328,7 @@ export function App() {
         {dockMode !== 'bottom' && (
           isEditorOpen ? (
             <div
-              className={`h-[calc(100vh-4rem)] bg-[#060710] shrink-0 flex flex-col z-20 shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
+              className={`h-[calc(100vh-4rem)] bg-studio-900 shrink-0 flex flex-col z-20 shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
                 isEditorWide ? 'w-[680px] xl:w-[740px]' : 'w-[500px] xl:w-[580px]'
               }`}
             >
@@ -345,8 +368,8 @@ export function App() {
 
       {/* Fullscreen IDE Studio Modal with Side Preview (optional) */}
       {dockMode === 'fullscreen' && (
-        <div className="fixed inset-0 z-50 bg-[#05070e] flex flex-col animate-in fade-in duration-200">
-          <div className="h-14 px-6 border-b border-white/10 bg-[#0a0d1d] flex items-center justify-between select-none">
+        <div className="fixed inset-0 z-50 bg-studio-950 flex flex-col animate-in fade-in duration-200">
+          <div className="h-14 px-6 border-b border-white/10 bg-studio-900 flex items-center justify-between select-none">
             <div className="flex items-center gap-3">
               <span className="font-extrabold text-white tracking-tight">YuwBrndr Fullscreen Code Studio</span>
               <span className="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">
@@ -380,7 +403,7 @@ export function App() {
               />
             </div>
 
-            <div className="w-[45%] h-full rounded-2xl border border-white/10 bg-[#070913] flex flex-col items-center justify-center p-6 overflow-hidden relative shadow-2xl">
+            <div className="w-[45%] h-full rounded-2xl border border-white/10 bg-studio-900 flex flex-col items-center justify-center p-6 overflow-hidden relative shadow-2xl">
               <div className="text-[11px] font-mono uppercase text-slate-500 font-bold mb-3">
                 Live Output Preview
               </div>
@@ -450,6 +473,8 @@ export function App() {
         currentPreset={currentPreset}
         onSelectPreset={setCurrentPreset}
       />
+
+      <CapabilitiesModal isOpen={isCapabilitiesOpen} onClose={() => setIsCapabilitiesOpen(false)} />
 
       {exportNotice && (
         <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-lg border border-emerald-500/30 bg-studio-850 px-4 py-2.5 text-sm font-medium text-emerald-300 shadow-xl">

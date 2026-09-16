@@ -11,9 +11,13 @@ import {
   Sparkles,
   Maximize2,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  BookOpen,
+  Monitor,
+  Moon,
+  Sun
 } from 'lucide-react';
-import { ASPECT_PRESETS, COLOR_THEMES, AspectPreset, ColorTheme } from '../types/studio';
+import { ASPECT_PRESETS, COLOR_THEMES, AppTheme, AspectPreset, ColorTheme } from '../types/studio';
 
 interface Props {
   currentPreset: AspectPreset;
@@ -28,6 +32,9 @@ interface Props {
   onCopyImage: () => void;
   onOpenExamples: () => void;
   onOpenPlatformGuide: () => void;
+  onOpenCapabilities: () => void;
+  appTheme: AppTheme;
+  onAppThemeChange: (theme: AppTheme) => void;
   isExporting: boolean;
   copiedImage: boolean;
   isSidebarOpen?: boolean;
@@ -47,6 +54,9 @@ export const Header: React.FC<Props> = ({
   onCopyImage,
   onOpenExamples,
   onOpenPlatformGuide,
+  onOpenCapabilities,
+  appTheme,
+  onAppThemeChange,
   isExporting,
   copiedImage,
   isSidebarOpen = true,
@@ -55,6 +65,9 @@ export const Header: React.FC<Props> = ({
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showPresetMenu, setShowPresetMenu] = useState(false);
+  const themeOptions: AppTheme[] = ['system', 'light', 'dark'];
+  const cycleAppTheme = () => onAppThemeChange(themeOptions[(themeOptions.indexOf(appTheme) + 1) % themeOptions.length]);
+  const AppThemeIcon = appTheme === 'light' ? Sun : appTheme === 'dark' ? Moon : Monitor;
 
   return (
     <header className="h-16 border-b border-white/10 bg-studio-900 px-4 sm:px-5 flex items-center justify-between z-30 select-none">
@@ -188,6 +201,23 @@ export const Header: React.FC<Props> = ({
 
       {/* Right Actions: Theme Selector, Code Inspector, Export */}
       <div className="flex items-center gap-2">
+        <button
+          onClick={cycleAppTheme}
+          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          title={`App theme: ${appTheme}. Click to change.`}
+          aria-label={`App theme: ${appTheme}`}
+        >
+          <AppThemeIcon className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onOpenCapabilities}
+          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          title="Supported design capabilities"
+          aria-label="Supported design capabilities"
+        >
+          <BookOpen className="w-4 h-4" />
+        </button>
         {/* Mobile Resolution Guide Button */}
         <button
           onClick={onOpenPlatformGuide}
