@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useState } from 'react';
+import { Code2, Sparkles } from 'lucide-react';
 import { ColorTheme } from '../../../types/studio';
-import { Code2, AlertTriangle, Sparkles, Terminal, Copy } from 'lucide-react';
+import { generateRuntimeUtilityCss } from '../../../utils/runtimeStyles';
 
 interface Props {
   codeType: 'html' | 'canvas';
@@ -14,6 +15,9 @@ interface Props {
   onTriggerUpload?: () => void;
 }
 
+const escapeScriptValue = (value: unknown) =>
+  JSON.stringify(value).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
+
 export const CustomCodeCanvas: React.FC<Props> = ({
   codeType,
   code,
@@ -25,146 +29,89 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   onPasteSample,
   onTriggerUpload,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const reactId = useId();
+  const frameId = useMemo(() => `preview-${reactId.replace(/:/g, '')}`, [reactId]);
   const [renderError, setRenderError] = useState<string | null>(null);
+  const [runtimeCss, setRuntimeCss] = useState('');
+  const isEmpty = !code.trim();
 
-  // Execute Canvas code whenever code, width, or height changes
   useEffect(() => {
-    if (codeType !== 'canvas') return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const receivePreviewMessage = (event: MessageEvent) => {
+      if (event.data?.source !== 'yuwbrndr-preview' || event.data?.frameId !== frameId) return;
+      if (event.data.type === 'render-error') setRenderError(event.data.message);
+      if (event.data.type === 'render-ready') setRenderError(null);
+    };
+    window.addEventListener('message', receivePreviewMessage);
+    return () => window.removeEventListener('message', receivePreviewMessage);
+  }, [frameId]);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    setRenderError(null);
-
-    // Clear previous drawing
-    ctx.clearRect(0, 0, width, height);
-
-    if (!code || code.trim() === '') return;
-
-    try {
-      // Safely evaluate user canvas script with context bindings
-      const executeCanvasCode = new Function('canvas', 'ctx', 'width', 'height', code);
-      executeCanvasCode(canvas, ctx, width, height);
-    } catch (err: any) {
-      console.error('Custom Canvas script execution error:', err);
-      setRenderError(err?.message || 'Error executing canvas script');
+  useEffect(() => {
+    let active = true;
+    if (codeType !== 'html') {
+      return () => { active = false; };
     }
-  }, [codeType, code, width, height]);
+    generateRuntimeUtilityCss(code)
+      .then((css) => { if (active) setRuntimeCss(css); })
+      .catch((error) => { if (active) setRenderError(`Utility CSS: ${String(error)}`); });
+    return () => { active = false; };
+  }, [code, codeType]);
 
-  const isEmpty = !code || code.trim() === '';
+  const srcDoc = useMemo(() => {
+    const background = useAsBackground && userImage
+      ? `background-color:${theme.background};background-image:url(${JSON.stringify(userImage)});background-size:cover;background-position:center;`
+      : `background:${theme.background};`;
 
-  // Background style if user enabled background image
-  const backgroundStyle: React.CSSProperties = useAsBackground && userImage
-    ? {
-        backgroundImage: `url(${userImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: theme.background,
-      }
-    : {
-        backgroundColor: theme.background,
-      };
+    const base = `html,body{width:100%;height:100%;margin:0;overflow:hidden}*{box-sizing:border-box}body{${background}}`;
 
-  // Empty State View
+    if (codeType === 'html') {
+      return `<!doctype html><html><head><meta charset="utf-8"><style>${base}\n${runtimeCss}</style></head><body>${code}</body></html>`;
+    }
+
+    const safeCode = escapeScriptValue(code);
+    return `<!doctype html><html><head><meta charset="utf-8"><style>${base}canvas{display:block;width:100%;height:100%}</style></head><body><canvas id="canvas" width="${width}" height="${height}"></canvas><script>
+      const frameId=${escapeScriptValue(frameId)};
+      const canvas=document.getElementById('canvas');
+      const ctx=canvas.getContext('2d');
+      const width=${width}; const height=${height};
+      const send=(type,payload={})=>parent.postMessage({source:'yuwbrndr-preview',frameId,type,...payload},'*');
+      try { const run=new Function('canvas','ctx','width','height',${safeCode}); run(canvas,ctx,width,height); send('render-ready'); }
+      catch(error){ send('render-error',{message:error instanceof Error?error.message:String(error)}); }
+      addEventListener('message',(event)=>{ if(event.data?.type==='yuwbrndr-export'&&event.data?.frameId===frameId){
+        try { const scale=Math.max(1,Number(event.data.scale)||1); const output=document.createElement('canvas'); output.width=width*scale; output.height=height*scale; const outputCtx=output.getContext('2d'); outputCtx.drawImage(canvas,0,0,output.width,output.height); send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')}); }
+        catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
+      }});
+    <\/script></body></html>`;
+  }, [code, codeType, frameId, height, runtimeCss, theme.background, useAsBackground, userImage, width]);
+
   if (isEmpty) {
     return (
-      <div 
-        className="w-full h-full flex flex-col items-center justify-center p-8 md:p-14 select-none relative overflow-hidden"
-        style={backgroundStyle}
-      >
-        {/* Scrim overlay if background image is active */}
-        {useAsBackground && userImage && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-none" />
-        )}
-
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
-
-        {/* Ambient glow */}
-        <div 
-          className="absolute w-96 h-96 rounded-full blur-3xl pointer-events-none opacity-20"
-          style={{ backgroundColor: theme.primary }}
-        />
-
-        {/* Dashed placeholder container */}
-        <div className="relative z-10 max-w-lg w-full p-8 md:p-10 rounded-3xl border-2 border-dashed border-white/15 bg-studio-900/80 backdrop-blur-md flex flex-col items-center text-center shadow-xl">
-          <div 
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 border shadow-glow-indigo"
-            style={{ 
-              backgroundColor: `${theme.primary}20`, 
-              borderColor: `${theme.primary}50`,
-              color: theme.accent 
-            }}
-          >
-            <Code2 className="w-8 h-8" />
-          </div>
-
-          <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight mb-2">
-            {userImage ? 'Image Loaded as Background' : 'Canvas is Empty'}
-          </h3>
-          <p className="text-xs md:text-sm text-slate-400 mb-6 leading-relaxed max-w-sm">
-            {userImage
-              ? 'Your custom image is loaded. Type or paste HTML & Tailwind CSS to overlay headings, badges, or memes on top.'
-              : 'Paste your raw HTML & Tailwind CSS or HTML5 Canvas JavaScript in the left sidebar, or upload your own image below.'}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full justify-center">
-            {onTriggerUpload && !userImage && (
-              <button
-                onClick={onTriggerUpload}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-md flex items-center justify-center gap-1.5 active:scale-95"
-              >
-                <span>Upload Your Image</span>
-              </button>
-            )}
-            {onPasteSample && (
-              <button
-                onClick={() => onPasteSample('html')}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-slate-200 transition-all border border-white/10 flex items-center justify-center gap-1.5 active:scale-95"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Load Sample Code</span>
-              </button>
-            )}
-          </div>
+      <div className="design-canvas w-full h-full flex flex-col items-center justify-center p-12 text-center" style={{ background: theme.background }}>
+        <div className="w-14 h-14 rounded-xl border flex items-center justify-center mb-4" style={{ background: `${theme.primary}20`, borderColor: `${theme.primary}50`, color: theme.accent }}>
+          <Code2 className="w-7 h-7" />
+        </div>
+        <h3 className="text-2xl font-bold text-white mb-2">Start your design</h3>
+        <p className="text-sm text-slate-400 mb-6 max-w-md">Choose a template, write HTML and CSS, or use the advanced Canvas JavaScript mode.</p>
+        <div className="flex gap-2">
+          {onTriggerUpload && <button onClick={onTriggerUpload} className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold">Upload image</button>}
+          {onPasteSample && <button onClick={() => onPasteSample('html')} className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 text-sm font-semibold flex items-center gap-2"><Sparkles className="w-4 h-4" />Load sample</button>}
         </div>
       </div>
     );
   }
 
   return (
-    <div 
-      className="w-full h-full relative overflow-hidden"
-      style={backgroundStyle}
-    >
-      {useAsBackground && userImage && (
-        <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      )}
-      {codeType === 'html' ? (
-        <div 
-          className="w-full h-full relative overflow-hidden z-10"
-          dangerouslySetInnerHTML={{ __html: code }}
-        />
-      ) : (
-        <div className="w-full h-full relative flex items-center justify-center">
-          <canvas
-            ref={canvasRef}
-            width={width}
-            height={height}
-            className="w-full h-full object-contain"
-          />
-          {renderError && (
-            <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-rose-950/90 border border-rose-500/50 text-rose-200 text-xs font-mono flex items-center gap-2 shadow-2xl backdrop-blur-md">
-              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
-              <div className="truncate">
-                <span className="font-bold">Execution Error: </span>
-                {renderError}
-              </div>
-            </div>
-          )}
+    <div className="design-canvas w-full h-full relative overflow-hidden" style={{ background: theme.background }}>
+      <iframe
+        title="Sandboxed design preview"
+        data-yuwbrndr-preview={codeType}
+        data-frame-id={frameId}
+        sandbox={codeType === 'html' ? 'allow-same-origin' : 'allow-scripts'}
+        srcDoc={srcDoc}
+        className="w-full h-full border-0 bg-transparent"
+      />
+      {renderError && (
+        <div className="absolute bottom-4 left-4 right-4 p-3 rounded-lg bg-rose-950/95 border border-rose-500/50 text-rose-200 text-xs font-mono">
+          <strong>Execution error:</strong> {renderError}
         </div>
       )}
     </div>

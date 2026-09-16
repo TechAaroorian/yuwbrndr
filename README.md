@@ -1,15 +1,24 @@
-# YuwBrndr
+# Yuwbrndr
 
-YuwBrndr is a browser-based studio for creating social graphics from HTML, Tailwind CSS, and Canvas JavaScript. It combines a live code editor, platform-sized canvases, reusable templates, image assets, and PNG export in one workspace.
+Yuwbrndr is a browser-based studio for creating social graphics from HTML, CSS, Tailwind-compatible utilities, and Canvas JavaScript. It combines a live code editor, platform-sized canvases, reusable templates, image assets, and PNG export in one workspace.
+
+<p align="center">
+  <img src="public/screenshots/dark.png" alt="Yuwbrndr Studio - Dark Theme" width="100%" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/light.png" alt="Yuwbrndr Studio - Light Theme" width="100%" />
+</p>
 
 ## Features
 
-- Live HTML/Tailwind and Canvas preview
+- Live HTML/CSS and sandboxed Canvas preview
+- Runtime Tailwind-compatible utilities powered by UnoCSS Wind4
 - Presets for social posts, thumbnails, banners, and article covers
 - Templates, fonts, stickers, and uploaded image assets
 - Syntax highlighting, formatting, and lint feedback
 - PNG export at 1x, 2x, or 4x and clipboard copy
-- Responsive, focused dark workspace
+- Responsive workspace with dark and light themes
 
 ## Local development
 
@@ -24,7 +33,11 @@ Create a production build with `npm run build` and run the linter with `npm run 
 
 ## Security note
 
-Canvas JavaScript entered in the editor currently executes in the browser page. Only run code you wrote or fully trust. Do not paste unknown templates or scripts. Preview sandboxing is planned before this project is positioned for broader third-party use.
+HTML previews run with scripts disabled. Canvas JavaScript runs in an origin-isolated preview and communicates with the application through a narrow message protocol. Users should still only run code they understand and trust.
+
+## Usage and content responsibility
+
+Anyone may use the deployed application to create and export graphics without an account, watermark, or usage limit. Users remain responsible for the legality, licensing, accuracy, and suitability of the code, text, images, fonts, trademarks, personal data, and other assets they use or publish. Users should confirm that they have the necessary rights and follow the rules of the platforms where they publish their output.
 
 ## Repository status
 

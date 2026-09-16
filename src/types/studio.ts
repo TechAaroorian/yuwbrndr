@@ -1,4 +1,5 @@
 export type StudioMode = 'customCode' | 'infographic' | 'meme' | 'illustration3d' | 'illustrationSvg';
+export type AppTheme = 'system' | 'light' | 'dark';
 
 export type InfographicTemplate = 'bento' | 'timeline' | 'comparison' | 'stat-highlight';
 export type MemeTemplate = 'dev-terminal' | 'tweet-card' | 'classic' | 'split-vs';

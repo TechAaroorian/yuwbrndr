@@ -220,9 +220,9 @@ export const FullCodeEditor: React.FC<Props> = ({
   }, [code]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#060710] border-l border-white/10 overflow-hidden shadow-2xl select-none">
+    <div className="flex flex-col h-full w-full bg-studio-900 border-l border-white/10 overflow-hidden shadow-2xl select-none">
       {/* TOP HEADER TOOLBAR */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-[#090b17] border-b border-white/10 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-studio-850 border-b border-white/10 text-xs">
         {/* Left: Engine Switcher & Presets */}
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-black/50 p-0.5 rounded-lg border border-white/10">
@@ -234,7 +234,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              HTML / Tailwind
+              HTML + CSS
             </button>
             <button
               onClick={() => setCodeType('canvas')}
@@ -454,7 +454,7 @@ export const FullCodeEditor: React.FC<Props> = ({
           onChange={(val) => onChange(val)}
           placeholder={
             codeType === 'html'
-              ? '<!-- Type or paste HTML / Tailwind code here -->\n<div class="w-full h-full p-8 bg-slate-900 text-white flex flex-col justify-center items-center">\n  <h1 class="text-4xl font-extrabold text-cyan-400">Design Title</h1>\n  <p class="text-slate-400 mt-2">Adjust content, colors, and layout in real-time...</p>\n</div>'
+              ? '<!-- Type or paste HTML + CSS here. Tailwind-compatible utilities are generated at runtime. -->\n<div class="w-full h-full p-8 bg-slate-900 text-white flex flex-col justify-center items-center">\n  <h1 class="text-[64px] font-extrabold text-cyan-400">Design Title</h1>\n  <p class="text-slate-400 mt-2">Adjust content, colors, and layout in real time.</p>\n</div>'
               : '// Canvas 2D Code (canvas, ctx, width, height are available)\nctx.fillStyle = "#090a10";\nctx.fillRect(0, 0, width, height);\n\nctx.fillStyle = "#38bdf8";\nctx.font = "bold 36px Inter, sans-serif";\nctx.fillText("Dynamic Canvas", 60, 100);'
           }
           className="h-full font-mono text-sm overflow-auto"
@@ -473,7 +473,7 @@ export const FullCodeEditor: React.FC<Props> = ({
       </div>
 
       {/* BOTTOM STATUS & LINTING DIAGNOSTICS BAR */}
-      <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#04050b] border-t border-white/10 text-[11px] font-mono text-slate-400 select-none">
+      <div className="flex items-center justify-between px-3.5 py-1.5 bg-studio-850 border-t border-white/10 text-[11px] font-mono text-slate-400 select-none">
         <div className="flex items-center gap-3">
           {/* Real-time Lint Diagnostic Status */}
           {diagnosticsCount === 0 ? (
