@@ -57,6 +57,7 @@ export function App() {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
+  const hasShownUsageNotice = useRef(false);
 
   // Global keyboard shortcut for toggling sidebar: Ctrl+B or Cmd+B
   useEffect(() => {
@@ -82,6 +83,14 @@ export function App() {
     media.addEventListener('change', applyTheme);
     return () => media.removeEventListener('change', applyTheme);
   }, [appTheme]);
+
+  useEffect(() => {
+    const hasStartedCreating = customCode.trim().length > 0 || uploadedAssets.length > 0;
+    if (!hasStartedCreating || hasShownUsageNotice.current) return;
+
+    hasShownUsageNotice.current = true;
+    setIsAboutOpen(true);
+  }, [customCode, uploadedAssets.length]);
 
   // When preset changes, re-enable autoFit
   const handleSelectPresetFormat = (preset: AspectPreset) => {
