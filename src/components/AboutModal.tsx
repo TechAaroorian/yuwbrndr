@@ -30,8 +30,8 @@ export const AboutModal: React.FC<Props> = ({ isOpen, onClose }) => {
             Yuwbrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed locally in the browser and are not intentionally sent to a Yuwbrndr server.
           </p>
 
-          <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
-            <div className="flex items-center gap-2 font-semibold text-amber-200">
+          <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/20 dark:bg-amber-500/10">
+            <div className="flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-200">
               <ShieldCheck className="h-5 w-5" /> Your content, your responsibility
             </div>
             <p className="mt-2 text-sm leading-6 text-slate-300">
