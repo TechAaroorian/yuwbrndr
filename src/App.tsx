@@ -17,6 +17,7 @@ import { ExamplesModal } from './components/ExamplesModal';
 import { FontsModal } from './components/FontsModal';
 import { StickersModal } from './components/StickersModal';
 import { CapabilitiesModal } from './components/CapabilitiesModal';
+import { AboutModal } from './components/AboutModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
@@ -53,6 +54,7 @@ export function App() {
     return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
   });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -252,6 +254,7 @@ export function App() {
         onOpenExamples={() => setIsExamplesOpen(true)}
         onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
         onOpenCapabilities={() => setIsCapabilitiesOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
         appTheme={appTheme}
         onAppThemeChange={setAppTheme}
         isExporting={isExporting}
@@ -475,6 +478,7 @@ export function App() {
       />
 
       <CapabilitiesModal isOpen={isCapabilitiesOpen} onClose={() => setIsCapabilitiesOpen(false)} />
+      <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
       {exportNotice && (
         <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-lg border border-emerald-500/30 bg-studio-850 px-4 py-2.5 text-sm font-medium text-emerald-300 shadow-xl">

@@ -25,7 +25,11 @@ Create a production build with `npm run build` and run the linter with `npm run 
 
 ## Security note
 
-Canvas JavaScript entered in the editor currently executes in the browser page. Only run code you wrote or fully trust. Do not paste unknown templates or scripts. Preview sandboxing is planned before this project is positioned for broader third-party use.
+HTML previews run with scripts disabled. Canvas JavaScript runs in an origin-isolated preview and communicates with the application through a narrow message protocol. Users should still only run code they understand and trust.
+
+## Usage and content responsibility
+
+Anyone may use the deployed application to create and export graphics without an account, watermark, or usage limit. Users remain responsible for the legality, licensing, accuracy, and suitability of the code, text, images, fonts, trademarks, personal data, and other assets they use or publish. Users should confirm that they have the necessary rights and follow the rules of the platforms where they publish their output.
 
 ## Repository status
 

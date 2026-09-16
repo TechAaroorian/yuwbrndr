@@ -13,6 +13,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   BookOpen,
+  Info,
   Monitor,
   Moon,
   Sun
@@ -33,6 +34,7 @@ interface Props {
   onOpenExamples: () => void;
   onOpenPlatformGuide: () => void;
   onOpenCapabilities: () => void;
+  onOpenAbout: () => void;
   appTheme: AppTheme;
   onAppThemeChange: (theme: AppTheme) => void;
   isExporting: boolean;
@@ -55,6 +57,7 @@ export const Header: React.FC<Props> = ({
   onOpenExamples,
   onOpenPlatformGuide,
   onOpenCapabilities,
+  onOpenAbout,
   appTheme,
   onAppThemeChange,
   isExporting,
@@ -217,6 +220,15 @@ export const Header: React.FC<Props> = ({
           aria-label="Supported design capabilities"
         >
           <BookOpen className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onOpenAbout}
+          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          title="About and usage responsibility"
+          aria-label="About YuwBrndr"
+        >
+          <Info className="w-4 h-4" />
         </button>
         {/* Mobile Resolution Guide Button */}
         <button
