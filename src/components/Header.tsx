@@ -16,7 +16,8 @@ import {
   Info,
   Monitor,
   Moon,
-  Sun
+  Sun,
+  MoreVertical
 } from 'lucide-react';
 import { ASPECT_PRESETS, COLOR_THEMES, AppTheme, AspectPreset, ColorTheme } from '../types/studio';
 
@@ -68,18 +69,19 @@ export const Header: React.FC<Props> = ({
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showPresetMenu, setShowPresetMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const themeOptions: AppTheme[] = ['system', 'light', 'dark'];
   const cycleAppTheme = () => onAppThemeChange(themeOptions[(themeOptions.indexOf(appTheme) + 1) % themeOptions.length]);
   const AppThemeIcon = appTheme === 'light' ? Sun : appTheme === 'dark' ? Moon : Monitor;
 
   return (
-    <header className="h-16 border-b border-white/10 bg-studio-900 px-4 sm:px-5 flex items-center justify-between z-30 select-none">
+    <header className="h-16 border-b border-white/10 bg-studio-900 px-3 sm:px-5 flex items-center justify-between z-30 select-none relative">
       {/* Brand Title & Sidebar Toggle */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {onToggleSidebar && (
           <button
             onClick={onToggleSidebar}
-            className={`p-2 rounded-lg border transition-colors ${
+            className={`hidden lg:flex p-2 rounded-lg border transition-colors ${
               isSidebarOpen
                 ? 'border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
                 : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25'
@@ -94,19 +96,19 @@ export const Header: React.FC<Props> = ({
           </button>
         )}
 
-        <img src="./yuwbrndr-logo.svg" alt="" className="w-9 h-9 shrink-0" />
+        <img src="./yuwbrndr-logo.svg" alt="" className="w-8 h-8 sm:w-9 sm:h-9 shrink-0" />
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-100 tracking-tight text-lg">Yuwbrndr</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg">Yuwbrndr</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-white/5 text-slate-400 border border-white/10">
               Studio
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 hidden sm:block">Create social graphics from code</p>
+          <p className="text-[10px] text-slate-400 hidden md:block">Create social graphics from code</p>
         </div>
       </div>
 
-      {/* Center Controls: Platform Selector, Resolution Guide & Zoom */}
+      {/* Center Controls: Platform Selector & Zoom (Desktop) */}
       <div className="hidden lg:flex items-center gap-2 bg-studio-950 p-1 rounded-lg border border-white/10">
         {/* Platform Preset Dropdown */}
         <div className="relative">
@@ -202,30 +204,77 @@ export const Header: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Right Actions: Theme Selector, Code Inspector, Export */}
-      <div className="flex items-center gap-2">
+      {/* Mobile Preset Trigger (< lg) */}
+      <div className="lg:hidden relative">
+        <button
+          onClick={() => setShowPresetMenu(!showPresetMenu)}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-studio-950 border border-white/10 text-xs text-slate-200 font-medium max-w-[140px] sm:max-w-[180px] truncate"
+        >
+          <Share2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+          <span className="truncate">{currentPreset.aspectRatio}</span>
+          <ChevronDown className="w-3 h-3 opacity-70 shrink-0" />
+        </button>
+
+        {showPresetMenu && (
+          <div className="absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1">
+            <div className="flex items-center justify-between px-2 py-1 text-[10px] font-mono uppercase text-slate-400">
+              <span>Platform Format</span>
+              <span className="text-indigo-400 font-bold">{currentPreset.aspectRatio}</span>
+            </div>
+            <div className="max-h-60 overflow-y-auto space-y-1 pr-1">
+              {ASPECT_PRESETS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    onSelectPreset(p);
+                    setShowPresetMenu(false);
+                  }}
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-mono transition-all text-left ${
+                    p.id === currentPreset.id
+                      ? 'bg-indigo-600 text-white font-bold'
+                      : 'text-slate-300 hover:bg-white/5'
+                  }`}
+                >
+                  <div className="truncate mr-2">
+                    <div className="font-sans font-semibold text-slate-100 truncate">{p.name}</div>
+                    <div className="text-[10px] text-slate-400">{p.width} × {p.height} ({p.aspectRatio})</div>
+                  </div>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300 shrink-0">
+                    {p.platform.split(' ')[0]}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Right Actions: Responsive Desktop & Mobile */}
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* App Theme Toggle (Accessible on all screens) */}
         <button
           onClick={cycleAppTheme}
           className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title={`App theme: ${appTheme}. Click to change.`}
-          aria-label={`App theme: ${appTheme}`}
+          title={`Theme: ${appTheme}`}
+          aria-label={`Theme: ${appTheme}`}
         >
           <AppThemeIcon className="w-4 h-4" />
         </button>
 
+        {/* Desktop-only secondary links */}
         <button
           onClick={onOpenCapabilities}
-          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title="Supported design capabilities"
-          aria-label="Supported design capabilities"
+          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          title="Capabilities"
+          aria-label="Capabilities"
         >
           <BookOpen className="w-4 h-4" />
         </button>
 
         <button
           onClick={onOpenAbout}
-          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title="About and usage responsibility"
+          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          title="About Yuwbrndr"
           aria-label="About Yuwbrndr"
         >
           <Info className="w-4 h-4" />
@@ -235,35 +284,27 @@ export const Header: React.FC<Props> = ({
           href="https://github.com/TechAaroorian/yuwbrndr"
           target="_blank"
           rel="noreferrer"
-          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 hover:text-slate-100 transition-colors"
-          title="View Yuwbrndr on GitHub"
-          aria-label="View Yuwbrndr on GitHub"
+          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 hover:text-slate-100 transition-colors"
+          title="GitHub"
+          aria-label="GitHub"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.39.97.1-.75.4-1.27.74-1.56-2.57-.3-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18a10.94 10.94 0 0 1 5.75 0c2.19-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.14v3.26c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
           </svg>
         </a>
-        {/* Mobile Resolution Guide Button */}
-        <button
-          onClick={onOpenPlatformGuide}
-          className="lg:hidden p-2 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:text-white"
-          title="Platform Resolution Guide"
-        >
-          <HelpCircle className="w-4 h-4 text-cyan-400" />
-        </button>
 
-        {/* Theme Selector Dropdown */}
-        <div className="relative">
+        {/* Theme Palette Dropdown (Desktop) */}
+        <div className="hidden sm:block relative">
           <button
             onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-medium text-slate-200 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-medium text-slate-200 transition-colors"
           >
             <span 
-              className="w-3 h-3 rounded-full border border-white/20"
+              className="w-3 h-3 rounded-full border border-white/20 shrink-0"
               style={{ backgroundColor: currentTheme.primary }} 
             />
-            <span className="hidden sm:inline">{currentTheme.name}</span>
-            <ChevronDown className="w-3 h-3 text-slate-400" />
+            <span className="hidden md:inline">{currentTheme.name}</span>
+            <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
           </button>
 
           {showThemeMenu && (
@@ -288,45 +329,35 @@ export const Header: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Browse Examples Button */}
-        <button
-          onClick={onOpenExamples}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
-          title="Browse templates"
-        >
-          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-          <span className="hidden sm:inline">Templates</span>
-        </button>
-
-        {/* Copy Image Button */}
+        {/* Copy Image Button (Desktop) */}
         <button
           onClick={onCopyImage}
           disabled={isExporting}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
-          title="Copy rendered PNG to clipboard"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
+          title="Copy rendered PNG"
         >
           {copiedImage ? (
             <Check className="w-3.5 h-3.5 text-emerald-400" />
           ) : (
             <Copy className="w-3.5 h-3.5 text-slate-300" />
           )}
-          <span className="hidden sm:inline">{copiedImage ? 'Copied!' : 'Copy PNG'}</span>
+          <span className="hidden md:inline">{copiedImage ? 'Copied' : 'Copy'}</span>
         </button>
 
-        {/* Export Image Dropdown */}
+        {/* Export Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowExportMenu(!showExportMenu)}
             disabled={isExporting}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs transition-colors shadow-sm"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{isExporting ? 'Rendering...' : 'Export'}</span>
-            <ChevronDown className="w-3 h-3 ml-0.5 opacity-80" />
+            <span className="hidden xs:inline">{isExporting ? 'Exporting...' : 'Export'}</span>
+            <ChevronDown className="w-3 h-3 opacity-80" />
           </button>
 
           {showExportMenu && (
-            <div className="absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-studio-900 shadow-2xl p-1.5 z-40 space-y-1">
+            <div className="absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-studio-900 shadow-2xl p-1.5 z-50 space-y-1">
               <div className="text-[10px] font-mono uppercase text-slate-500 px-2 py-1">Resolution Multiplier</div>
               <button
                 onClick={() => {
@@ -349,10 +380,8 @@ export const Header: React.FC<Props> = ({
                 className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors bg-indigo-600/10 border border-indigo-500/20"
               >
                 <div>
-                  <div className="font-semibold text-indigo-300 flex items-center gap-1">
-                    <span>Recommended</span>
-                  </div>
-                  <div className="text-[10px] text-indigo-400/80 font-mono">2x ({currentPreset.width * 2}×{currentPreset.height * 2})</div>
+                  <div className="font-semibold text-indigo-300">Recommended (2x)</div>
+                  <div className="text-[10px] text-indigo-400/80 font-mono">{currentPreset.width * 2}×{currentPreset.height * 2}</div>
                 </div>
                 <span className="font-mono text-[10px] text-indigo-400 font-bold">2x</span>
               </button>
@@ -364,11 +393,124 @@ export const Header: React.FC<Props> = ({
                 className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
               >
                 <div>
-                  <div className="font-semibold text-cyan-300">Ultra Print / 4K</div>
-                  <div className="text-[10px] text-cyan-500 font-mono">4x ({currentPreset.width * 4}×{currentPreset.height * 4})</div>
+                  <div className="font-semibold text-cyan-300">Ultra Print (4x)</div>
+                  <div className="text-[10px] text-cyan-500 font-mono">{currentPreset.width * 4}×{currentPreset.height * 4}</div>
                 </div>
                 <span className="font-mono text-[10px] text-cyan-400 font-bold">4x</span>
               </button>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile More Options Dropdown Button (< lg) */}
+        <div className="lg:hidden relative">
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="p-2 rounded-lg border border-white/10 bg-studio-850 text-slate-300 hover:text-white hover:bg-studio-800 transition-colors"
+            title="More Options"
+          >
+            <MoreVertical className="w-4 h-4" />
+          </button>
+
+          {showMobileMenu && (
+            <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-2 py-1 text-[10px] font-mono uppercase text-slate-500 font-bold border-b border-white/10">
+                Menu & Settings
+              </div>
+
+              {/* Copy Image Button on Mobile */}
+              <button
+                onClick={() => {
+                  onCopyImage();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <Copy className="w-4 h-4 text-indigo-400" />
+                <span>{copiedImage ? 'PNG Copied!' : 'Copy PNG to Clipboard'}</span>
+              </button>
+
+              {/* Templates Gallery */}
+              <button
+                onClick={() => {
+                  onOpenExamples();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <span>Browse Templates</span>
+              </button>
+
+              {/* Theme Palette */}
+              <div className="pt-1 border-t border-white/10">
+                <div className="px-2.5 py-1 text-[10px] font-mono uppercase text-slate-400 font-semibold">Canvas Palette</div>
+                <div className="grid grid-cols-5 gap-1 px-1 py-1">
+                  {Object.values(COLOR_THEMES).map((th) => (
+                    <button
+                      key={th.id}
+                      onClick={() => {
+                        onSelectTheme(th);
+                        setShowMobileMenu(false);
+                      }}
+                      className={`h-7 rounded-md border flex items-center justify-center transition-transform active:scale-95 ${
+                        th.id === currentTheme.id ? 'border-white ring-1 ring-white/50 scale-105' : 'border-white/20'
+                      }`}
+                      style={{ backgroundColor: th.primary }}
+                      title={th.name}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Platform Resolution Guide */}
+              <button
+                onClick={() => {
+                  onOpenPlatformGuide();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <HelpCircle className="w-4 h-4 text-cyan-400" />
+                <span>Resolution Guide</span>
+              </button>
+
+              {/* Capabilities */}
+              <button
+                onClick={() => {
+                  onOpenCapabilities();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <BookOpen className="w-4 h-4 text-slate-400" />
+                <span>Design Capabilities</span>
+              </button>
+
+              {/* About */}
+              <button
+                onClick={() => {
+                  onOpenAbout();
+                  setShowMobileMenu(false);
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <Info className="w-4 h-4 text-slate-400" />
+                <span>About & Responsibility</span>
+              </button>
+
+              {/* GitHub */}
+              <a
+                href="https://github.com/TechAaroorian/yuwbrndr"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
+              >
+                <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.39.97.1-.75.4-1.27.74-1.56-2.57-.3-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18a10.94 10.94 0 0 1 5.75 0c2.19-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.14v3.26c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
+                </svg>
+                <span>View on GitHub</span>
+              </a>
             </div>
           )}
         </div>

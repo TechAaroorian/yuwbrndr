@@ -81,13 +81,23 @@ export const Sidebar: React.FC<Props> = ({
   };
 
   return (
-    <aside 
-      className={`h-[calc(100vh-4rem)] border-r border-white/10 bg-studio-900/80 backdrop-blur-md flex flex-col shrink-0 select-none transition-all duration-200 ease-out relative ${
-        isOpen 
-          ? 'w-72 xl:w-80 overflow-y-auto' 
-          : 'w-0 overflow-hidden opacity-0 border-r-0 pointer-events-none'
-      }`}
-    >
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 lg:hidden animate-in fade-in duration-200"
+          onClick={onToggle}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside 
+        className={`h-[calc(100vh-4rem)] border-r border-white/10 bg-studio-900/95 backdrop-blur-md flex flex-col shrink-0 select-none transition-all duration-200 ease-out z-40 ${
+          isOpen 
+            ? 'fixed inset-y-0 left-0 w-80 max-w-[85vw] lg:relative lg:w-72 xl:w-80 lg:inset-auto overflow-y-auto shadow-2xl lg:shadow-none' 
+            : 'w-0 overflow-hidden opacity-0 border-r-0 pointer-events-none hidden lg:flex'
+        }`}
+      >
       {/* Top Header Row with Collapse Button */}
       <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-studio-950/40">
         <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400">
@@ -306,5 +316,6 @@ export const Sidebar: React.FC<Props> = ({
 
       </div>
     </aside>
+  </>
   );
 };

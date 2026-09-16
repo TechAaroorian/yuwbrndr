@@ -21,7 +21,7 @@ import { AboutModal } from './components/AboutModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
-import { Code2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Code2, ChevronLeft, Eye, Sparkles, Download } from 'lucide-react';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB max per file
 const MAX_ASSETS_COUNT = 5; // Max 5 uploaded assets in RAM
@@ -30,7 +30,13 @@ export function App() {
   const [customCodeType, setCustomCodeType] = useState<'html' | 'canvas'>('html');
   const [customCode, setCustomCode] = useState<string>(''); // Clean empty canvas on initial load!
   const [dockMode, setDockMode] = useState<EditorDockMode>('sidebar');
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true); // Left-side panel collapse/expand
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return true;
+  }); // Left-side panel collapse/expand
+  const [mobileTab, setMobileTab] = useState<'canvas' | 'code'>('canvas');
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(true); // Right-side editor active by default
   const [isEditorWide, setIsEditorWide] = useState<boolean>(false);
   const [autoFit, setAutoFit] = useState<boolean>(true); // Auto-arrange & fit canvas size by default
@@ -198,6 +204,10 @@ export function App() {
     }
     setIsEditorOpen(true);
     setAutoFit(true);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+      setMobileTab('canvas');
+    }
   };
 
   // Load selected preset from Examples Gallery
@@ -206,6 +216,10 @@ export function App() {
     setCustomCode(preset.code);
     setIsEditorOpen(true);
     setAutoFit(true);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+      setMobileTab('canvas');
+    }
   };
 
   // Export Image Handler
@@ -297,7 +311,11 @@ export function App() {
         />
 
         {/* 2. CENTER CANVAS VIEWPORT */}
-        <div className="flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden min-w-0">
+        <div
+          className={`flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden min-w-0 pb-14 lg:pb-0 ${
+            mobileTab === 'canvas' ? 'flex' : 'hidden lg:flex'
+          }`}
+        >
           <CanvasViewport
             currentPreset={currentPreset}
             currentTheme={currentTheme}
@@ -340,8 +358,10 @@ export function App() {
         {dockMode !== 'bottom' && (
           isEditorOpen ? (
             <div
-              className={`h-[calc(100vh-4rem)] bg-studio-900 shrink-0 flex flex-col z-20 shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
-                isEditorWide ? 'w-[680px] xl:w-[740px]' : 'w-[500px] xl:w-[580px]'
+              className={`h-[calc(100vh-4rem)] pb-14 lg:pb-0 bg-studio-900 shrink-0 flex-col z-20 shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
+                mobileTab === 'code' ? 'flex w-full lg:w-[500px]' : 'hidden lg:flex'
+              } ${
+                isEditorWide ? 'lg:w-[680px] xl:w-[740px]' : 'lg:w-[500px] xl:w-[580px]'
               }`}
             >
               <FullCodeEditor
@@ -358,14 +378,17 @@ export function App() {
                 onInsertImage={handleInsertImageToCode}
                 isWide={isEditorWide}
                 onToggleWide={() => setIsEditorWide(!isEditorWide)}
-                onToggleCollapse={() => setIsEditorOpen(false)}
+                onToggleCollapse={() => {
+                  setIsEditorOpen(false);
+                  setMobileTab('canvas');
+                }}
               />
             </div>
           ) : (
-            /* Collapsed side tab when editor is hidden */
+            /* Collapsed side tab when editor is hidden (Desktop only) */
             <button
               onClick={() => setIsEditorOpen(true)}
-              className="h-[calc(100vh-4rem)] w-10 bg-studio-900/90 border-l border-white/10 hover:bg-studio-800 transition-colors flex flex-col items-center justify-center gap-3 text-slate-400 hover:text-white cursor-pointer py-4 shadow-lg shrink-0"
+              className="hidden lg:flex h-[calc(100vh-4rem)] w-10 bg-studio-900/90 border-l border-white/10 hover:bg-studio-800 transition-colors flex-col items-center justify-center gap-3 text-slate-400 hover:text-white cursor-pointer py-4 shadow-lg shrink-0"
               title="Expand Right Code Editor"
             >
               <ChevronLeft className="w-4 h-4 text-indigo-400" />
@@ -377,6 +400,61 @@ export function App() {
           )
         )}
       </div>
+
+      {/* 4. MOBILE BOTTOM NAVIGATION BAR (< lg) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-studio-900/95 backdrop-blur-md border-t border-white/10 flex items-center justify-around px-2 z-40 select-none">
+        <button
+          onClick={() => {
+            setMobileTab('canvas');
+            setIsSidebarOpen(false);
+          }}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
+            mobileTab === 'canvas' && !isSidebarOpen
+              ? 'text-indigo-400 font-bold'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Eye className="w-4 h-4" />
+          <span className="text-[10px] font-medium">Canvas</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setMobileTab('code');
+            setIsSidebarOpen(false);
+            setIsEditorOpen(true);
+          }}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
+            mobileTab === 'code' && !isSidebarOpen
+              ? 'text-indigo-400 font-bold'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Code2 className="w-4 h-4" />
+          <span className="text-[10px] font-medium">Code</span>
+        </button>
+
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
+            isSidebarOpen
+              ? 'text-indigo-400 font-bold'
+              : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span className="text-[10px] font-medium">Assets</span>
+        </button>
+
+        <button
+          onClick={() => handleExport(2)}
+          disabled={isExporting}
+          className="flex flex-col items-center justify-center gap-1 flex-1 py-1.5 text-slate-400 hover:text-indigo-300 transition-colors"
+        >
+          <Download className="w-4 h-4 text-cyan-400" />
+          <span className="text-[10px] font-medium">{isExporting ? '...' : 'Export'}</span>
+        </button>
+      </nav>
 
       {/* Fullscreen IDE Studio Modal with Side Preview (optional) */}
       {dockMode === 'fullscreen' && (
