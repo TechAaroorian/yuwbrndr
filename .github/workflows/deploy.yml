@@ -1,4 +1,4 @@
-name: Deploy YuwBrndr to GitHub Pages
+name: Deploy Yuwbrndr to GitHub Pages
 
 on:
   push:
