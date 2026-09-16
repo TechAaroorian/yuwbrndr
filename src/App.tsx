@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   AspectPreset, 
   ASPECT_PRESETS, 
@@ -21,6 +21,7 @@ import { AboutModal } from './components/AboutModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
+import { encodeShareUrl, decodeShareUrl, hasLocalUploadedImages } from './utils/shareUrl';
 import { Code2, ChevronLeft, Eye, Sparkles, Download } from 'lucide-react';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB max per file
@@ -45,6 +46,7 @@ export function App() {
   const [zoom, setZoom] = useState<number>(0.55);
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
+  const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
   const [exportNotice, setExportNotice] = useState<string | null>(null);
   const [isCodeOpen, setIsCodeOpen] = useState<boolean>(false);
   const [isExamplesOpen, setIsExamplesOpen] = useState<boolean>(false);
@@ -89,6 +91,38 @@ export function App() {
     media.addEventListener('change', applyTheme);
     return () => media.removeEventListener('change', applyTheme);
   }, [appTheme]);
+
+  const hasLocalImages = useMemo(() => {
+    return hasLocalUploadedImages(uploadedAssets, userImage, customCode);
+  }, [uploadedAssets, userImage, customCode]);
+
+  // Restore design from URL hash on load (stateless, zero localStorage/IndexedDB)
+  useEffect(() => {
+    const restoreFromHash = async () => {
+      const hash = window.location.hash;
+      if (!hash || !hash.includes('share=')) return;
+
+      const restored = await decodeShareUrl(hash);
+      if (restored) {
+        setCustomCodeType(restored.t);
+        setCustomCode(restored.c);
+        const matchedPreset = ASPECT_PRESETS.find((p) => p.id === restored.p);
+        if (matchedPreset) {
+          setCurrentPreset(matchedPreset);
+        }
+        const matchedTheme = Object.values(COLOR_THEMES).find((th) => th.id === restored.th);
+        if (matchedTheme) {
+          setCurrentTheme(matchedTheme);
+        }
+        setIsEditorOpen(true);
+        setAutoFit(true);
+        setExportNotice('Shared design loaded from link!');
+        setTimeout(() => setExportNotice(null), 3500);
+      }
+    };
+
+    restoreFromHash();
+  }, []);
 
   useEffect(() => {
     const hasStartedCreating = customCode.trim().length > 0 || uploadedAssets.length > 0;
@@ -260,6 +294,37 @@ export function App() {
     }
   };
 
+  // Share design via URL hash (stateless, compressed, zero localStorage/IndexedDB)
+  const handleShare = async () => {
+    if (hasLocalImages) {
+      setExportNotice('URL sharing is not available with uploaded images. Use web image URLs instead.');
+      setTimeout(() => setExportNotice(null), 4000);
+      return;
+    }
+
+    try {
+      const hashData = await encodeShareUrl({
+        t: customCodeType,
+        c: customCode,
+        p: currentPreset.id,
+        th: currentTheme.id,
+      });
+
+      const newUrl = `${window.location.origin}${window.location.pathname}#share=${hashData}`;
+      window.history.replaceState(null, '', newUrl);
+
+      await navigator.clipboard.writeText(newUrl);
+      setCopiedShareLink(true);
+      setExportNotice('Share link copied to clipboard!');
+      setTimeout(() => setCopiedShareLink(false), 2500);
+      setTimeout(() => setExportNotice(null), 3500);
+    } catch (err) {
+      console.error('Failed to encode/copy share URL', err);
+      setExportNotice('Failed to generate share link');
+      setTimeout(() => setExportNotice(null), 3000);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-studio-950 text-slate-100">
       {/* Top Navigation Bar */}
@@ -284,6 +349,9 @@ export function App() {
         copiedImage={copiedImage}
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={handleToggleSidebar}
+        onShare={handleShare}
+        hasLocalImages={hasLocalImages}
+        sharedCopied={copiedShareLink}
       />
 
       {/* Main Workspace Body: [Left Tools & Presets] | [Center Live Canvas] | [Right Code Editor] */}
@@ -574,7 +642,14 @@ export function App() {
       <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
 
       {exportNotice && (
-        <div role="status" className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-lg border border-emerald-500/30 bg-studio-850 px-4 py-2.5 text-sm font-medium text-emerald-300 shadow-xl">
+        <div
+          role="status"
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-xl border px-4 py-2.5 text-sm font-semibold shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-200 ${
+            exportNotice.includes('not available') || exportNotice.includes('Failed')
+              ? 'border-amber-500/40 bg-studio-900/95 text-amber-300 shadow-amber-500/10'
+              : 'border-emerald-500/40 bg-studio-900/95 text-emerald-300 shadow-emerald-500/10'
+          }`}
+        >
           {exportNotice}
         </div>
       )}

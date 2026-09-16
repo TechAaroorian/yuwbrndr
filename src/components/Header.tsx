@@ -42,6 +42,9 @@ interface Props {
   copiedImage: boolean;
   isSidebarOpen?: boolean;
   onToggleSidebar?: () => void;
+  onShare: () => void;
+  hasLocalImages: boolean;
+  sharedCopied: boolean;
 }
 
 export const Header: React.FC<Props> = ({
@@ -65,6 +68,9 @@ export const Header: React.FC<Props> = ({
   copiedImage,
   isSidebarOpen = true,
   onToggleSidebar,
+  onShare,
+  hasLocalImages,
+  sharedCopied,
 }) => {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
@@ -329,6 +335,31 @@ export const Header: React.FC<Props> = ({
           )}
         </div>
 
+        {/* Share URL Button (Desktop & Tablet) */}
+        <button
+          onClick={onShare}
+          disabled={hasLocalImages}
+          className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+            hasLocalImages
+              ? 'border-white/5 bg-white/5 text-slate-500 cursor-not-allowed opacity-60'
+              : sharedCopied
+              ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300 shadow-sm'
+              : 'border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-200 hover:text-white'
+          }`}
+          title={
+            hasLocalImages
+              ? 'URL sharing is not available with uploaded images. Use web image URLs (https://...) instead.'
+              : 'Share design via link (code encoded in URL hash)'
+          }
+        >
+          {sharedCopied ? (
+            <Check className="w-3.5 h-3.5 text-emerald-400" />
+          ) : (
+            <Share2 className={`w-3.5 h-3.5 ${hasLocalImages ? 'text-slate-500' : 'text-cyan-400'}`} />
+          )}
+          <span className="hidden md:inline">{sharedCopied ? 'Link Copied!' : 'Share'}</span>
+        </button>
+
         {/* Copy Image Button (Desktop) */}
         <button
           onClick={onCopyImage}
@@ -428,6 +459,43 @@ export const Header: React.FC<Props> = ({
               >
                 <Copy className="w-4 h-4 text-indigo-400" />
                 <span>{copiedImage ? 'PNG Copied!' : 'Copy PNG to Clipboard'}</span>
+              </button>
+
+              {/* Share Design Link on Mobile */}
+              <button
+                onClick={() => {
+                  if (!hasLocalImages) {
+                    onShare();
+                    setShowMobileMenu(false);
+                  }
+                }}
+                disabled={hasLocalImages}
+                className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs transition-colors ${
+                  hasLocalImages
+                    ? 'text-slate-500 cursor-not-allowed opacity-60'
+                    : 'text-slate-200 hover:bg-white/5'
+                }`}
+                title={
+                  hasLocalImages
+                    ? 'URL sharing is not available with uploaded images'
+                    : 'Share design via URL link'
+                }
+              >
+                {sharedCopied ? (
+                  <Check className="w-4 h-4 text-emerald-400" />
+                ) : (
+                  <Share2 className={`w-4 h-4 ${hasLocalImages ? 'text-slate-500' : 'text-cyan-400'}`} />
+                )}
+                <div className="text-left">
+                  <div className={sharedCopied ? 'text-emerald-300 font-semibold' : ''}>
+                    {sharedCopied ? 'Link Copied!' : 'Share Design Link'}
+                  </div>
+                  {hasLocalImages && (
+                    <div className="text-[10px] text-amber-400/80">
+                      Not available with uploaded images
+                    </div>
+                  )}
+                </div>
               </button>
 
               {/* Templates Gallery */}
