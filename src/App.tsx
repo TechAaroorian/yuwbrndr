@@ -383,7 +383,7 @@ export function App() {
         <div className="fixed inset-0 z-50 bg-studio-950 flex flex-col animate-in fade-in duration-200">
           <div className="h-14 px-6 border-b border-white/10 bg-studio-900 flex items-center justify-between select-none">
             <div className="flex items-center gap-3">
-              <span className="font-extrabold text-white tracking-tight">YuwBrndr Fullscreen Code Studio</span>
+              <span className="font-extrabold text-white tracking-tight">Yuwbrndr Fullscreen Code Studio</span>
               <span className="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">
                 {currentPreset.name} ({currentPreset.width}×{currentPreset.height})
               </span>

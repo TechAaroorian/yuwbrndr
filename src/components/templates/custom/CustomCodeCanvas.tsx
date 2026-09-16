@@ -85,7 +85,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
 
   if (isEmpty) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center p-12 text-center" style={{ background: theme.background }}>
+      <div className="design-canvas w-full h-full flex flex-col items-center justify-center p-12 text-center" style={{ background: theme.background }}>
         <div className="w-14 h-14 rounded-xl border flex items-center justify-center mb-4" style={{ background: `${theme.primary}20`, borderColor: `${theme.primary}50`, color: theme.accent }}>
           <Code2 className="w-7 h-7" />
         </div>
@@ -100,7 +100,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   }
 
   return (
-    <div className="w-full h-full relative overflow-hidden" style={{ background: theme.background }}>
+    <div className="design-canvas w-full h-full relative overflow-hidden" style={{ background: theme.background }}>
       <iframe
         title="Sandboxed design preview"
         data-yuwbrndr-preview={codeType}

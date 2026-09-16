@@ -16,7 +16,7 @@ export const AboutModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <div className="flex items-center gap-3">
             <img src="./yuwbrndr-logo.svg" alt="" className="h-11 w-11" />
             <div>
-              <h2 className="text-xl font-bold text-slate-100">About YuwBrndr</h2>
+              <h2 className="text-xl font-bold text-slate-100">About Yuwbrndr</h2>
               <p className="mt-1 text-sm text-slate-400">A browser-based studio for creating social graphics from code.</p>
             </div>
           </div>
@@ -27,7 +27,7 @@ export const AboutModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         <div className="space-y-5 p-6">
           <p className="text-sm leading-7 text-slate-300">
-            YuwBrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed locally in the browser and are not intentionally sent to a YuwBrndr server.
+            Yuwbrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed locally in the browser and are not intentionally sent to a Yuwbrndr server.
           </p>
 
           <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">

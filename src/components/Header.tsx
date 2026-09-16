@@ -97,7 +97,7 @@ export const Header: React.FC<Props> = ({
         <img src="./yuwbrndr-logo.svg" alt="" className="w-9 h-9 shrink-0" />
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-extrabold text-slate-100 tracking-tight text-lg">YuwBrndr</span>
+            <span className="font-extrabold text-slate-100 tracking-tight text-lg">Yuwbrndr</span>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">
               Studio
             </span>
@@ -226,7 +226,7 @@ export const Header: React.FC<Props> = ({
           onClick={onOpenAbout}
           className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
           title="About and usage responsibility"
-          aria-label="About YuwBrndr"
+          aria-label="About Yuwbrndr"
         >
           <Info className="w-4 h-4" />
         </button>

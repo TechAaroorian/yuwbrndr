@@ -1,6 +1,6 @@
-# YuwBrndr
+# Yuwbrndr
 
-YuwBrndr is a browser-based studio for creating social graphics from HTML, CSS, Tailwind-compatible utilities, and Canvas JavaScript. It combines a live code editor, platform-sized canvases, reusable templates, image assets, and PNG export in one workspace.
+Yuwbrndr is a browser-based studio for creating social graphics from HTML, CSS, Tailwind-compatible utilities, and Canvas JavaScript. It combines a live code editor, platform-sized canvases, reusable templates, image assets, and PNG export in one workspace.
 
 ## Features
 

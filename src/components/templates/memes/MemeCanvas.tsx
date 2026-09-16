@@ -60,7 +60,7 @@ export const MemeCanvas: React.FC<Props> = ({ data, theme }) => {
 
             <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-500">
               <span>Status: 137 (Fatal Error)</span>
-              <span className="text-indigo-400 font-medium">#DevLife #YuwBrndr</span>
+              <span className="text-indigo-400 font-medium">#DevLife #Yuwbrndr</span>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export const MemeCanvas: React.FC<Props> = ({ data, theme }) => {
           </p>
 
           <div className="text-xs text-slate-500 font-mono py-3 border-y border-white/10">
-            {data.timestamp} • YuwBrndr for Web
+            {data.timestamp} • Yuwbrndr for Web
           </div>
 
           {/* Tweet Metrics */}
