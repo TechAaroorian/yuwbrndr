@@ -80,7 +80,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         try { const scale=Math.max(1,Number(event.data.scale)||1); const output=document.createElement('canvas'); output.width=width*scale; output.height=height*scale; const outputCtx=output.getContext('2d'); outputCtx.drawImage(canvas,0,0,output.width,output.height); send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')}); }
         catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
       }});
-    <\/script></body></html>`;
+    </script></body></html>`;
   }, [code, codeType, frameId, height, runtimeCss, theme.background, useAsBackground, userImage, width]);
 
   if (isEmpty) {

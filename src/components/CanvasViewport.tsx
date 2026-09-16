@@ -93,12 +93,12 @@ export const CanvasViewport: React.FC<Props> = ({
   const canvasHeight = Math.round(currentPreset.height * zoom);
 
   return (
-    <main className="flex-1 h-[calc(100vh-4rem)] bg-studio-950 overflow-hidden flex flex-col items-center justify-between p-4 relative select-none min-w-0">
-      {/* Floating Expand Sidebar Button when sidebar is collapsed */}
+    <main className="flex-1 h-full min-h-0 bg-studio-950 overflow-hidden flex flex-col items-center justify-between p-2 sm:p-4 relative select-none min-w-0">
+      {/* Floating Expand Sidebar Button when sidebar is collapsed (Desktop only) */}
       {!isSidebarOpen && onToggleSidebar && (
         <button
           onClick={onToggleSidebar}
-          className="absolute left-3 top-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-studio-900/90 border border-white/15 text-xs font-semibold text-slate-200 hover:text-white hover:bg-studio-800 shadow-xl backdrop-blur-md transition-all hover:border-indigo-500/40 group active:scale-95"
+          className="hidden lg:flex absolute left-3 top-3 z-30 items-center gap-1.5 px-3 py-1.5 rounded-xl bg-studio-900/90 border border-white/15 text-xs font-semibold text-slate-200 hover:text-white hover:bg-studio-800 shadow-xl backdrop-blur-md transition-all hover:border-indigo-500/40 group active:scale-95"
           title="Expand Left Panel (Ctrl+B)"
         >
           <PanelLeftOpen className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
@@ -107,33 +107,33 @@ export const CanvasViewport: React.FC<Props> = ({
       )}
 
       {/* Top Floating Platform Info & Resolution Banner */}
-      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-3 px-3.5 py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0">
+      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0">
         <div className="flex items-center gap-2 truncate">
-          <div className="flex items-center gap-1.5 truncate text-[11px]">
+          <div className="flex items-center gap-1.5 truncate text-[10px] sm:text-[11px]">
             <span className="font-bold text-slate-100 truncate">{currentPreset.name}</span>
             <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold shrink-0">
               {currentPreset.aspectRatio}
             </span>
-            <span className="text-cyan-400 font-bold shrink-0">{currentPreset.width} × {currentPreset.height} px</span>
+            <span className="text-cyan-400 font-bold shrink-0 hidden xs:inline">{currentPreset.width} × {currentPreset.height} px</span>
             <span className="text-slate-500 shrink-0">({Math.round(zoom * 100)}%)</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {!autoFit && (
             <button
               onClick={onToggleAutoFit}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/40 border border-indigo-500/30 text-[11px] font-semibold transition-colors"
+              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/40 border border-indigo-500/30 text-[10px] sm:text-[11px] font-semibold transition-colors"
               title="Fit to Screen"
             >
               <Maximize2 className="w-3 h-3" />
-              <span>Auto Fit</span>
+              <span>Fit</span>
             </button>
           )}
 
           <button
             onClick={onOpenPlatformGuide}
-            className="inline-flex items-center gap-0.5 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="inline-flex items-center gap-0.5 text-[10px] sm:text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
           >
             <span>Specs</span>
             <ChevronRight className="w-3 h-3" />
