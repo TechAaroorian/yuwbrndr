@@ -40,6 +40,15 @@ async function renderElement(element: HTMLElement, scale: number): Promise<strin
   return toPng(body, { pixelRatio: scale, cacheBust: true });
 }
 
+export async function renderElementAsPngBlob(
+  element: HTMLElement,
+  scale: 1 | 2 | 4 = 2
+): Promise<Blob> {
+  const dataUrl = await renderElement(element, scale);
+  const response = await fetch(dataUrl);
+  return response.blob();
+}
+
 /**
  * Downloads a DOM element as a high-DPI PNG image
  */

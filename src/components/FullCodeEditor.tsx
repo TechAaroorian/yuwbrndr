@@ -33,7 +33,7 @@ export type EditorDockMode = 'sidebar' | 'bottom' | 'split' | 'fullscreen';
 
 interface Props {
   codeType: 'html' | 'canvas';
-  setCodeType: React.Dispatch<React.SetStateAction<'html' | 'canvas'>>;
+  setCodeType: (type: 'html' | 'canvas') => void;
   code: string;
   onChange: (value: string) => void;
   onClear: () => void;

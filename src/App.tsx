@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { flushSync } from 'react-dom';
 import { 
   AspectPreset, 
   ASPECT_PRESETS, 
@@ -19,7 +20,8 @@ import { StickersModal } from './components/StickersModal';
 import { CapabilitiesModal } from './components/CapabilitiesModal';
 import { AboutModal } from './components/AboutModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
-import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
+import { MAX_SLIDES, SlideStrip, StudioSlide } from './components/SlideStrip';
+import { exportElementAsPng, copyElementToClipboard, renderElementAsPngBlob } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
 import {
   decodeShareUrl,
@@ -61,6 +63,7 @@ async function copyShareUrl(url: string): Promise<void> {
 const MAX_ASSETS_COUNT = 5; // Max 5 uploaded assets in RAM
 
 export function App() {
+  const [documentMode, setDocumentMode] = useState<'design' | 'slides'>('design');
   const [customCodeType, setCustomCodeType] = useState<'html' | 'canvas'>('html');
   const [customCode, setCustomCode] = useState<string>(''); // Clean empty canvas on initial load!
   const [dockMode, setDockMode] = useState<EditorDockMode>('sidebar');
@@ -96,9 +99,117 @@ export function App() {
   });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [slides, setSlides] = useState<StudioSlide[]>([]);
+  const [activeSlideId, setActiveSlideId] = useState('');
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const hasShownUsageNotice = useRef(false);
+  const designDraftRef = useRef<{ code: string; codeType: 'html' | 'canvas' }>({
+    code: '',
+    codeType: 'html',
+  });
+
+  const handleCodeChange = (code: string) => {
+    setCustomCode(code);
+    if (documentMode === 'design') {
+      designDraftRef.current.code = code;
+    }
+    if (documentMode === 'slides' && activeSlideId) {
+      setSlides((current) => current.map((slide) =>
+        slide.id === activeSlideId ? { ...slide, code } : slide
+      ));
+    }
+  };
+
+  const handleCodeTypeChange = (codeType: 'html' | 'canvas') => {
+    setCustomCodeType(codeType);
+    if (documentMode === 'design') {
+      designDraftRef.current.codeType = codeType;
+    }
+    if (documentMode === 'slides' && activeSlideId) {
+      setSlides((current) => current.map((slide) =>
+        slide.id === activeSlideId ? { ...slide, codeType } : slide
+      ));
+    }
+  };
+
+  const handleDocumentModeChange = (mode: 'design' | 'slides') => {
+    if (mode === 'slides') {
+      designDraftRef.current = { code: customCode, codeType: customCodeType };
+      if (slides.length === 0) {
+        const firstSlide: StudioSlide = {
+          id: crypto.randomUUID(),
+          name: 'Cover',
+          codeType: customCodeType,
+          code: customCode,
+        };
+        setSlides([firstSlide]);
+        setActiveSlideId(firstSlide.id);
+      } else {
+        const active = slides.find((slide) => slide.id === activeSlideId) ?? slides[0];
+        setActiveSlideId(active.id);
+        setCustomCodeType(active.codeType);
+        setCustomCode(active.code);
+      }
+    } else {
+      setCustomCodeType(designDraftRef.current.codeType);
+      setCustomCode(designDraftRef.current.code);
+    }
+    setDocumentMode(mode);
+    setAutoFit(true);
+  };
+
+  const handleSelectSlide = (id: string) => {
+    const slide = slides.find((item) => item.id === id);
+    if (!slide) return;
+    setActiveSlideId(id);
+    setCustomCodeType(slide.codeType);
+    setCustomCode(slide.code);
+    setAutoFit(true);
+  };
+
+  const handleAddSlide = () => {
+    if (slides.length >= MAX_SLIDES) return;
+    const slide: StudioSlide = {
+      id: crypto.randomUUID(),
+      name: `Slide ${slides.length + 1}`,
+      codeType: customCodeType,
+      code: '',
+    };
+    setSlides((current) => [...current, slide]);
+    setActiveSlideId(slide.id);
+    setCustomCode('');
+    setAutoFit(true);
+  };
+
+  const handleDuplicateSlide = () => {
+    if (slides.length >= MAX_SLIDES) return;
+    const activeIndex = slides.findIndex((slide) => slide.id === activeSlideId);
+    if (activeIndex < 0) return;
+    const source = slides[activeIndex];
+    const duplicate: StudioSlide = {
+      ...source,
+      id: crypto.randomUUID(),
+      name: `${source.name} copy`,
+    };
+    const next = [...slides];
+    next.splice(activeIndex + 1, 0, duplicate);
+    setSlides(next);
+    setActiveSlideId(duplicate.id);
+    setCustomCodeType(duplicate.codeType);
+    setCustomCode(duplicate.code);
+  };
+
+  const handleDeleteSlide = () => {
+    if (slides.length <= 1) return;
+    const activeIndex = slides.findIndex((slide) => slide.id === activeSlideId);
+    const next = slides.filter((slide) => slide.id !== activeSlideId);
+    const replacement = next[Math.min(activeIndex, next.length - 1)];
+    setSlides(next);
+    setActiveSlideId(replacement.id);
+    setCustomCodeType(replacement.codeType);
+    setCustomCode(replacement.code);
+  };
 
   // Global keyboard shortcut for toggling sidebar: Ctrl+B or Cmd+B
   useEffect(() => {
@@ -269,26 +380,26 @@ export function App() {
   const handleInsertImageToCode = (imageUrl: string) => {
     if (customCodeType === 'html') {
       const imgSnippet = `\n  <div class="flex justify-center my-4">\n    <img src="${imageUrl}" alt="Custom asset" class="max-h-64 rounded-2xl shadow-2xl border border-white/10 object-contain" />\n  </div>`;
-      setCustomCode((prev) => {
-        if (!prev || prev.trim() === '') {
+      handleCodeChange((() => {
+        if (!customCode || customCode.trim() === '') {
           return `<div class="w-full h-full p-8 bg-[#090a10] text-white flex flex-col items-center justify-center">${imgSnippet}\n</div>`;
         }
-        return prev + imgSnippet;
-      });
+        return customCode + imgSnippet;
+      })());
     } else {
       const canvasSnippet = `\n// Draw custom uploaded image\nconst img = new Image();\nimg.onload = () => {\n  ctx.drawImage(img, (width - 400) / 2, (height - 300) / 2, 400, 300);\n};\nimg.src = "${imageUrl}";\n`;
-      setCustomCode((prev) => prev + canvasSnippet);
+      handleCodeChange(customCode + canvasSnippet);
     }
   };
 
   // Load starter sample
   const handleLoadSample = (type: 'html' | 'canvas') => {
     if (type === 'html') {
-      setCustomCodeType('html');
-      setCustomCode(CODE_PRESETS[0].code); // Promise.all vs allSettled
+      handleCodeTypeChange('html');
+      handleCodeChange(CODE_PRESETS[0].code); // Promise.all vs allSettled
     } else {
-      setCustomCodeType('canvas');
-      setCustomCode(CODE_PRESETS[3].code); // 3D Isometric Tech Cube Canvas
+      handleCodeTypeChange('canvas');
+      handleCodeChange(CODE_PRESETS[3].code); // 3D Isometric Tech Cube Canvas
     }
     setIsEditorOpen(true);
     setAutoFit(true);
@@ -300,8 +411,8 @@ export function App() {
 
   // Load selected preset from Examples Gallery
   const handleSelectPreset = (preset: CodePreset) => {
-    setCustomCodeType(preset.type);
-    setCustomCode(preset.code);
+    handleCodeTypeChange(preset.type);
+    handleCodeChange(preset.code);
     setIsEditorOpen(true);
     setAutoFit(true);
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {
@@ -317,7 +428,9 @@ export function App() {
     try {
       await exportElementAsPng(canvasRef.current, {
         scale,
-        fileName: `yuwbrndr-${scale}x.png`,
+        fileName: documentMode === 'slides'
+          ? `yuwbrndr-slide-${Math.max(1, slides.findIndex((slide) => slide.id === activeSlideId) + 1)}-${scale}x.png`
+          : `yuwbrndr-${scale}x.png`,
       });
       setExportNotice(`PNG exported at ${currentPreset.width * scale} × ${currentPreset.height * scale}px`);
       setTimeout(() => setExportNotice(null), 3000);
@@ -330,7 +443,7 @@ export function App() {
 
   const handleClearCode = () => {
     if (!customCode.trim() || window.confirm('Clear the current canvas code? This cannot be undone.')) {
-      setCustomCode('');
+      handleCodeChange('');
     }
   };
 
@@ -345,6 +458,70 @@ export function App() {
       setTimeout(() => setCopiedImage(false), 2000);
     } else {
       alert('Unable to copy directly to clipboard in this browser. Try the Export button.');
+    }
+  };
+
+  const waitForSlidePreview = async () => {
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    const frame = canvasRef.current?.querySelector('iframe[data-yuwbrndr-preview]');
+    if (!frame) return;
+    await new Promise<void>((resolve) => {
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        window.clearTimeout(timer);
+        resolve();
+      };
+      const timer = window.setTimeout(done, 1200);
+      frame.addEventListener('load', done, { once: true });
+    });
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  };
+
+  const handleExportSlidesZip = async () => {
+    if (!canvasRef.current || slides.length === 0) return;
+    const previousSlide = slides.find((slide) => slide.id === activeSlideId) ?? slides[0];
+    setIsExporting(true);
+    setExportNotice(`Preparing 1 of ${slides.length} slides…`);
+
+    try {
+      const { default: JSZip } = await import('jszip');
+      const zip = new JSZip();
+      for (let index = 0; index < slides.length; index += 1) {
+        const slide = slides[index];
+        flushSync(() => {
+          setActiveSlideId(slide.id);
+          setCustomCodeType(slide.codeType);
+          setCustomCode(slide.code);
+          setExportNotice(`Preparing ${index + 1} of ${slides.length} slides…`);
+        });
+        await waitForSlidePreview();
+        if (!canvasRef.current) throw new Error('Slide preview is unavailable.');
+        const blob = await renderElementAsPngBlob(canvasRef.current, 2);
+        const safeName = slide.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `slide-${index + 1}`;
+        zip.file(`${String(index + 1).padStart(2, '0')}-${safeName}.png`, blob);
+      }
+
+      const archive = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } });
+      const url = URL.createObjectURL(archive);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'yuwbrndr-slides.zip';
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setExportNotice(`${slides.length} slides exported as a ZIP.`);
+    } catch (error) {
+      console.error('Failed to export slide deck', error);
+      setExportNotice('Unable to export the slide deck. Check the slide code and try again.');
+    } finally {
+      flushSync(() => {
+        setActiveSlideId(previousSlide.id);
+        setCustomCodeType(previousSlide.codeType);
+        setCustomCode(previousSlide.code);
+      });
+      setIsExporting(false);
+      window.setTimeout(() => setExportNotice(null), 4000);
     }
   };
 
@@ -417,6 +594,8 @@ export function App() {
         onShare={handleShare}
         hasLocalImages={hasLocalImages}
         sharedCopied={copiedShareLink}
+        documentMode={documentMode}
+        onDocumentModeChange={handleDocumentModeChange}
       />
 
       {/* Main Workspace Body: [Left Tools & Presets] | [Center Live Canvas] | [Right Code Editor] */}
@@ -449,6 +628,21 @@ export function App() {
             mobileTab === 'canvas' ? 'flex' : 'hidden lg:flex'
           }`}
         >
+          {documentMode === 'slides' && (
+            <SlideStrip
+              slides={slides}
+              activeSlideId={activeSlideId}
+              onSelect={handleSelectSlide}
+              onAdd={handleAddSlide}
+              onDuplicate={handleDuplicateSlide}
+              onDelete={handleDeleteSlide}
+              onExport={() => handleExport(2)}
+              onCopy={handleCopyImage}
+              onExportAll={handleExportSlidesZip}
+              isExporting={isExporting}
+              copiedImage={copiedImage}
+            />
+          )}
           <CanvasViewport
             currentPreset={currentPreset}
             currentTheme={currentTheme}
@@ -472,9 +666,9 @@ export function App() {
             <div className="h-[360px] w-full p-3 border-t border-white/10 bg-studio-950 flex flex-col shrink-0 z-20 shadow-2xl animate-in slide-in-from-bottom duration-200">
               <FullCodeEditor
                 codeType={customCodeType}
-                setCodeType={setCustomCodeType}
+                setCodeType={handleCodeTypeChange}
                 code={customCode}
-                onChange={setCustomCode}
+                onChange={handleCodeChange}
                 onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
@@ -501,9 +695,9 @@ export function App() {
             >
               <FullCodeEditor
                 codeType={customCodeType}
-                setCodeType={setCustomCodeType}
+                setCodeType={handleCodeTypeChange}
                 code={customCode}
-                onChange={setCustomCode}
+                onChange={handleCodeChange}
                 onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
@@ -619,9 +813,9 @@ export function App() {
             <div className="flex-1 h-full min-w-0">
               <FullCodeEditor
                 codeType={customCodeType}
-                setCodeType={setCustomCodeType}
+                setCodeType={handleCodeTypeChange}
                 code={customCode}
-                onChange={setCustomCode}
+                onChange={handleCodeChange}
                 onClear={handleClearCode}
                 onLoadSample={handleLoadSample}
                 dockMode={dockMode}
@@ -677,14 +871,14 @@ export function App() {
       <FontsModal
         isOpen={isFontsOpen}
         onClose={() => setIsFontsOpen(false)}
-        onInsertSnippet={(snippet) => setCustomCode((prev) => prev ? `${prev}\n\n${snippet}` : snippet)}
+        onInsertSnippet={(snippet) => handleCodeChange(customCode ? `${customCode}\n\n${snippet}` : snippet)}
       />
 
       {/* Vectors, Lucide Icons & Meme Stickers Modal */}
       <StickersModal
         isOpen={isStickersOpen}
         onClose={() => setIsStickersOpen(false)}
-        onInsertSnippet={(snippet) => setCustomCode((prev) => prev ? `${prev}\n\n${snippet}` : snippet)}
+        onInsertSnippet={(snippet) => handleCodeChange(customCode ? `${customCode}\n\n${snippet}` : snippet)}
       />
 
       {/* Developer Code Inspector Modal */}
