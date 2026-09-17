@@ -10,7 +10,8 @@ import {
   X,
   PanelLeftClose,
   Type,
-  Smile
+  Smile,
+  Shapes
 } from 'lucide-react';
 import { UploadedAsset } from '../types/studio';
 
@@ -20,6 +21,7 @@ interface Props {
   onOpenExamples: () => void;
   onOpenFonts?: () => void;
   onOpenStickers?: () => void;
+  onOpenMemeStudio?: () => void;
   onClearCode: () => void;
   userImage: string | null;
   setUserImage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -41,6 +43,7 @@ export const Sidebar: React.FC<Props> = ({
   onOpenExamples,
   onOpenFonts,
   onOpenStickers,
+  onOpenMemeStudio,
   onClearCode,
   userImage,
   setUserImage,
@@ -144,6 +147,12 @@ export const Sidebar: React.FC<Props> = ({
             <span>Browse templates</span>
           </button>
           <button onClick={() => onLoadSample(customCodeType)} className="w-full py-2 px-3 rounded-lg border border-white/10 bg-studio-800 hover:bg-studio-700 text-xs font-semibold transition-colors">Start with a sample</button>
+          {onOpenMemeStudio && (
+            <button onClick={onOpenMemeStudio} className="w-full py-2.5 px-3 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-200 text-xs font-semibold flex items-center justify-center gap-2 transition-colors">
+              <Shapes className="w-4 h-4" />
+              <span>Open Visual Meme Studio</span>
+            </button>
+          )}
         </div>}
 
         {activeTab === 'assets' && <><div className="grid grid-cols-2 gap-2">

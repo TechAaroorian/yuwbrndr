@@ -18,6 +18,7 @@ import { FontsModal } from './components/FontsModal';
 import { StickersModal } from './components/StickersModal';
 import { CapabilitiesModal } from './components/CapabilitiesModal';
 import { AboutModal } from './components/AboutModal';
+import { VisualMemeEditor } from './components/VisualMemeEditor';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { exportElementAsPng, copyElementToClipboard } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
@@ -96,6 +97,7 @@ export function App() {
   });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isVisualMemeOpen, setIsVisualMemeOpen] = useState(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const hasShownUsageNotice = useRef(false);
@@ -428,6 +430,7 @@ export function App() {
           onOpenExamples={() => setIsExamplesOpen(true)}
           onOpenFonts={() => setIsFontsOpen(true)}
           onOpenStickers={() => setIsStickersOpen(true)}
+          onOpenMemeStudio={() => setIsVisualMemeOpen(true)}
           onClearCode={handleClearCode}
           userImage={userImage}
           setUserImage={setUserImage}
@@ -705,6 +708,7 @@ export function App() {
 
       <CapabilitiesModal isOpen={isCapabilitiesOpen} onClose={() => setIsCapabilitiesOpen(false)} />
       <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+      <VisualMemeEditor isOpen={isVisualMemeOpen} onClose={() => setIsVisualMemeOpen(false)} />
 
       {exportNotice && (
         <div
