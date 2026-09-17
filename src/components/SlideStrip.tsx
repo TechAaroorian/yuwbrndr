@@ -1,5 +1,5 @@
 import React from 'react';
-import { Archive, Check, Copy, Download, Plus, Trash2, CopyPlus } from 'lucide-react';
+import { Archive, Check, Copy, Download, FileDown, Plus, Trash2, CopyPlus } from 'lucide-react';
 
 export interface StudioSlide {
   id: string;
@@ -18,6 +18,7 @@ interface Props {
   onExport: () => void;
   onCopy: () => void;
   onExportAll: () => void;
+  onExportPdf: () => void;
   isExporting: boolean;
   copiedImage: boolean;
 }
@@ -34,6 +35,7 @@ export const SlideStrip: React.FC<Props> = ({
   onExport,
   onCopy,
   onExportAll,
+  onExportPdf,
   isExporting,
   copiedImage,
 }) => (
@@ -100,6 +102,15 @@ export const SlideStrip: React.FC<Props> = ({
       >
         <Archive className="w-3.5 h-3.5" />
         <span className="hidden 2xl:inline">Export ZIP</span>
+      </button>
+      <button
+        onClick={onExportPdf}
+        disabled={isExporting}
+        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-500/20 disabled:opacity-50"
+        title="Export all slides as a multi-page PDF"
+      >
+        <FileDown className="w-3.5 h-3.5" />
+        <span className="hidden 2xl:inline">Export PDF</span>
       </button>
       <button
         onClick={onExport}
