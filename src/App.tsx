@@ -525,6 +525,66 @@ export function App() {
     }
   };
 
+  const handleExportSlidesPdf = async () => {
+    if (!canvasRef.current || slides.length === 0) return;
+    const previousSlide = slides.find((slide) => slide.id === activeSlideId) ?? slides[0];
+    const orientation = currentPreset.width > currentPreset.height ? 'landscape' : 'portrait';
+    setIsExporting(true);
+    setExportNotice(`Preparing PDF page 1 of ${slides.length}…`);
+
+    try {
+      const { jsPDF } = await import('jspdf');
+      const pdf = new jsPDF({
+        orientation,
+        unit: 'px',
+        format: [currentPreset.width, currentPreset.height],
+        hotfixes: ['px_scaling'],
+        compress: true,
+      });
+
+      for (let index = 0; index < slides.length; index += 1) {
+        const slide = slides[index];
+        flushSync(() => {
+          setActiveSlideId(slide.id);
+          setCustomCodeType(slide.codeType);
+          setCustomCode(slide.code);
+          setExportNotice(`Preparing PDF page ${index + 1} of ${slides.length}…`);
+        });
+        await waitForSlidePreview();
+        if (!canvasRef.current) throw new Error('Slide preview is unavailable.');
+        const blob = await renderElementAsPngBlob(canvasRef.current, 2);
+        const image = new Uint8Array(await blob.arrayBuffer());
+        if (index > 0) {
+          pdf.addPage([currentPreset.width, currentPreset.height], orientation);
+        }
+        pdf.addImage(
+          image,
+          'PNG',
+          0,
+          0,
+          currentPreset.width,
+          currentPreset.height,
+          undefined,
+          'FAST'
+        );
+      }
+
+      pdf.save('yuwbrndr-slides.pdf');
+      setExportNotice(`${slides.length}-page PDF exported successfully.`);
+    } catch (error) {
+      console.error('Failed to export slide PDF', error);
+      setExportNotice('Unable to export the PDF. Check the slide code and try again.');
+    } finally {
+      flushSync(() => {
+        setActiveSlideId(previousSlide.id);
+        setCustomCodeType(previousSlide.codeType);
+        setCustomCode(previousSlide.code);
+      });
+      setIsExporting(false);
+      window.setTimeout(() => setExportNotice(null), 4000);
+    }
+  };
+
   // Share design via URL hash (stateless, compressed, zero localStorage/IndexedDB)
   const handleShare = async () => {
     if (hasLocalImages) {
@@ -639,6 +699,7 @@ export function App() {
               onExport={() => handleExport(2)}
               onCopy={handleCopyImage}
               onExportAll={handleExportSlidesZip}
+              onExportPdf={handleExportSlidesPdf}
               isExporting={isExporting}
               copiedImage={copiedImage}
             />
