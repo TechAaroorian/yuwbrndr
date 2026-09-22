@@ -459,6 +459,129 @@ ctx.font = 'bold 14px "JetBrains Mono", monospace';
 ctx.fillText('HIGH PRECISION 2D CANVAS GRAPHIC', cx, 140);
 `
   },
+  {
+    id: 'handdrawn-canvas-dashboard',
+    name: 'Hand-Drawn Sketch Telemetry (Rough.js Canvas)',
+    category: '3D & Canvas',
+    type: 'canvas',
+    description: 'Sketchy 2D hand-drawn dashboard with hatched fills, organic circle meters, and Comic Neue typography.',
+    code: `// 1. Hand-Drawn Sketch Dashboard on 2D Canvas with Rough.js
+ctx.fillStyle = '#faf8f5';
+ctx.fillRect(0, 0, width, height);
+
+// Draw faint notebook grid
+ctx.strokeStyle = 'rgba(15, 23, 42, 0.05)';
+ctx.lineWidth = 1;
+for (let x = 0; x < width; x += 32) {
+  ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+}
+for (let y = 0; y < height; y += 32) {
+  ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+}
+
+const rc = rough.canvas(canvas);
+
+// Outer hand-drawn border
+rc.rectangle(24, 24, width - 48, height - 48, {
+  roughness: 1.5,
+  stroke: '#0f172a',
+  strokeWidth: 3
+});
+
+// Title Section
+ctx.fillStyle = '#0f172a';
+ctx.font = 'bold 36px "Comic Neue", cursive, sans-serif';
+ctx.textAlign = 'left';
+ctx.fillText('⚡ System Health & Throughput', 56, 80);
+
+ctx.font = 'bold 16px "Comic Neue", cursive, sans-serif';
+ctx.fillStyle = '#475569';
+ctx.fillText('Realtime Hand-Drawn Telemetry · Rendered with Rough.js & 2D Canvas', 56, 110);
+
+// Card 1: Traffic Peak (Cross-hatch fill)
+rc.rectangle(56, 140, 320, 240, {
+  roughness: 2,
+  stroke: '#0f172a',
+  strokeWidth: 2.5,
+  fill: '#fed7aa',
+  fillStyle: 'cross-hatch',
+  hachureGap: 8
+});
+
+ctx.fillStyle = '#0f172a';
+ctx.font = 'bold 22px "Comic Neue", cursive, sans-serif';
+ctx.fillText('Incoming Traffic', 80, 185);
+
+ctx.font = 'bold 50px "Comic Neue", cursive, sans-serif';
+ctx.fillText('14.2k', 80, 250);
+
+ctx.font = 'bold 17px "Comic Neue", cursive, sans-serif';
+ctx.fillStyle = '#9a3412';
+ctx.fillText('req/sec (Peak Hour)', 80, 285);
+
+// Card 2: Cluster Gauge (Circular Rough shape)
+rc.rectangle(400, 140, 360, 240, {
+  roughness: 1.8,
+  stroke: '#0f172a',
+  strokeWidth: 2.5,
+  fill: '#bfdbfe',
+  fillStyle: 'hachure',
+  hachureAngle: 45
+});
+
+ctx.fillStyle = '#0f172a';
+ctx.font = 'bold 22px "Comic Neue", cursive, sans-serif';
+ctx.fillText('Cluster Saturation', 424, 185);
+
+rc.circle(580, 260, 110, {
+  roughness: 2.2,
+  stroke: '#1e3a8a',
+  strokeWidth: 3,
+  fill: '#93c5fd',
+  fillStyle: 'dots'
+});
+
+ctx.fillStyle = '#1e3a8a';
+ctx.font = 'bold 30px "Comic Neue", cursive, sans-serif';
+ctx.textAlign = 'center';
+ctx.fillText('78%', 580, 270);
+
+// Card 3: Cache Hit Ratio (Zigzag fill)
+ctx.textAlign = 'left';
+rc.rectangle(784, 140, width - 840, 240, {
+  roughness: 2.2,
+  stroke: '#0f172a',
+  strokeWidth: 2.5,
+  fill: '#bbf7d0',
+  fillStyle: 'zigzag',
+  hachureGap: 8
+});
+
+ctx.fillStyle = '#0f172a';
+ctx.font = 'bold 22px "Comic Neue", cursive, sans-serif';
+ctx.fillText('Redis Hit Ratio', 808, 185);
+
+ctx.font = 'bold 50px "Comic Neue", cursive, sans-serif';
+ctx.fillText('99.6%', 808, 250);
+
+ctx.font = 'bold 17px "Comic Neue", cursive, sans-serif';
+ctx.fillStyle = '#166534';
+ctx.fillText('P99 Latency: 0.8ms', 808, 285);
+
+// Bottom Takeaway Banner
+rc.rectangle(56, 410, width - 112, 70, {
+  roughness: 1.4,
+  stroke: '#0f172a',
+  strokeWidth: 2.5,
+  fill: '#fef08a',
+  fillStyle: 'solid'
+});
+
+ctx.fillStyle = '#0f172a';
+ctx.font = 'bold 19px "Comic Neue", cursive, sans-serif';
+ctx.fillText('💡 Note: All systems operational. Zero degraded pods across 12 node pools.', 80, 452);
+`
+  },
 
   // ==========================================
   // 3. VECTOR & SVG ILLUSTRATIONS
@@ -506,6 +629,121 @@ ctx.fillText('HIGH PRECISION 2D CANVAS GRAPHIC', cx, 140);
     <span>Zero External Assets</span>
   </div>
 </div>`
+  },
+  {
+    id: 'handdrawn-architecture',
+    name: 'Hand-Drawn Architecture (HTML + Rough.js)',
+    category: 'Vector & SVG',
+    type: 'html',
+    description: 'Sketchy 2D hand-drawn system layout with organic puzzle cards, hatched Rough.js fills, directional connectors, and bold Comic Neue typography.',
+    code: `<div class="w-full h-full p-8 md:p-10 bg-[#faf8f5] text-slate-800 flex flex-col justify-between relative overflow-hidden font-comic select-none border-4 border-slate-900" style="background-image: radial-gradient(#d1d5db 1.5px, transparent 1.5px); background-size: 24px 24px;">
+
+  <!-- Rough.js Dynamic SVG Canvas Overlay for hand-drawn connectors -->
+  <svg id="rough-layer" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 5;"></svg>
+
+  <!-- 1. HEADER SECTION -->
+  <div class="relative z-10 flex items-start justify-between">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-200 text-amber-950 border-2 border-slate-900 rounded-lg text-sm font-bold rotate-[-1.5deg] shadow-[2px_2px_0px_#0f172a]">
+        <span>⚡ System Architecture Note</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-black text-slate-950 mt-2 tracking-tight">
+        Event-Driven Pipeline & Cache
+      </h1>
+      <p class="text-lg text-slate-700 font-bold mt-1">
+        Hand-drawn microservice layout with asynchronous worker queues & edge caching.
+      </p>
+    </div>
+    <div class="hidden sm:flex flex-col items-end gap-1">
+      <span class="px-3 py-1 bg-emerald-200 text-emerald-950 border-2 border-slate-900 rounded-md font-bold text-sm rotate-[1deg] shadow-[2px_2px_0px_#0f172a]">
+        ● 99.99% Reliability
+      </span>
+      <span class="text-xs text-slate-500 font-bold">Updated: Today</span>
+    </div>
+  </div>
+
+  <!-- 2. PUZZLED / DYNAMIC CARDS LAYOUT (Mixed Sizes & Offsets) -->
+  <div class="relative z-10 grid grid-cols-12 gap-5 my-auto">
+    <!-- Card 1: API Gateway (col-span-3, tilted -1deg) -->
+    <div class="col-span-3 relative p-5 bg-white border-3 border-slate-900 rounded-2xl shadow-[4px_4px_0px_#0f172a] rotate-[-1deg] flex flex-col justify-between">
+      <svg data-rough-rect="fill: #fef08a; fillStyle: hachure; roughness: 1.8; stroke: #0f172a; strokeWidth: 2" class="absolute inset-0 w-full h-full -z-10 rounded-2xl"></svg>
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono font-black uppercase px-2 py-0.5 bg-slate-900 text-white rounded">ENTRY</span>
+          <span class="text-xs font-bold text-slate-600">Port 443</span>
+        </div>
+        <h3 class="text-2xl font-black text-slate-950">API Gateway</h3>
+        <p class="text-sm font-bold text-slate-700 mt-1">Rate limiting, JWT authentication & TLS termination</p>
+      </div>
+      <div class="mt-4 pt-2 border-t-2 border-dashed border-slate-400 text-xs font-mono font-bold text-slate-600">
+        p99: 1.8ms
+      </div>
+    </div>
+
+    <!-- Card 2: Event Bus (col-span-5, slightly taller & wider, tilted 0.8deg) -->
+    <div class="col-span-5 relative p-6 bg-white border-3 border-slate-900 rounded-2xl shadow-[5px_5px_0px_#0f172a] rotate-[0.8deg] flex flex-col justify-between">
+      <svg data-rough-rect="fill: #bfdbfe; fillStyle: cross-hatch; roughness: 2; stroke: #0f172a; strokeWidth: 2.5" class="absolute inset-0 w-full h-full -z-10 rounded-2xl"></svg>
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono font-black uppercase px-2 py-0.5 bg-blue-900 text-white rounded">CORE BUS</span>
+          <span class="text-xs font-bold text-blue-950 bg-blue-100 px-2 py-0.5 rounded border border-blue-900">Partitioned</span>
+        </div>
+        <h3 class="text-3xl font-black text-slate-950">Kafka Event Stream</h3>
+        <p class="text-base font-bold text-slate-800 mt-1">
+          High-throughput immutable log. Ordered consumer groups distribute background tasks without backpressure.
+        </p>
+      </div>
+      <div class="mt-4 flex items-center justify-between text-sm font-mono font-bold text-slate-800">
+        <span>⚡ 42,000 msg/sec</span>
+        <span>Replication: 3x</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Storage & Cache (col-span-4, tilted -1.2deg) -->
+    <div class="col-span-4 relative p-5 bg-white border-3 border-slate-900 rounded-2xl shadow-[4px_4px_0px_#0f172a] rotate-[-1.2deg] flex flex-col justify-between">
+      <svg data-rough-rect="fill: #bbf7d0; fillStyle: zigzag; roughness: 1.6; stroke: #0f172a; strokeWidth: 2" class="absolute inset-0 w-full h-full -z-10 rounded-2xl"></svg>
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-mono font-black uppercase px-2 py-0.5 bg-emerald-900 text-white rounded">STORAGE</span>
+          <span class="text-xs font-bold text-emerald-900">WAL Enabled</span>
+        </div>
+        <h3 class="text-2xl font-black text-slate-950">Redis + Postgres</h3>
+        <p class="text-sm font-bold text-slate-800 mt-1">
+          Multi-layer caching with write-through cache eviction and ACID transactions.
+        </p>
+      </div>
+      <div class="mt-4 pt-2 border-t-2 border-dashed border-slate-400 flex items-center justify-between text-xs font-mono font-bold text-slate-700">
+        <span>Hit Rate: 99.4%</span>
+        <span>Failover: Auto</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. FOOTER TAKEAWAY BANNER -->
+  <div class="relative z-10 flex items-center justify-between p-4 bg-amber-100 border-3 border-slate-900 rounded-xl shadow-[3px_3px_0px_#0f172a]">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">💡</span>
+      <span class="text-base sm:text-lg font-black text-slate-950">
+        Rule of Thumb: Decouple synchronous user requests from asynchronous background workers using an event log.
+      </span>
+    </div>
+    <span class="hidden md:inline-block px-3 py-1 bg-white border-2 border-slate-900 rounded-lg text-xs font-mono font-bold text-slate-800">
+      Rough.js + HTML5
+    </span>
+  </div>
+</div>
+<script>
+  // Draw hand-drawn directional connectors between cards using rough.svg
+  const svg = document.getElementById('rough-layer');
+  if (svg && window.rough) {
+    const rc = window.rough.svg(svg);
+    // Draw sketchy connecting arrows across the cards
+    const arrow1 = rc.line(260, 240, 310, 240, { stroke: '#0f172a', strokeWidth: 3, roughness: 2 });
+    const arrow2 = rc.line(770, 240, 820, 240, { stroke: '#0f172a', strokeWidth: 3, roughness: 2 });
+    svg.appendChild(arrow1);
+    svg.appendChild(arrow2);
+  }
+</script>`
   },
 
   // ==========================================
