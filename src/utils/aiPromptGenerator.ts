@@ -38,8 +38,8 @@ export interface AiPromptOptions {
 
 export const ARCHETYPE_LABELS: Record<DesignArchetype, { name: string; description: string }> = {
   sketch: {
-    name: '2D Hand-Drawn & Sketch Art (Excalidraw Style)',
-    description: 'Organic hand-drawn wobbly borders, Comic Neue typography, sketchy arrows (──▶), and paper-feel 2D ink aesthetic.',
+    name: '2D Hand-Drawn & Sketch Art (Mixed HTML + Rough.js)',
+    description: 'Organic hand-drawn sketchy borders, Rough.js hatched fills & shapes, Comic Neue/Caveat typography, and 2D ink aesthetic.',
   },
   cheatsheet: {
     name: 'Numbered Step-by-Step Cheatsheet (Library Showcase)',
@@ -170,11 +170,14 @@ Your mission: Translate the user's intent into a stunning, professional graphic.
 
 ### 2. CREATIVE FREEDOM & AESTHETICS
 - **Layout & Composition**: You have full freedom over the layout (bento grid, pipeline sequence, comparison matrix, cheatsheet, card flow, or terminal frames). Suggested direction: ${archetypeInfo.name}.
-- **Aesthetic Guidance**: Create a rich, high-craft developer feel. Avoid typical AI theme clichés (such as generic over-the-top rainbow text or random floating glowing spheres). Use gradients, shadows, borders, glassmorphism, and visual depth tastefully and purposefully.
-- **Readability**: Ensure text is sharp, high-contrast, and comfortably readable on mobile feeds (avoid tiny microscopic text). Keep copy clear and punchy.
+- **Aesthetic Guidance**: Create a rich, high-craft developer feel. Avoid typical AI theme clichés (such as generic over-the-top rainbow text or random floating glowing spheres). Use gradients, shadows, borders, glassmorphism, or hand-drawn rough strokes purposefully.
+- **Readability**: Ensure text is sharp, high-contrast, and comfortably readable on mobile feeds (avoid tiny microscopic text; use bold font weights and generous text sizes like text-lg, text-xl, text-2xl). Keep copy clear and punchy.
 
 ### 3. RUNTIME & ENGINE CONSTRAINTS
-- **No <script> tags**: Scripts do not run in the preview sandbox. Do not include <script> tags or inline JS handlers.
+- **Rough.js Hand-Drawn Graphics**: The global \`window.rough\` is loaded and available! For hand-drawn/sketch styles, you can mix HTML typography with Rough.js in two ways:
+  1. Declarative SVG: \`<svg data-rough-rect="fill: #fef08a; fillStyle: cross-hatch; roughness: 2; stroke: #1e293b" class="absolute inset-0 w-full h-full -z-10"></svg>\`
+  2. Inline Script: \`<svg id="sketch-board" class="absolute inset-0 w-full h-full pointer-events-none"></svg><script>const rc = rough.svg(document.getElementById('sketch-board')); /* draw shapes & appendChild */</script>\`
+- **Typography**: Hand-drawn and modern fonts are pre-loaded: Comic Neue (\`font-comic\`), Caveat (\`font-caveat\`), Patrick Hand (\`font-hand\`), JetBrains Mono (\`font-mono\`), and Inter (\`font-sans\`).
 - **No <html>/<head>/<body> wrappers**: Return only the root container element and its inner children.
 - **Root Element**: Start with a full-bleed root container:
   \`<div class="w-full h-full p-6 sm:p-8 bg-[${theme.background}] text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans select-none border border-white/10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 28px 28px;">\`
@@ -204,12 +207,13 @@ Your mission: Translate the user's intent into a stunning, professional graphic 
 
 ### 2. CREATIVE FREEDOM & AESTHETICS
 - **Layout & Composition**: You have full freedom over visual structure (geometric layouts, architecture diagrams, charts, or isometric visuals). Suggested direction: ${archetypeInfo.name}.
-- **Aesthetic Guidance**: Maintain a polished developer aesthetic. Avoid typical AI theme clichés. Use gradients, shadows, and geometric patterns creatively and tastefully.
+- **Aesthetic Guidance**: Maintain a polished developer aesthetic. Avoid typical AI theme clichés. Use gradients, shadows, geometric patterns, or hand-drawn sketchy graphics creatively and tastefully.
 - **Readability**: Ensure text labels are clear, bold, and high-contrast.
 
 ### 3. RUNTIME CONSTRAINTS
-- **Execution Context**: Runs inside \`new Function('canvas', 'ctx', 'width', 'height', code)\`.
-- **Pure Canvas 2D**: Use standard \`ctx\` methods (fillRect, roundRect, stroke, fillText, createLinearGradient, etc.). No DOM access or script tags.
+- **Execution Context**: Runs inside \`new Function('canvas', 'ctx', 'width', 'height', 'rough', code)\`.
+- **Rough.js Support**: \`rough\` is passed into the function! You can draw sketchy hand-drawn graphics using \`const rc = rough.canvas(canvas); rc.rectangle(x, y, w, h, { roughness: 2, fill: '#...', fillStyle: 'cross-hatch' });\`.
+- **Pure Canvas 2D**: Standard \`ctx\` methods (fillRect, roundRect, stroke, fillText, createLinearGradient, etc.) are available.
 - **Stay Within Canvas**: Strictly respect width: ${preset.width}px and height: ${preset.height}px with no overflow.
 
 ### 4. USER INTENT

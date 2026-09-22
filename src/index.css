@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@600;700;800;900&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400..700&family=Cinzel:wght@600;700;800;900&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,8 @@
 
 /* Direct Font Utilities (guaranteed to apply in user HTML & dynamic presets) */
 .font-comic, [class*="font-comic"] { font-family: 'Comic Neue', cursive, sans-serif !important; }
+.font-caveat, [class*="font-caveat"] { font-family: 'Caveat', cursive, sans-serif !important; }
+.font-hand, [class*="font-hand"] { font-family: 'Patrick Hand', cursive, sans-serif !important; }
 .font-arcade, [class*="font-arcade"] { font-family: 'Press Start 2P', monospace !important; }
 .font-bebas, .font-meme, [class*="font-bebas"], [class*="font-meme"] { font-family: 'Bebas Neue', Impact, sans-serif !important; }
 .font-inter, [class*="font-inter"] { font-family: 'Inter', system-ui, sans-serif !important; }
