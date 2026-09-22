@@ -4,6 +4,7 @@ export type DesignArchetype =
   | 'infographic'
   | 'bento'
   | 'comparison'
+  | 'architecture'
   | 'announcement'
   | 'minimalist';
 
@@ -34,25 +35,29 @@ export interface AiPromptOptions {
 }
 
 export const ARCHETYPE_LABELS: Record<DesignArchetype, { name: string; description: string }> = {
+  architecture: {
+    name: 'Technical Architecture & Pipeline',
+    description: 'Rich system dataflow diagram with terminal windows, protocol badges, sequence arrows, and code insets.',
+  },
+  comparison: {
+    name: 'Side-by-Side Comparison Matrix',
+    description: 'Two-column contrast showing flawed vs secure patterns with syntax code blocks and takeaway banner.',
+  },
   infographic: {
-    name: 'Infographic / Cheatsheet',
-    description: 'Structured technical guide with numbered points, code snippets, and takeaway banner.',
+    name: 'Technical Infographic / Deep-Dive',
+    description: 'Structured technical guide with numbered points, code snippets, mental models, and takeaway banners.',
   },
   bento: {
     name: 'Bento Grid System',
-    description: 'Modern multi-tile bento layout highlighting key metrics, latency, and status badges.',
-  },
-  comparison: {
-    name: 'Side-by-Side Comparison',
-    description: 'Two-column vs comparison showing contrasting architectures, pros/cons, or benchmarks.',
+    description: 'Modern multi-tile bento layout highlighting key metrics, latency, security guarantees, and status badges.',
   },
   announcement: {
     name: 'Release / Feature Card',
-    description: 'High-impact product update, release notes, or milestone card with glowing headline.',
+    description: 'High-impact product update, release notes, or milestone card with version pills and CLI commands.',
   },
   minimalist: {
     name: 'Minimalist & Clean',
-    description: 'Understated monochrome or single-accent composition with focus on bold typography.',
+    description: 'Understated high-contrast developer layout focusing on bold typography, code tokens, and crisp borders.',
   },
 };
 
@@ -192,9 +197,14 @@ Your mission: Translate the user's raw intent into clean, high-impact, professio
    Powered by UnoCSS Wind4 at runtime. You can freely use standard Tailwind classes and arbitrary utilities (\`bg-[#090b10]\`, \`border-white/10\`, \`grid-cols-2\`, \`gap-4\`, etc.).
 5. **ICONS & ASSETS**:
    Use inline \`<svg>\` elements with \`viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"\` or clean Unicode symbols (⚡, 🔒, 📦, 💡). Do not load external CDNs.
-6. **AVOID TYPICAL "AI THEME" CLICHÉS**:
-   - Do NOT use rainbow text gradients (e.g. \`from-pink-500 via-purple-500 to-cyan-500\`). Use solid crisp white text with subtle single-color accents.
-   - Do NOT plaster giant blurry neon spheres in corners (\`w-96 blur-3xl\`). Use matte backgrounds with subtle engineered dot grids or hairline borders.
+6. **AVOID BARE OR EMPTY LAYOUTS (RICH VISUAL CRAFTSMANSHIP)**:
+   - Do NOT produce a bare, empty canvas with vast dead space. Fill the canvas with deliberate, high-density developer components:
+     - **Terminal & Code Chrome**: Include window header controls (three macOS red/yellow/green dots \`w-2.5 h-2.5 rounded-full\`) or file tabs (\`auth.ts\`, \`schema.prisma\`).
+     - **Connected Sequence Pipelines**: Include visual node flow arrows (\`Browser ──[Cookie]──▶ Server ──[SHA-256]──▶ Database\`) with protocol badges.
+     - **Mental Models & Visual Analogy Cards**: Feature a key conceptual mental model (e.g. Locker & Key, Cache Stampede, Gateway Guard).
+     - **Syntax-Highlighted Tokens**: Color-code code keywords (\`const\`, \`await\`, \`async\`), variables, and strings for instant visual appeal.
+     - **Surface Depth**: Use multi-layer card depths (\`bg-slate-900/90 border border-white/10\`, nested code blocks \`bg-black/75 border border-white/10\`).
+   - Do NOT use rainbow gradient text or giant neon blur-3xl orbs; use crisp, engineered developer aesthetics (clean grid lines, hairline borders, and semantic status colors like Emerald for secure, Rose for insecure, Cyan for transport).
 7. **ZERO OVERFLOW GUARANTEE**:
    - The canvas height is strictly fixed at ${preset.height}px with \`overflow-hidden\`.
    - Content must NEVER exceed ${preset.height}px or push the footer out of view.
