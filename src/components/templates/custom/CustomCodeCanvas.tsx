@@ -13,6 +13,7 @@ interface Props {
   useAsBackground?: boolean;
   onPasteSample?: (type: 'html' | 'canvas') => void;
   onTriggerUpload?: () => void;
+  onOpenAiPrompt?: () => void;
 }
 
 const escapeScriptValue = (value: unknown) =>
@@ -28,6 +29,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   useAsBackground = false,
   onPasteSample,
   onTriggerUpload,
+  onOpenAiPrompt,
 }) => {
   const reactId = useId();
   const frameId = useMemo(() => `preview-${reactId.replace(/:/g, '')}`, [reactId]);
@@ -91,9 +93,18 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         </div>
         <h3 className="text-2xl font-bold text-white mb-2">Start your design</h3>
         <p className="text-sm text-slate-400 mb-6 max-w-md">Choose a template, write HTML and CSS, or use the advanced Canvas JavaScript mode.</p>
-        <div className="flex gap-2">
-          {onTriggerUpload && <button onClick={onTriggerUpload} className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold">Upload image</button>}
-          {onPasteSample && <button onClick={() => onPasteSample('html')} className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 text-sm font-semibold flex items-center gap-2"><Sparkles className="w-4 h-4" />Load sample</button>}
+        <div className="flex flex-wrap gap-2 justify-center">
+          {onOpenAiPrompt && (
+            <button
+              onClick={onOpenAiPrompt}
+              className="px-4 py-2 rounded-lg border border-cyan-500/40 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+              Generate with AI
+            </button>
+          )}
+          {onPasteSample && <button onClick={() => onPasteSample('html')} className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 text-sm font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors"><Sparkles className="w-4 h-4" />Load sample</button>}
+          {onTriggerUpload && <button onClick={onTriggerUpload} className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">Upload image</button>}
         </div>
       </div>
     );

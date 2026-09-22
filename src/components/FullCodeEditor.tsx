@@ -48,6 +48,7 @@ interface Props {
   onToggleCollapse?: () => void;
   isWide?: boolean;
   onToggleWide?: () => void;
+  onOpenAiPrompt?: () => void;
 }
 
 export const FullCodeEditor: React.FC<Props> = ({
@@ -67,6 +68,7 @@ export const FullCodeEditor: React.FC<Props> = ({
   onToggleCollapse,
   isWide,
   onToggleWide,
+  onOpenAiPrompt,
 }) => {
   const [fontSize, setFontSize] = useState<number>(13);
   const [wordWrap, setWordWrap] = useState<boolean>(true);
@@ -275,6 +277,18 @@ export const FullCodeEditor: React.FC<Props> = ({
               Canvas JS · Advanced
             </button>
           </div>
+
+          {/* AI Prompt Generator */}
+          {onOpenAiPrompt && (
+            <button
+              onClick={onOpenAiPrompt}
+              className="px-2.5 py-1 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 flex items-center gap-1.5 text-[11px] font-semibold transition-all shadow-sm"
+              title="Generate AI Prompt for Design Code (ChatGPT, Claude, etc.)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden sm:inline">AI Prompt</span>
+            </button>
+          )}
 
           {/* Quick Snippets Inserter */}
           {codeType === 'html' && (
