@@ -19,6 +19,7 @@ import { FontsModal } from './components/FontsModal';
 import { StickersModal } from './components/StickersModal';
 import { CapabilitiesModal } from './components/CapabilitiesModal';
 import { AboutModal } from './components/AboutModal';
+import { AiPromptModal } from './components/AiPromptModal';
 import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
 import { MAX_SLIDES, SlideStrip, StudioSlide } from './components/SlideStrip';
 import { exportElementAsPng, copyElementToClipboard, renderElementAsPngBlob } from './utils/exportImage';
@@ -99,6 +100,7 @@ export function App() {
   });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
   const [slides, setSlides] = useState<StudioSlide[]>([]);
   const [activeSlideId, setActiveSlideId] = useState('');
 
@@ -131,6 +133,13 @@ export function App() {
         slide.id === activeSlideId ? { ...slide, codeType } : slide
       ));
     }
+  };
+
+  const handleApplyAiGeneratedCode = (code: string, type: 'html' | 'canvas') => {
+    handleCodeTypeChange(type);
+    handleCodeChange(code);
+    setExportNotice('AI design code applied to canvas!');
+    setTimeout(() => setExportNotice(null), 3000);
   };
 
   const handleDocumentModeChange = (mode: 'design' | 'slides') => {
@@ -422,17 +431,22 @@ export function App() {
   };
 
   // Export Image Handler
-  const handleExport = async (scale: 1 | 2 | 4) => {
+  const handleExport = async (scale: 1 | 2 | 4, customFileName?: string) => {
     if (!canvasRef.current) return;
     setIsExporting(true);
     try {
+      const defaultBase = documentMode === 'slides'
+        ? `yuwbrndr-slide-${Math.max(1, slides.findIndex((slide) => slide.id === activeSlideId) + 1)}`
+        : 'yuwbrndr';
+      const cleanCustom = customFileName?.trim().replace(/\.png$/i, '');
+      const baseName = cleanCustom || defaultBase;
+      const fileName = `${baseName}-${scale}x.png`;
+
       await exportElementAsPng(canvasRef.current, {
         scale,
-        fileName: documentMode === 'slides'
-          ? `yuwbrndr-slide-${Math.max(1, slides.findIndex((slide) => slide.id === activeSlideId) + 1)}-${scale}x.png`
-          : `yuwbrndr-${scale}x.png`,
+        fileName,
       });
-      setExportNotice(`PNG exported at ${currentPreset.width * scale} × ${currentPreset.height * scale}px`);
+      setExportNotice(`Exported ${fileName} (${currentPreset.width * scale} × ${currentPreset.height * scale}px)`);
       setTimeout(() => setExportNotice(null), 3000);
     } catch (err) {
       alert('Export failed. Please check browser console.');
@@ -654,6 +668,7 @@ export function App() {
         onShare={handleShare}
         hasLocalImages={hasLocalImages}
         sharedCopied={copiedShareLink}
+        onOpenAiPrompt={() => setIsAiPromptOpen(true)}
         documentMode={documentMode}
         onDocumentModeChange={handleDocumentModeChange}
       />
@@ -675,6 +690,7 @@ export function App() {
           onInsertImageToCode={handleInsertImageToCode}
           isOpen={isSidebarOpen}
           onToggle={handleToggleSidebar}
+          onOpenAiPrompt={() => setIsAiPromptOpen(true)}
           uploadedAssets={uploadedAssets}
           onAddAssets={handleAddAssets}
           onRemoveAsset={handleRemoveAsset}
@@ -720,6 +736,7 @@ export function App() {
             onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
             isSidebarOpen={isSidebarOpen}
             onToggleSidebar={handleToggleSidebar}
+            onOpenAiPrompt={() => setIsAiPromptOpen(true)}
           />
 
           {/* Bottom Drawer (optional layout switch) */}
@@ -737,6 +754,7 @@ export function App() {
                 userImage={userImage}
                 uploadedAssets={uploadedAssets}
                 onInsertImage={handleInsertImageToCode}
+                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
               />
             </div>
           )}
@@ -768,6 +786,7 @@ export function App() {
                 onInsertImage={handleInsertImageToCode}
                 isWide={isEditorWide}
                 onToggleWide={() => setIsEditorWide(!isEditorWide)}
+                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
                 onToggleCollapse={() => {
                   setIsEditorOpen(false);
                   setIsEditorWide(false);
@@ -884,6 +903,7 @@ export function App() {
                 userImage={userImage}
                 uploadedAssets={uploadedAssets}
                 onInsertImage={handleInsertImageToCode}
+                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
               />
             </div>
 
@@ -960,6 +980,19 @@ export function App() {
 
       <CapabilitiesModal isOpen={isCapabilitiesOpen} onClose={() => setIsCapabilitiesOpen(false)} />
       <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+
+      {/* AI Design Code Prompt Generator Modal */}
+      <AiPromptModal
+        isOpen={isAiPromptOpen}
+        onClose={() => setIsAiPromptOpen(false)}
+        currentPreset={currentPreset}
+        onSelectPreset={handleSelectPresetFormat}
+        currentTheme={currentTheme}
+        onSelectTheme={setCurrentTheme}
+        customCodeType={customCodeType}
+        onSelectCodeType={handleCodeTypeChange}
+        onApplyGeneratedCode={handleApplyAiGeneratedCode}
+      />
 
       {exportNotice && (
         <div

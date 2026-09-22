@@ -33,6 +33,7 @@ interface Props {
   onRemoveAsset?: (id: string) => void;
   uploadError?: string | null;
   onClearUploadError?: () => void;
+  onOpenAiPrompt?: () => void;
 }
 
 export const Sidebar: React.FC<Props> = ({
@@ -54,6 +55,7 @@ export const Sidebar: React.FC<Props> = ({
   onRemoveAsset,
   uploadError,
   onClearUploadError,
+  onOpenAiPrompt,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -143,6 +145,15 @@ export const Sidebar: React.FC<Props> = ({
             <FolderOpen className="w-4 h-4" />
             <span>Browse templates</span>
           </button>
+          {onOpenAiPrompt && (
+            <button
+              onClick={onOpenAiPrompt}
+              className="w-full py-2.5 px-3 rounded-lg border border-cyan-500/40 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 hover:text-cyan-200 text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-sm"
+            >
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <span>Generate with AI</span>
+            </button>
+          )}
           <button onClick={() => onLoadSample(customCodeType)} className="w-full py-2 px-3 rounded-lg border border-white/10 bg-studio-800 hover:bg-studio-700 text-xs font-semibold transition-colors">Start with a sample</button>
         </div>}
 

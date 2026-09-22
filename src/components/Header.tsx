@@ -30,7 +30,7 @@ interface Props {
   onZoomChange: (newZoom: number) => void;
   autoFit?: boolean;
   onToggleAutoFit?: () => void;
-  onExport: (scale: 1 | 2 | 4) => void;
+  onExport: (scale: 1 | 2 | 4, customName?: string) => void;
   onCopyImage: () => void;
   onOpenExamples: () => void;
   onOpenPlatformGuide: () => void;
@@ -45,6 +45,7 @@ interface Props {
   onShare: () => void;
   hasLocalImages: boolean;
   sharedCopied: boolean;
+  onOpenAiPrompt?: () => void;
   documentMode: 'design' | 'slides';
   onDocumentModeChange: (mode: 'design' | 'slides') => void;
 }
@@ -73,6 +74,7 @@ export const Header: React.FC<Props> = ({
   onShare,
   hasLocalImages,
   sharedCopied,
+  onOpenAiPrompt,
   documentMode,
   onDocumentModeChange,
 }) => {
@@ -80,6 +82,7 @@ export const Header: React.FC<Props> = ({
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showPresetMenu, setShowPresetMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [customExportName, setCustomExportName] = useState('');
   const themeOptions: AppTheme[] = ['system', 'light', 'dark'];
   const cycleAppTheme = () => onAppThemeChange(themeOptions[(themeOptions.indexOf(appTheme) + 1) % themeOptions.length]);
   const AppThemeIcon = appTheme === 'light' ? Sun : appTheme === 'dark' ? Moon : Monitor;
@@ -110,9 +113,12 @@ export const Header: React.FC<Props> = ({
         <div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg">Yuwbrndr</span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400 border border-white/10">Studio</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium">
+              <span className="inline sm:hidden">Design by Code</span>
+              <span className="hidden sm:inline">Design by Code · Design to All</span>
+            </span>
           </div>
-          <p className="text-[10px] text-slate-400 hidden md:block">Create social graphics from code</p>
+          <p className="text-[10px] text-slate-400 hidden md:block">Developer Brand Illustration Platform</p>
         </div>
 
         <div className="hidden sm:flex items-center rounded-lg border border-white/10 bg-studio-950 p-1" aria-label="Document type">
@@ -352,6 +358,18 @@ export const Header: React.FC<Props> = ({
           )}
         </div>
 
+        {/* AI Prompt Generator Button (Desktop & Tablet) */}
+        {onOpenAiPrompt && (
+          <button
+            onClick={onOpenAiPrompt}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:border-cyan-500/50 transition-all shadow-sm active:scale-95"
+            title="Generate AI Prompt for Design Code (ChatGPT, Claude, Cursor)"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="hidden md:inline">AI Prompt</span>
+          </button>
+        )}
+
         {/* Share URL Button (Desktop & Tablet) */}
         {documentMode === 'design' && <button
           onClick={onShare}
@@ -405,47 +423,77 @@ export const Header: React.FC<Props> = ({
           </button>
 
           {showExportMenu && (
-            <div className="absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-studio-900 shadow-2xl p-1.5 z-50 space-y-1">
-              <div className="text-[10px] font-mono uppercase text-slate-500 px-2 py-1">Resolution Multiplier</div>
-              <button
-                onClick={() => {
-                  onExport(1);
-                  setShowExportMenu(false);
-                }}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-              >
-                <div>
-                  <div>Standard Resolution</div>
-                  <div className="text-[10px] text-slate-500 font-mono">1x ({currentPreset.width}×{currentPreset.height})</div>
+            <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-2 animate-in fade-in zoom-in-95 duration-150">
+              {/* Optional Custom File Name */}
+              <div className="px-1 pt-1 pb-1.5 border-b border-white/10 space-y-1">
+                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center justify-between">
+                  <span>File Name</span>
+                  <span className="text-[9px] text-slate-500 font-normal lowercase">optional</span>
+                </label>
+                <div className="flex items-center gap-1 bg-studio-950 rounded-lg border border-white/10 px-2.5 py-1.5 focus-within:border-indigo-500/60 focus-within:ring-1 focus-within:ring-indigo-500/30 transition-all">
+                  <input
+                    type="text"
+                    value={customExportName}
+                    onChange={(e) => setCustomExportName(e.target.value)}
+                    placeholder={documentMode === 'slides' ? 'slide-name' : 'graphic-name'}
+                    className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none font-mono"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onExport(2, customExportName);
+                        setShowExportMenu(false);
+                      }
+                    }}
+                  />
+                  <span className="text-[10px] font-mono text-slate-500 shrink-0">.png</span>
                 </div>
-                <span className="font-mono text-[10px] text-slate-500 font-bold">1x</span>
-              </button>
-              <button
-                onClick={() => {
-                  onExport(2);
-                  setShowExportMenu(false);
-                }}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors bg-indigo-600/10 border border-indigo-500/20"
-              >
-                <div>
-                  <div className="font-semibold text-indigo-300">Recommended (2x)</div>
-                  <div className="text-[10px] text-indigo-400/80 font-mono">{currentPreset.width * 2}×{currentPreset.height * 2}</div>
+              </div>
+
+              <div>
+                <div className="text-[10px] font-mono uppercase text-slate-400 px-1 py-1 font-bold">
+                  Select Resolution
                 </div>
-                <span className="font-mono text-[10px] text-indigo-400 font-bold">2x</span>
-              </button>
-              <button
-                onClick={() => {
-                  onExport(4);
-                  setShowExportMenu(false);
-                }}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-              >
-                <div>
-                  <div className="font-semibold text-cyan-300">Ultra Print (4x)</div>
-                  <div className="text-[10px] text-cyan-500 font-mono">{currentPreset.width * 4}×{currentPreset.height * 4}</div>
+                <div className="space-y-1">
+                  <button
+                    onClick={() => {
+                      onExport(1, customExportName);
+                      setShowExportMenu(false);
+                    }}
+                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <div>
+                      <div>Standard Resolution</div>
+                      <div className="text-[10px] text-slate-500 font-mono">1x ({currentPreset.width}×{currentPreset.height})</div>
+                    </div>
+                    <span className="font-mono text-[10px] text-slate-500 font-bold">1x</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onExport(2, customExportName);
+                      setShowExportMenu(false);
+                    }}
+                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors bg-indigo-600/10 border border-indigo-500/20"
+                  >
+                    <div>
+                      <div className="font-semibold text-indigo-300">Recommended (2x)</div>
+                      <div className="text-[10px] text-indigo-400/80 font-mono">{currentPreset.width * 2}×{currentPreset.height * 2}</div>
+                    </div>
+                    <span className="font-mono text-[10px] text-indigo-400 font-bold">2x</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      onExport(4, customExportName);
+                      setShowExportMenu(false);
+                    }}
+                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <div>
+                      <div className="font-semibold text-cyan-300">Ultra Print (4x)</div>
+                      <div className="text-[10px] text-cyan-500 font-mono">{currentPreset.width * 4}×{currentPreset.height * 4}</div>
+                    </div>
+                    <span className="font-mono text-[10px] text-cyan-400 font-bold">4x</span>
+                  </button>
                 </div>
-                <span className="font-mono text-[10px] text-cyan-400 font-bold">4x</span>
-              </button>
+              </div>
             </div>
           )}
         </div>
@@ -519,6 +567,20 @@ export const Header: React.FC<Props> = ({
                   )}
                 </div>
               </button>}
+
+              {/* AI Prompt Generator */}
+              {onOpenAiPrompt && (
+                <button
+                  onClick={() => {
+                    onOpenAiPrompt();
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 font-semibold"
+                >
+                  <Sparkles className="w-4 h-4 text-cyan-400" />
+                  <span>AI Prompt Generator</span>
+                </button>
+              )}
 
               {/* Templates Gallery */}
               <button

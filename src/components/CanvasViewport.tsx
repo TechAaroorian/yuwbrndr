@@ -20,6 +20,7 @@ interface Props {
   onOpenPlatformGuide: () => void;
   isSidebarOpen?: boolean;
   onToggleSidebar?: () => void;
+  onOpenAiPrompt?: () => void;
 }
 
 export const CanvasViewport: React.FC<Props> = ({
@@ -39,6 +40,7 @@ export const CanvasViewport: React.FC<Props> = ({
   onOpenPlatformGuide,
   isSidebarOpen = true,
   onToggleSidebar,
+  onOpenAiPrompt,
 }) => {
   const [showTip, setShowTip] = useState<boolean>(true);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -208,6 +210,7 @@ export const CanvasViewport: React.FC<Props> = ({
                 useAsBackground={useAsBackground}
                 onPasteSample={onLoadSample}
                 onTriggerUpload={onTriggerUpload}
+                onOpenAiPrompt={onOpenAiPrompt}
               />
             </div>
           </div>
