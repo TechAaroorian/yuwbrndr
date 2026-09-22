@@ -159,131 +159,62 @@ export function buildYuwbrndrAiPrompt(options: AiPromptOptions): string {
   const safeZoneGuideline = preset.safeZone || 'Keep critical elements at least 32px away from canvas boundaries.';
 
   if (engine === 'html') {
-    return `You are an expert design engineer writing production-ready design code for **Yuwbrndr** (Philosophy: "Design by Code · Design to All").
-Your mission: Translate the user's raw intent into clean, high-impact, professional developer graphics.
+    return `You are an expert developer-designer writing production design code for **Yuwbrndr** (Philosophy: "Design by Code · Design to All").
+Your mission: Translate the user's intent into a stunning, professional graphic.
 
-### 1. TARGET GRAPHIC SPECIFICATIONS & SAFE-ZONE
-- **Platform**: ${preset.platform} (${preset.name})
-- **Canvas Resolution**: ${preset.width}px width × ${preset.height}px height
-- **Aspect Ratio**: ${preset.aspectRatio}
-- **PLATFORM SAFE-ZONE (MANDATORY)**:
-  ${safeZoneGuideline}
-  - Ensure all critical headlines, code blocks, and badges sit safely within this boundary so social feeds, profile grids, or platform overlays (like YouTube video timestamps) never clip or obstruct the design.
-- **Recommended Color Palette**:
-  - Primary Accent: ${theme.primary}
-  - Secondary Accent: ${theme.secondary}
-  - Highlight Accent: ${theme.accent}
-  - Canvas Background: ${theme.background}
-  - Card/Surface Fill: ${theme.surface}
-  - Text Color: ${theme.text}
-  - Muted Text: ${theme.muted}
+### 1. CANVAS SPECIFICATIONS
+- **Target**: ${preset.platform} (${preset.name})
+- **Dimensions**: ${preset.width}px width × ${preset.height}px height (${preset.aspectRatio})
+- **Platform Safe Zone**: ${safeZoneGuideline}
+- **Suggested Theme Mood**: ${theme.name} (e.g. background around ${theme.background}, accents around ${theme.primary}). You have full creative freedom to pick and blend harmonious colors, gradients, and surface tones that best communicate the topic.
 
-### 2. INTENT TRANSLATION & VISUAL HIERARCHY
-- **Detected Intent**: ${detectedIntent.label}
-- **Layout Archetype**: ${archetypeInfo.name} (${archetypeInfo.description})
-- **Target Layout**: ${detectedIntent.recommendedLayout}
-- **Structural Blueprint**: ${detectedIntent.structuralPattern}
-- **STRICT 5-LEVEL VISUAL HIERARCHY**:
-  - **Level 1 (Eyebrow Tag)**: Uppercase monospace category pill (\`text-[11px] font-mono font-bold uppercase tracking-widest text-[${theme.primary}]\`).
-  - **Level 2 (Hero Headline)**: Bold/Extrabold headline (\`text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight\`). Maximum 1-2 lines.
-  - **Level 3 (Core Premise / Subheading)**: Single concise sentence under 12-15 words (\`text-sm text-slate-400\`).
-  - **Level 4 (Core Visual Body)**:
-    ${detectedIntent.hierarchyGuide}
-  - **Level 5 (Bottom Takeaway Banner)**: Compact rule of thumb or summary pill at the bottom (\`px-4 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 flex items-center justify-between text-xs font-mono\`).
+### 2. CREATIVE FREEDOM & AESTHETICS
+- **Layout & Composition**: You have full freedom over the layout (bento grid, pipeline sequence, comparison matrix, cheatsheet, card flow, or terminal frames). Suggested direction: ${archetypeInfo.name}.
+- **Aesthetic Guidance**: Create a rich, high-craft developer feel. Avoid typical AI theme clichés (such as generic over-the-top rainbow text or random floating glowing spheres). Use gradients, shadows, borders, glassmorphism, and visual depth tastefully and purposefully.
+- **Readability**: Ensure text is sharp, high-contrast, and comfortably readable on mobile feeds (avoid tiny microscopic text). Keep copy clear and punchy.
 
-### 3. MOBILE-FIRST READABILITY & CONTRAST GUARANTEES (WCAG COMPLIANT)
-- **CRITICAL MOBILE READABILITY RULE**: When this graphic appears in a mobile social feed (LinkedIn, X, Instagram), it is scaled down 3x. Microscopic text becomes illegible and hurts engagement.
-  - **Headlines**: Use \`text-3xl\` to \`text-5xl\` (30px–48px) with bold/extrabold weight.
-  - **Section Titles**: Minimum \`text-base\` to \`text-lg\` (16px–18px).
-  - **Body & Explanations**: Minimum \`text-sm\` (14px) or \`text-base\` (16px).
-  - **Code Tokens & Badges**: Minimum \`text-xs\` (12px) to \`text-sm\` (14px). **NEVER use text-[9px] or text-[10px]**!
-  - **Concise Copy**: Keep text lines short and punchy so font sizes can remain comfortably large.
-- **Primary Text**: Use pure white (\`text-white\` or \`#ffffff\`) on dark background (\`${theme.background}\`) for guaranteed 16:1+ contrast ratio.
-- **Secondary & Body Text**: Use high-readability slate (\`text-slate-200\` or \`text-slate-300\`) exceeding 4.5:1 contrast.
-- **2D HAND-DRAWN & SKETCH ART STYLING (IF REQUESTED)**:
-  - Apply the organic wobbly border formula to cards: \`style="border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;"\`.
-  - Use \`font-['Comic_Neue']\` or \`font-['Space_Grotesk']\` for friendly, hand-sketched technical diagrams.
-  - Use 2D comic ink drop shadows: \`shadow-[3px_3px_0px_rgba(255,255,255,0.8)]\` with \`border-2 border-white\`.
-- **Monospace Elements**: Use \`font-mono\` for code tokens, numbers, metrics, and badges.
+### 3. RUNTIME & ENGINE CONSTRAINTS
+- **No <script> tags**: Scripts do not run in the preview sandbox. Do not include <script> tags or inline JS handlers.
+- **No <html>/<head>/<body> wrappers**: Return only the root container element and its inner children.
+- **Root Element**: Start with a full-bleed root container:
+  \`<div class="w-full h-full p-6 sm:p-8 bg-[${theme.background}] text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans select-none border border-white/10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 28px 28px;">\`
+- **Tailwind / UnoCSS Support**: Fully supported with standard and arbitrary utility classes (\`bg-[#...]\`, \`border-white/10\`, \`shadow-...\`, \`grid\`, \`flex\`, etc.).
+- **Zero Vertical Overflow**: The canvas is strictly fixed at ${preset.height}px with \`overflow-hidden\`. Ensure all content sits cleanly within this height without clipping the footer.
 
-### 4. STRICT YUWBRNDR ENGINE CONSTRAINTS
-1. **NO \`<script>\` TAGS**: HTML previews run with scripts disabled for security. Do NOT include any \`<script>\` tags or event handlers.
-2. **NO HTML/HEAD/BODY WRAPPERS**: Output ONLY the root container element and its children. Do not write \`<!doctype html>\`, \`<html>\`, \`<head>\`, or \`<body>\`.
-3. **ROOT CONTAINER REQUIREMENT**:
-   The root element MUST be a single \`<div>\` formatted exactly as:
-   \`<div class="w-full h-full p-6 sm:p-8 bg-[${theme.background}] text-slate-100 flex flex-col justify-between relative overflow-hidden font-sans select-none border border-white/10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 28px 28px;">\`
-4. **TAILWIND UTILITY SUPPORT**:
-   Powered by UnoCSS Wind4 at runtime. You can freely use standard Tailwind classes and arbitrary utilities (\`bg-[#090b10]\`, \`border-white/10\`, \`grid-cols-2\`, \`gap-4\`, etc.).
-5. **ICONS & ASSETS**:
-   Use inline \`<svg>\` elements with \`viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"\` or clean Unicode symbols (⚡, 🔒, 📦, 💡). Do not load external CDNs.
-6. **AVOID BARE OR EMPTY LAYOUTS (RICH VISUAL CRAFTSMANSHIP)**:
-   - Do NOT produce a bare, empty canvas with vast dead space. Fill the canvas with deliberate, high-density developer components:
-     - **Terminal & Code Chrome**: Include window header controls (three macOS red/yellow/green dots \`w-2.5 h-2.5 rounded-full\`) or file tabs (\`auth.ts\`, \`schema.prisma\`).
-     - **Connected Sequence Pipelines**: Include visual node flow arrows (\`Browser ──[Cookie]──▶ Server ──[SHA-256]──▶ Database\`) with protocol badges.
-     - **Mental Models & Visual Analogy Cards**: Feature a key conceptual mental model (e.g. Locker & Key, Cache Stampede, Gateway Guard).
-     - **Syntax-Highlighted Tokens**: Color-code code keywords (\`const\`, \`await\`, \`async\`), variables, and strings for instant visual appeal.
-     - **Surface Depth**: Use multi-layer card depths (\`bg-slate-900/90 border border-white/10\`, nested code blocks \`bg-black/75 border border-white/10\`).
-   - Do NOT use rainbow gradient text or giant neon blur-3xl orbs; use crisp, engineered developer aesthetics (clean grid lines, hairline borders, and semantic status colors like Emerald for secure, Rose for insecure, Cyan for transport).
-7. **ZERO OVERFLOW GUARANTEE**:
-   - The canvas height is strictly fixed at ${preset.height}px with \`overflow-hidden\`.
-   - Content must NEVER exceed ${preset.height}px or push the footer out of view.
-   - Use compact vertical spacing (\`gap-3\` to \`gap-4\`, \`my-auto\`, \`p-4\`), concise copy, and tiny code blocks (2-3 lines max).
-
-### 5. USER INPUT & INTENT SPECIFICATION
+### 4. USER INTENT
 ${isUrlInstruction
-  ? `[DOCUMENTATION / REFERENCE LINK DETECTED]:
-Reference URL: ${userInstruction.trim()}
-INSTRUCTION: Analyze this link's technical domain. Extract the core architectural pattern, 2 contrasting pillars or mechanisms, and formulate an authoritative developer graphic.`
+  ? `Reference URL: ${userInstruction.trim()}\nAnalyze the topic from this link and create a compelling visual breakdown.`
   : isBulletPoints
-  ? `[RAW BULLET POINTS DETECTED]:
-Input Notes:
-${userInstruction.trim()}
-INSTRUCTION: Group and synthesize these bullet points into a clean visual hierarchy. Eliminate wordiness, preserve key technical terms, and place them into structured cards.`
-  : `[CONCEPT / REQUIREMENT]:
-${userInstruction.trim() || 'Create a compelling technical cheatsheet contrasting architectures or highlighting system benchmarks.'}
-INSTRUCTION: Structure this concept into an authoritative post cover matching the detected ${detectedIntent.label} layout.`}
+  ? `User Notes:\n${userInstruction.trim()}\nSynthesize these points into a polished, structured visual layout.`
+  : `Topic / Instruction:\n${userInstruction.trim() || 'Create an engaging technical explainer graphic.'}`}
 
-### 6. OUTPUT INSTRUCTION
-Return ONLY the raw HTML code block starting with the root \`<div class="w-full h-full ...">\`. Do NOT include any conversational introduction, explanations, or wrapper tags.`;
+### 5. OUTPUT FORMAT
+Return ONLY the raw HTML code inside a single \`\`\`html code block. Do NOT include any conversational introduction, explanations, or wrapper tags.`;
   }
 
   // Canvas 2D Engine Prompt
   return `You are an expert creative technologist writing pure 2D Canvas JavaScript code for **Yuwbrndr** (Philosophy: "Design by Code · Design to All").
+Your mission: Translate the user's intent into a stunning, professional graphic using the HTML5 Canvas 2D API.
 
-### 1. TARGET GRAPHIC SPECIFICATIONS & SAFE-ZONE
-- **Platform**: ${preset.platform} (${preset.name})
-- **Canvas Resolution**: ${preset.width}px width × ${preset.height}px height
-- **Aspect Ratio**: ${preset.aspectRatio}
-- **PLATFORM SAFE-ZONE**:
-  ${safeZoneGuideline}
-- **Palette**: Primary (${theme.primary}), Secondary (${theme.secondary}), Highlight (${theme.accent}), Background (${theme.background}), Card Surface (${theme.surface}), Text (${theme.text}).
+### 1. CANVAS SPECIFICATIONS
+- **Target**: ${preset.platform} (${preset.name})
+- **Dimensions**: ${preset.width}px width × ${preset.height}px height (${preset.aspectRatio})
+- **Platform Safe Zone**: ${safeZoneGuideline}
+- **Suggested Theme Mood**: ${theme.name} (Primary: ${theme.primary}, Background: ${theme.background}). You have full creative freedom over color palettes, gradients, and visual styling.
 
-### 2. INTENT TRANSLATION & VISUAL HIERARCHY
-- **Detected Intent**: ${detectedIntent.label}
-- **Layout Archetype**: ${archetypeInfo.name} (${archetypeInfo.description})
-- **Target Structure**: ${detectedIntent.recommendedLayout} (${detectedIntent.structuralPattern})
-- **Contrast Guarantee**: Solid white (\`#ffffff\`) for main title, light slate for labels, and ${theme.primary} for accent badges. Ensure sharp readability.
+### 2. CREATIVE FREEDOM & AESTHETICS
+- **Layout & Composition**: You have full freedom over visual structure (geometric layouts, architecture diagrams, charts, or isometric visuals). Suggested direction: ${archetypeInfo.name}.
+- **Aesthetic Guidance**: Maintain a polished developer aesthetic. Avoid typical AI theme clichés. Use gradients, shadows, and geometric patterns creatively and tastefully.
+- **Readability**: Ensure text labels are clear, bold, and high-contrast.
 
-### 3. STRICT YUWBRNDR CANVAS ENGINE CONSTRAINTS
-1. **SANDBOX FUNCTION**:
-   Your code executes inside: \`new Function('canvas', 'ctx', 'width', 'height', code)\`
-   - Bindings: \`canvas\` (HTMLCanvasElement), \`ctx\` (CanvasRenderingContext2D), \`width\` (${preset.width}), \`height\` (${preset.height}).
-2. **NO SCRIPT TAGS & NO FUNCTION WRAPPERS**:
-   Write the direct executable statements. Do not define \`function()\` wrapper.
-3. **NO DOM ACCESS**:
-   Draw only via \`ctx\` standard 2D Canvas methods.
-4. **AVOID AI THEME CLICHÉS**:
-   Use matte engineering backgrounds, crisp geometric layouts, dot/coordinate grids, and high-contrast typography.
-5. **DRAWING BEST PRACTICES**:
-   - Fill background: \`ctx.fillStyle = '${theme.background}'; ctx.fillRect(0, 0, width, height);\`
-   - Subtle dot grid or grid lines: \`ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';\`
-   - Rounded cards: \`ctx.roundRect\` with \`ctx.fillStyle = '${theme.surface}'; ctx.fill();\`
-   - Typography: \`ctx.font = 'bold 32px system-ui, sans-serif'; ctx.textBaseline = 'middle';\`
-   - Stay strictly within width: ${preset.width}px and height: ${preset.height}px (no overflow).
+### 3. RUNTIME CONSTRAINTS
+- **Execution Context**: Runs inside \`new Function('canvas', 'ctx', 'width', 'height', code)\`.
+- **Pure Canvas 2D**: Use standard \`ctx\` methods (fillRect, roundRect, stroke, fillText, createLinearGradient, etc.). No DOM access or script tags.
+- **Stay Within Canvas**: Strictly respect width: ${preset.width}px and height: ${preset.height}px with no overflow.
 
-### 4. USER INPUT & INTENT SPECIFICATION
-${isUrlInstruction ? `Reference URL: ${userInstruction.trim()}` : `Requirement:\n${userInstruction.trim() || 'Create a geometric isometric diagram, system pipeline, or benchmark chart.'}`}
+### 4. USER INTENT
+${isUrlInstruction ? `Reference URL: ${userInstruction.trim()}` : `Requirement:\n${userInstruction.trim() || 'Create an engaging technical visual.'}`}
 
-### 5. OUTPUT INSTRUCTION
+### 5. OUTPUT FORMAT
 Return ONLY the raw JavaScript code inside a single \`\`\`javascript code block with zero preamble.`;
 }
