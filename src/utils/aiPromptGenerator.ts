@@ -1,6 +1,7 @@
 import { AspectPreset, ColorTheme } from '../types/studio';
 
 export type DesignArchetype =
+  | 'sketch'
   | 'cheatsheet'
   | 'architecture'
   | 'comparison'
@@ -36,6 +37,10 @@ export interface AiPromptOptions {
 }
 
 export const ARCHETYPE_LABELS: Record<DesignArchetype, { name: string; description: string }> = {
+  sketch: {
+    name: '2D Hand-Drawn & Sketch Art (Excalidraw Style)',
+    description: 'Organic hand-drawn wobbly borders, Comic Neue typography, sketchy arrows (──▶), and paper-feel 2D ink aesthetic.',
+  },
   cheatsheet: {
     name: 'Numbered Step-by-Step Cheatsheet (Library Showcase)',
     description: 'Structured 6-step developer guide with numbered color badges, code snippets with file tabs, and live UI preview mockups.',
@@ -186,10 +191,19 @@ Your mission: Translate the user's raw intent into clean, high-impact, professio
     ${detectedIntent.hierarchyGuide}
   - **Level 5 (Bottom Takeaway Banner)**: Compact rule of thumb or summary pill at the bottom (\`px-4 py-2.5 rounded-xl bg-slate-900/80 border border-white/10 flex items-center justify-between text-xs font-mono\`).
 
-### 3. CONTRAST RATIO & TYPOGRAPHY GUARANTEES (WCAG COMPLIANT)
+### 3. MOBILE-FIRST READABILITY & CONTRAST GUARANTEES (WCAG COMPLIANT)
+- **CRITICAL MOBILE READABILITY RULE**: When this graphic appears in a mobile social feed (LinkedIn, X, Instagram), it is scaled down 3x. Microscopic text becomes illegible and hurts engagement.
+  - **Headlines**: Use \`text-3xl\` to \`text-5xl\` (30px–48px) with bold/extrabold weight.
+  - **Section Titles**: Minimum \`text-base\` to \`text-lg\` (16px–18px).
+  - **Body & Explanations**: Minimum \`text-sm\` (14px) or \`text-base\` (16px).
+  - **Code Tokens & Badges**: Minimum \`text-xs\` (12px) to \`text-sm\` (14px). **NEVER use text-[9px] or text-[10px]**!
+  - **Concise Copy**: Keep text lines short and punchy so font sizes can remain comfortably large.
 - **Primary Text**: Use pure white (\`text-white\` or \`#ffffff\`) on dark background (\`${theme.background}\`) for guaranteed 16:1+ contrast ratio.
-- **Secondary & Body Text**: Use high-readability slate (\`text-slate-300\` or \`text-slate-400\`) exceeding 4.5:1 contrast.
-- **NEVER USE ILLEGIBLE CONTRAST**: Never place dark grey text on dark backgrounds. All text must be instantly readable at a glance on mobile feeds.
+- **Secondary & Body Text**: Use high-readability slate (\`text-slate-200\` or \`text-slate-300\`) exceeding 4.5:1 contrast.
+- **2D HAND-DRAWN & SKETCH ART STYLING (IF REQUESTED)**:
+  - Apply the organic wobbly border formula to cards: \`style="border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;"\`.
+  - Use \`font-['Comic_Neue']\` or \`font-['Space_Grotesk']\` for friendly, hand-sketched technical diagrams.
+  - Use 2D comic ink drop shadows: \`shadow-[3px_3px_0px_rgba(255,255,255,0.8)]\` with \`border-2 border-white\`.
 - **Monospace Elements**: Use \`font-mono\` for code tokens, numbers, metrics, and badges.
 
 ### 4. STRICT YUWBRNDR ENGINE CONSTRAINTS
