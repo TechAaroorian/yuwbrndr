@@ -1,10 +1,11 @@
 import { AspectPreset, ColorTheme } from '../types/studio';
 
 export type DesignArchetype =
+  | 'cheatsheet'
+  | 'architecture'
+  | 'comparison'
   | 'infographic'
   | 'bento'
-  | 'comparison'
-  | 'architecture'
   | 'announcement'
   | 'minimalist';
 
@@ -35,6 +36,10 @@ export interface AiPromptOptions {
 }
 
 export const ARCHETYPE_LABELS: Record<DesignArchetype, { name: string; description: string }> = {
+  cheatsheet: {
+    name: 'Numbered Step-by-Step Cheatsheet (Library Showcase)',
+    description: 'Structured 6-step developer guide with numbered color badges, code snippets with file tabs, and live UI preview mockups.',
+  },
   architecture: {
     name: 'Technical Architecture & Pipeline',
     description: 'Rich system dataflow diagram with terminal windows, protocol badges, sequence arrows, and code insets.',
