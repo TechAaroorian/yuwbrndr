@@ -94,7 +94,7 @@ export const Sidebar: React.FC<Props> = ({
       )}
 
       <aside 
-        className={`h-[calc(100vh-4rem)] border-r border-white/10 bg-studio-900/95 backdrop-blur-md flex flex-col shrink-0 select-none transition-all duration-200 ease-out z-40 ${
+        className={`h-full lg:h-[calc(100vh-4rem)] border-r border-white/10 bg-studio-900/95 backdrop-blur-md flex flex-col shrink-0 select-none transition-all duration-200 ease-out z-40 ${
           isOpen 
             ? 'fixed inset-y-0 left-0 w-80 max-w-[85vw] lg:relative lg:w-72 xl:w-80 lg:inset-auto overflow-y-auto shadow-2xl lg:shadow-none' 
             : 'w-0 overflow-hidden opacity-0 border-r-0 pointer-events-none hidden lg:flex'
@@ -108,10 +108,12 @@ export const Sidebar: React.FC<Props> = ({
         {onToggle && (
           <button
             onClick={onToggle}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-            title="Collapse Sidebar (Ctrl+B)"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="Close Panel"
+            aria-label="Close Panel"
           >
-            <PanelLeftClose className="w-4 h-4" />
+            <X className="w-4 h-4 lg:hidden" />
+            <PanelLeftClose className="w-4 h-4 hidden lg:block" />
           </button>
         )}
       </div>

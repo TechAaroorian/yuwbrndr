@@ -28,36 +28,36 @@ export const PlatformResolutionGuide: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in">
       <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-studio-900 shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-              <Share2 className="w-5 h-5" />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/10 bg-white/5">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shrink-0">
+              <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-slate-100 text-lg">Social & Web Platform Resolution Guide</h3>
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                <h3 className="font-bold text-slate-100 text-sm sm:text-lg">Social & Web Platform Resolution Guide</h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase font-semibold">
                   Updated for 2026 Algorithms
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-[11px] sm:text-xs text-slate-400 font-mono mt-0.5">
                 Optimal aspect ratios, safe zones, and compression bypass techniques for crystal-clear exports
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Global Pro-Tips Banner */}
-        <div className="px-6 py-3 bg-indigo-950/40 border-b border-indigo-500/20 flex items-center gap-3 text-xs text-indigo-200">
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-indigo-950/40 border-b border-indigo-500/20 flex items-center gap-2.5 text-xs text-indigo-200">
           <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
           <span>
             <strong>Pro Tip for Developers:</strong> Social platforms (X, LinkedIn, Meta) re-encode uploaded JPEGs. Always export in <strong>PNG at 2x (Retina)</strong> to keep small code snippets, diagram lines, and text vector-sharp.
@@ -65,7 +65,7 @@ export const PlatformResolutionGuide: React.FC<Props> = ({
         </div>
 
         {/* Platform Presets Cards Grid */}
-        <div className="p-6 overflow-y-auto space-y-4 max-h-[60vh]">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[70vh]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ASPECT_PRESETS.map((p) => {
               const isSelected = p.id === currentPreset.id;

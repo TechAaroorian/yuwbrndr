@@ -10,22 +10,22 @@ export const AboutModal: React.FC<Props> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-4" onMouseDown={onClose}>
-      <section className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-studio-900 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
-        <header className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/60 p-3 sm:p-4" onMouseDown={onClose}>
+      <section className="w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-studio-900 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
+        <header className="flex items-start justify-between gap-4 border-b border-white/10 px-4 sm:px-6 py-4 sm:py-5 shrink-0">
           <div className="flex items-center gap-3">
-            <img src="./yuwbrndr-logo.svg" alt="" className="h-11 w-11" />
+            <img src="./yuwbrndr-logo.svg" alt="" className="h-10 w-10 sm:h-11 sm:w-11 shrink-0" />
             <div>
-              <h2 className="text-xl font-bold text-slate-100">About Yuwbrndr</h2>
-              <p className="mt-1 text-sm text-slate-400">A browser-based studio for creating social graphics from code.</p>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-100">About Yuwbrndr</h2>
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-slate-400">A browser-based studio for creating social graphics from code.</p>
             </div>
           </div>
-          <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Close About dialog">
+          <button onClick={onClose} className="rounded-lg p-1.5 sm:p-2 text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Close About dialog">
             <X className="h-5 w-5" />
           </button>
         </header>
 
-        <div className="space-y-5 p-6">
+        <div className="space-y-4 sm:space-y-5 p-4 sm:p-6 overflow-y-auto">
           <p className="text-sm leading-7 text-slate-300">
             Yuwbrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed locally in the browser and are not intentionally sent to a Yuwbrndr server.
           </p>

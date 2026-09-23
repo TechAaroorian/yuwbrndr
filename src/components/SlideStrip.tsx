@@ -72,7 +72,7 @@ export const SlideStrip: React.FC<Props> = ({
       <button
         onClick={onDuplicate}
         disabled={slides.length >= MAX_SLIDES}
-        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         title="Duplicate active slide"
       >
         <CopyPlus className="w-3.5 h-3.5" />
@@ -80,7 +80,7 @@ export const SlideStrip: React.FC<Props> = ({
       <button
         onClick={onDelete}
         disabled={slides.length === 1}
-        className="p-2 rounded-lg text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         title="Delete active slide"
       >
         <Trash2 className="w-3.5 h-3.5" />
@@ -88,7 +88,7 @@ export const SlideStrip: React.FC<Props> = ({
       <button
         onClick={onCopy}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-white/10 text-[11px] font-semibold text-slate-300 hover:text-white hover:bg-white/5 disabled:opacity-50"
+        className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-white/10 text-[11px] font-semibold text-slate-300 hover:text-white hover:bg-white/5 disabled:opacity-50 transition-colors"
         title="Copy active slide as PNG"
       >
         {copiedImage ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -97,7 +97,7 @@ export const SlideStrip: React.FC<Props> = ({
       <button
         onClick={onExportAll}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-indigo-500/35 bg-indigo-500/10 text-[11px] font-semibold text-indigo-200 hover:bg-indigo-500/20 disabled:opacity-50"
+        className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-indigo-500/35 bg-indigo-500/10 text-[11px] font-semibold text-indigo-200 hover:bg-indigo-500/20 disabled:opacity-50 transition-colors"
         title="Export all slides as numbered PNGs in a ZIP file"
       >
         <Archive className="w-3.5 h-3.5" />
@@ -106,16 +106,16 @@ export const SlideStrip: React.FC<Props> = ({
       <button
         onClick={onExportPdf}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-500/20 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 p-1.5 sm:px-2.5 sm:py-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-500/20 disabled:opacity-50 transition-colors"
         title="Export all slides as a multi-page PDF"
       >
-        <FileDown className="w-3.5 h-3.5" />
-        <span className="hidden 2xl:inline">Export PDF</span>
+        <FileDown className="w-3.5 h-3.5 text-emerald-300" />
+        <span className="hidden xl:inline">Export PDF</span>
       </button>
       <button
         onClick={onExport}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-semibold text-white disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 p-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-semibold text-white disabled:opacity-50 transition-colors shadow-sm"
         title="Export active slide as PNG at 2x"
       >
         <Download className="w-3.5 h-3.5" />

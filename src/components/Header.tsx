@@ -94,7 +94,7 @@ export const Header: React.FC<Props> = ({
         {onToggleSidebar && (
           <button
             onClick={onToggleSidebar}
-            className={`hidden lg:flex p-2 rounded-lg border transition-colors ${
+            className={`hidden md:flex p-2 rounded-lg border transition-colors ${
               isSidebarOpen
                 ? 'border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
                 : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25'
@@ -137,8 +137,8 @@ export const Header: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Center Controls: Platform Selector & Zoom (Desktop) */}
-      <div className="hidden lg:flex items-center gap-2 bg-studio-950 p-1 rounded-lg border border-white/10">
+      {/* Center Controls: Platform Selector & Zoom (Desktop & Tablet) */}
+      <div className="hidden md:flex items-center gap-2 bg-studio-950 p-1 rounded-lg border border-white/10">
         {/* Platform Preset Dropdown */}
         <div className="relative">
           <button
@@ -233,8 +233,8 @@ export const Header: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Mobile Preset Trigger (< lg) */}
-      <div className="lg:hidden relative">
+      {/* Mobile Preset Trigger (< md) */}
+      <div className="md:hidden relative">
         <button
           onClick={() => setShowPresetMenu(!showPresetMenu)}
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-studio-950 border border-white/10 text-xs text-slate-200 font-medium max-w-[140px] sm:max-w-[180px] truncate"
