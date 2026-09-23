@@ -9,8 +9,85 @@ export interface CodePreset {
 
 export const CODE_PRESETS: CodePreset[] = [
   // ==========================================
-  // 1. INFOGRAPHICS
+  // 1. INFOGRAPHICS & BENCHMARKS
   // ==========================================
+  {
+    id: 'social-carousel-benchmark',
+    name: 'Social Carousel Benchmark (1.4M Posts)',
+    category: 'Infographic',
+    type: 'html',
+    description: 'Verified industry benchmark: multi-slide document carousels deliver 2.56x higher engagement & 3.2x dwell time.',
+    code: `<div class="w-full h-full p-10 bg-[#090a12] text-white flex flex-col justify-between relative overflow-hidden font-sans border border-white/10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 28px 28px;">
+  <!-- Header Eyebrow -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2.5">
+      <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 font-mono text-xs font-bold border border-indigo-500/30">
+        📊 INDUSTRY BENCHMARK 2026
+      </span>
+      <span class="text-xs font-mono text-slate-400">Socialinsider Study (1.4M+ Posts)</span>
+    </div>
+    <span class="text-xs font-mono text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+      Verified Data
+    </span>
+  </div>
+
+  <!-- Hero Comparison Title -->
+  <div class="my-3">
+    <h1 class="text-4xl font-extrabold text-white tracking-tight leading-tight">
+      Multi-Slide Carousels vs. Single Images
+    </h1>
+    <p class="text-base text-slate-400 mt-1">Why document slides dominate technical content feeds</p>
+  </div>
+
+  <!-- 3-Column Metrics Grid -->
+  <div class="grid grid-cols-3 gap-5 my-2">
+    <!-- Card 1: Engagement -->
+    <div class="p-6 rounded-2xl bg-slate-900/90 border border-indigo-500/30 shadow-xl flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono uppercase text-indigo-300 font-bold">Avg. Engagement Rate</div>
+        <div class="text-5xl font-black text-indigo-400 mt-2 font-mono">5.48%</div>
+        <div class="text-xs text-slate-400 mt-1">vs 2.14% for single image posts</div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+        <span class="text-emerald-400 font-bold">+156% Boost</span>
+        <span class="text-slate-500">2.56x Higher</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Dwell Time -->
+    <div class="p-6 rounded-2xl bg-slate-900/90 border border-cyan-500/30 shadow-xl flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono uppercase text-cyan-300 font-bold">Reader Dwell Time</div>
+        <div class="text-5xl font-black text-cyan-400 mt-2 font-mono">3.2x</div>
+        <div class="text-xs text-slate-400 mt-1">Longer interaction per swipe</div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+        <span class="text-cyan-300 font-bold">High Retention</span>
+        <span class="text-slate-500">Swipe-by-swipe</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Mobile Reality -->
+    <div class="p-6 rounded-2xl bg-slate-900/90 border border-amber-500/30 shadow-xl flex flex-col justify-between">
+      <div>
+        <div class="text-xs font-mono uppercase text-amber-300 font-bold">Mobile Feed Share</div>
+        <div class="text-5xl font-black text-amber-400 mt-2 font-mono">82%</div>
+        <div class="text-xs text-slate-400 mt-1">Readers viewing on phones</div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+        <span class="text-amber-300 font-bold">Mobile-First</span>
+        <span class="text-slate-500">Requires bold text</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Takeaway -->
+  <div class="px-5 py-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 flex items-center justify-between text-xs text-slate-300">
+    <span class="font-semibold text-indigo-200">💡 Takeaway for Developers:</span>
+    <span>Turn tutorials into bite-sized 4-6 slide PDF decks to maximize reach and readability.</span>
+  </div>
+</div>`,
+  },
   {
     id: 'promise-cheatsheet',
     name: 'Promise.all vs allSettled',
