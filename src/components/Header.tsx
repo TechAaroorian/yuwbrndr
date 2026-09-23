@@ -110,15 +110,15 @@ export const Header: React.FC<Props> = ({
         )}
 
         <img src="./yuwbrndr-logo.svg" alt="" className="w-8 h-8 sm:w-9 sm:h-9 shrink-0" />
-        <div>
+        <div className="shrink-0">
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg">Yuwbrndr</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium">
-              <span className="inline sm:hidden">Design by Code</span>
-              <span className="hidden sm:inline">Design by Code · Design to All</span>
+            <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg whitespace-nowrap">Yuwbrndr</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium whitespace-nowrap shrink-0 hidden sm:inline">
+              <span className="hidden xl:inline">Design by Code · Design to All</span>
+              <span className="xl:hidden">Design by Code</span>
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 hidden md:block">Developer Brand Illustration Platform</p>
+          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand Illustration Platform</p>
         </div>
 
         <div className="hidden sm:flex items-center rounded-lg border border-white/10 bg-studio-950 p-1" aria-label="Document type">
