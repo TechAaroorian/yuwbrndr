@@ -27,7 +27,7 @@ export const AboutModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
         <div className="space-y-4 sm:space-y-5 p-4 sm:p-6 overflow-y-auto">
           <p className="text-sm leading-7 text-slate-300">
-            Yuwbrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed locally in the browser and are not intentionally sent to a Yuwbrndr server.
+            Yuwbrndr lets anyone create and export graphics without an account, watermark, or usage limit. Designs and uploaded files are processed 100% locally in your browser. We use lightweight, cookie-free GoatCounter strictly for anonymous visit counts—your code, designs, and content are never tracked or uploaded.
           </p>
 
           <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/20 dark:bg-amber-500/10">
