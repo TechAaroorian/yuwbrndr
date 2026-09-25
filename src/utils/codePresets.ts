@@ -719,23 +719,23 @@ ctx.fillText('💡 Note: All systems operational. Zero degraded pods across 12 n
   <svg id="rough-layer" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 5;"></svg>
 
   <!-- 1. HEADER SECTION -->
-  <div class="relative z-10 flex items-start justify-between">
+  <div class="relative z-10 flex items-start justify-between gap-4">
     <div>
-      <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-200 text-amber-950 border-2 border-slate-900 rounded-lg text-sm font-bold rotate-[-1.5deg] shadow-[2px_2px_0px_#0f172a]">
-        <span>⚡ System Architecture Note</span>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-amber-200 text-amber-950 border-2 border-slate-900 rounded-lg text-xs font-black shadow-[2px_2px_0px_#0f172a] whitespace-nowrap">
+        <span>⚡ System Architecture</span>
       </div>
-      <h1 class="text-4xl sm:text-5xl font-black text-slate-950 mt-2 tracking-tight">
+      <h1 class="text-3xl sm:text-4xl font-black text-slate-950 mt-1.5 leading-snug tracking-tight">
         Event-Driven Pipeline & Cache
       </h1>
-      <p class="text-lg text-slate-700 font-bold mt-1">
+      <p class="text-sm sm:text-base text-slate-700 font-bold mt-1 leading-normal">
         Hand-drawn microservice layout with asynchronous worker queues & edge caching.
       </p>
     </div>
-    <div class="hidden sm:flex flex-col items-end gap-1">
-      <span class="px-3 py-1 bg-emerald-200 text-emerald-950 border-2 border-slate-900 rounded-md font-bold text-sm rotate-[1deg] shadow-[2px_2px_0px_#0f172a]">
+    <div class="hidden sm:flex flex-col items-end gap-1 shrink-0">
+      <span class="whitespace-nowrap px-3 py-1 bg-emerald-200 text-emerald-950 border-2 border-slate-900 rounded-md font-black text-xs shadow-[2px_2px_0px_#0f172a]">
         ● 99.99% Reliability
       </span>
-      <span class="text-xs text-slate-500 font-bold">Updated: Today</span>
+      <span class="text-[11px] text-slate-500 font-bold whitespace-nowrap">Updated: Today</span>
     </div>
   </div>
 
@@ -797,14 +797,14 @@ ctx.fillText('💡 Note: All systems operational. Zero degraded pods across 12 n
   </div>
 
   <!-- 3. FOOTER TAKEAWAY BANNER -->
-  <div class="relative z-10 flex items-center justify-between p-4 bg-amber-100 border-3 border-slate-900 rounded-xl shadow-[3px_3px_0px_#0f172a]">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">💡</span>
-      <span class="text-base sm:text-lg font-black text-slate-950">
-        Rule of Thumb: Decouple synchronous user requests from asynchronous background workers using an event log.
+  <div class="relative z-10 flex items-center justify-between px-4 py-2.5 bg-amber-100 border-3 border-slate-900 rounded-xl shadow-[3px_3px_0px_#0f172a]">
+    <div class="flex items-center gap-2.5">
+      <span class="text-xl shrink-0">💡</span>
+      <span class="text-xs sm:text-sm font-black text-slate-950 leading-snug">
+        Rule of Thumb: Decouple synchronous requests from background workers using an event log.
       </span>
     </div>
-    <span class="hidden md:inline-block px-3 py-1 bg-white border-2 border-slate-900 rounded-lg text-xs font-mono font-bold text-slate-800">
+    <span class="hidden md:inline-block whitespace-nowrap px-2.5 py-0.5 bg-white border-2 border-slate-900 rounded-lg text-xs font-mono font-bold text-slate-800 shrink-0">
       Rough.js + HTML5
     </span>
   </div>
