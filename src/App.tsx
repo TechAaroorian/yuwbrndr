@@ -768,7 +768,7 @@ export function App() {
                 mobileTab === 'code' ? 'flex w-full lg:w-[500px]' : 'hidden lg:flex'
               } ${
                 isEditorWide
-                  ? 'fixed inset-0 z-50 h-screen w-screen pb-0 lg:relative lg:inset-auto lg:h-[calc(100vh-4rem)] lg:w-[680px] xl:w-[740px]'
+                  ? 'fixed inset-0 z-50 h-screen w-screen pb-0 lg:relative lg:inset-auto lg:h-[calc(100vh-4rem)] lg:w-[680px] xl:w-[740px] lg:z-20'
                   : 'z-20 lg:w-[500px] xl:w-[580px]'
               }`}
             >
