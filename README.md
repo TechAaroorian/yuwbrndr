@@ -24,7 +24,7 @@
 ---
 
 <p align="center">
-  <img src="public/screenshots/dark.png" alt="Yuwbrndr Studio - Dark Theme" width="100%" />
+  <img src="public/demo.gif" alt="Yuwbrndr Studio - Interactive Demo" width="100%" />
 </p>
 
 ## Why Yuwbrndr?
