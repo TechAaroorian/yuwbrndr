@@ -1,0 +1,35 @@
+name: Feature Request / Template Idea
+description: Suggest a new idea, template preset, typography option, or feature for Yuwbrndr
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea for a new visual preset, canvas capability, or developer feature? Let's hear it!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem or missing capability is.
+      placeholder: I'm always frustrated when trying to make a 3-step architecture diagram...
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear description of what you want to happen, including any UI or code ideas.
+      placeholder: Add a new architecture preset with glowing connector lines...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: Any alternative solutions or features you've evaluated.
+  - type: textarea
+    id: visual-references
+    attributes:
+      label: Visual References or Inspiration
+      description: Links to visual references, sketches, or screenshots.
