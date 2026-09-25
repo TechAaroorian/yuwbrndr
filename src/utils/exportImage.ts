@@ -32,12 +32,55 @@ async function canvasFrameDataUrl(frame: HTMLIFrameElement, scale: number): Prom
 }
 
 async function renderElement(element: HTMLElement, scale: number): Promise<string> {
+  const targetWidth = parseInt(element.style.width, 10) || element.offsetWidth || 1200;
+  const targetHeight = parseInt(element.style.height, 10) || element.offsetHeight || 675;
+
   const frame = findPreviewFrame(element);
-  if (!frame) return toPng(element, { pixelRatio: scale, cacheBust: true });
+  if (!frame) {
+    return toPng(element, {
+      width: targetWidth,
+      height: targetHeight,
+      canvasWidth: targetWidth * scale,
+      canvasHeight: targetHeight * scale,
+      pixelRatio: scale,
+      cacheBust: true,
+      style: {
+        transform: 'none',
+        width: `${targetWidth}px`,
+        height: `${targetHeight}px`,
+      },
+    });
+  }
+
   if (frame.dataset.yuwbrndrPreview === 'canvas') return canvasFrameDataUrl(frame, scale);
-  const body = frame.contentDocument?.body;
+
+  const doc = frame.contentDocument;
+  const body = doc?.body;
   if (!body) throw new Error('HTML preview is not ready for export.');
-  return toPng(body, { pixelRatio: scale, cacheBust: true });
+
+  if (doc?.fonts?.ready) {
+    try {
+      await doc.fonts.ready;
+    } catch {
+      // Non-fatal if font loading check rejects
+    }
+  }
+
+  return toPng(body, {
+    width: targetWidth,
+    height: targetHeight,
+    canvasWidth: targetWidth * scale,
+    canvasHeight: targetHeight * scale,
+    pixelRatio: scale,
+    cacheBust: true,
+    style: {
+      transform: 'none',
+      width: `${targetWidth}px`,
+      height: `${targetHeight}px`,
+      margin: '0',
+      overflow: 'hidden',
+    },
+  });
 }
 
 export async function renderElementAsPngBlob(
@@ -87,7 +130,21 @@ export async function copyElementToClipboard(
         : await renderElement(element, scale);
       blob = await fetch(dataUrl).then((response) => response.blob());
     } else {
-      blob = await toBlob(element, { pixelRatio: scale, cacheBust: true });
+      const targetWidth = parseInt(element.style.width, 10) || element.offsetWidth || 1200;
+      const targetHeight = parseInt(element.style.height, 10) || element.offsetHeight || 675;
+      blob = await toBlob(element, {
+        width: targetWidth,
+        height: targetHeight,
+        canvasWidth: targetWidth * scale,
+        canvasHeight: targetHeight * scale,
+        pixelRatio: scale,
+        cacheBust: true,
+        style: {
+          transform: 'none',
+          width: `${targetWidth}px`,
+          height: `${targetHeight}px`,
+        },
+      });
     }
 
     if (!blob) throw new Error('Blob generation failed');
