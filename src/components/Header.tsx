@@ -88,7 +88,7 @@ export const Header: React.FC<Props> = ({
   const AppThemeIcon = appTheme === 'light' ? Sun : appTheme === 'dark' ? Moon : Monitor;
 
   return (
-    <header className="h-16 border-b border-white/10 bg-studio-900 px-3 sm:px-5 flex items-center justify-between z-30 select-none relative">
+    <header className="h-16 border-b border-white/10 bg-studio-900 px-3 sm:px-5 flex items-center justify-between z-40 select-none relative">
       {/* Brand Title & Sidebar Toggle */}
       <div className="flex items-center gap-2 sm:gap-3">
         {onToggleSidebar && (
@@ -423,7 +423,7 @@ export const Header: React.FC<Props> = ({
           </button>
 
           {showExportMenu && (
-            <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-2 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-2 animate-in fade-in zoom-in-95 duration-150">
               {/* Optional Custom File Name */}
               <div className="px-1 pt-1 pb-1.5 border-b border-white/10 space-y-1">
                 <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center justify-between">
