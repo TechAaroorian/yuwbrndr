@@ -28,6 +28,8 @@ interface Props {
   onSelectTheme: (theme: ColorTheme) => void;
   zoom: number;
   onZoomChange: (newZoom: number) => void;
+  fontScale: number;
+  onFontScaleChange: (newScale: number) => void;
   autoFit?: boolean;
   onToggleAutoFit?: () => void;
   onExport: (scale: 1 | 2 | 4, customName?: string) => void;
@@ -57,6 +59,8 @@ export const Header: React.FC<Props> = ({
   onSelectTheme,
   zoom,
   onZoomChange,
+  fontScale,
+  onFontScaleChange,
   autoFit,
   onToggleAutoFit,
   onExport,
@@ -229,6 +233,32 @@ export const Header: React.FC<Props> = ({
             title="Zoom In"
           >
             <ZoomIn className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Font Size Scaling Controls */}
+        <div className="flex items-center gap-1 border-l border-white/10 pl-2">
+          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider hidden lg:inline">Font</span>
+          <button
+            onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
+            className="px-1.5 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors font-mono text-xs font-bold"
+            title="Decrease Font Size (A-)"
+          >
+            A-
+          </button>
+          <button
+            onClick={() => onFontScaleChange(1.0)}
+            className="text-xs font-mono text-slate-300 hover:text-indigo-300 min-w-[2.5rem] text-center transition-colors"
+            title="Click to reset font size to 100%"
+          >
+            {Math.round(fontScale * 100)}%
+          </button>
+          <button
+            onClick={() => onFontScaleChange(Math.min(2.0, Math.round((fontScale + 0.05) * 100) / 100))}
+            className="px-1.5 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors font-mono text-xs font-bold"
+            title="Increase Font Size (A+)"
+          >
+            A+
           </button>
         </div>
       </div>
