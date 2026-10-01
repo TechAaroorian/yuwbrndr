@@ -8,6 +8,8 @@ interface Props {
   currentTheme: ColorTheme;
   zoom: number;
   onZoomChange: (newZoom: number) => void;
+  fontScale: number;
+  onFontScaleChange: (newScale: number) => void;
   autoFit: boolean;
   onToggleAutoFit: () => void;
   canvasRef: React.RefObject<HTMLDivElement | null>;
@@ -28,6 +30,8 @@ export const CanvasViewport: React.FC<Props> = ({
   currentTheme,
   zoom,
   onZoomChange,
+  fontScale,
+  onFontScaleChange,
   autoFit,
   onToggleAutoFit,
   canvasRef,
@@ -117,7 +121,30 @@ export const CanvasViewport: React.FC<Props> = ({
               {currentPreset.aspectRatio}
             </span>
             <span className="text-cyan-400 font-bold shrink-0 hidden xs:inline">{currentPreset.width} × {currentPreset.height} px</span>
-            <span className="text-slate-500 shrink-0">({Math.round(zoom * 100)}%)</span>
+            <span className="text-slate-500 shrink-0">({Math.round(zoom * 100)}% zoom)</span>
+            <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
+              <button
+                onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
+                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
+                title="Decrease Font Size (A-)"
+              >
+                A-
+              </button>
+              <button
+                onClick={() => onFontScaleChange(1.0)}
+                className="px-1 py-0.5 rounded text-slate-300 hover:text-indigo-300 hover:bg-white/10 text-[10px] font-mono"
+                title="Reset Font Size to 100%"
+              >
+                {Math.round(fontScale * 100)}%
+              </button>
+              <button
+                onClick={() => onFontScaleChange(Math.min(2.0, Math.round((fontScale + 0.05) * 100) / 100))}
+                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
+                title="Increase Font Size (A+)"
+              >
+                A+
+              </button>
+            </div>
           </div>
         </div>
 
@@ -208,6 +235,7 @@ export const CanvasViewport: React.FC<Props> = ({
                 height={currentPreset.height}
                 userImage={userImage}
                 useAsBackground={useAsBackground}
+                fontScale={fontScale}
                 onPasteSample={onLoadSample}
                 onTriggerUpload={onTriggerUpload}
                 onOpenAiPrompt={onOpenAiPrompt}

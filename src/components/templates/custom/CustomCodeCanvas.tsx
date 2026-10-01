@@ -10,6 +10,7 @@ interface Props {
   theme: ColorTheme;
   width: number;
   height: number;
+  fontScale?: number;
   userImage?: string | null;
   useAsBackground?: boolean;
   onPasteSample?: (type: 'html' | 'canvas') => void;
@@ -26,6 +27,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   theme,
   width,
   height,
+  fontScale = 1.0,
   userImage,
   useAsBackground = false,
   onPasteSample,
@@ -81,7 +83,8 @@ export const CustomCodeCanvas: React.FC<Props> = ({
       .font-fira, [class*="font-fira"] { font-family: 'Fira Code', monospace !important; }
     `;
 
-    const base = `html,body{width:100%;height:100%;margin:0;overflow:hidden}*{box-sizing:border-box}body{${background}}`;
+    const baseFontSize = Math.round(16 * (fontScale || 1.0) * 100) / 100;
+    const base = `html{font-size:${baseFontSize}px;--font-scale:${fontScale || 1.0}}html,body{width:100%;height:100%;margin:0;overflow:hidden}*{box-sizing:border-box}body{${background}}`;
 
     if (codeType === 'html') {
       return `<!doctype html><html><head><meta charset="utf-8">${fontLinks}<style>${base}\n${fontStyles}\n${runtimeCss}</style><script>${roughScript}</script><script>
