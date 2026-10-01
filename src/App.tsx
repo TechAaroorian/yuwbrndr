@@ -81,6 +81,22 @@ export function App() {
   const [currentPreset, setCurrentPreset] = useState<AspectPreset>(ASPECT_PRESETS[0]);
   const [currentTheme, setCurrentTheme] = useState<ColorTheme>(COLOR_THEMES.midnight);
   const [zoom, setZoom] = useState<number>(0.55);
+  const [fontScale, setFontScale] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("yuwbrndr-font-scale");
+      const parsed = saved ? parseFloat(saved) : 1.0;
+      return isNaN(parsed) || parsed < 0.5 || parsed > 2.0 ? 1.0 : parsed;
+    }
+    return 1.0;
+  });
+
+  const handleFontScaleChange = (newScale: number) => {
+    const clamped = Math.max(0.6, Math.min(2.0, Math.round(newScale * 100) / 100));
+    setFontScale(clamped);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("yuwbrndr-font-scale", clamped.toString());
+    }
+  };
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
@@ -651,6 +667,8 @@ export function App() {
         onSelectTheme={setCurrentTheme}
         zoom={zoom}
         onZoomChange={handleManualZoom}
+        fontScale={fontScale}
+        onFontScaleChange={handleFontScaleChange}
         autoFit={autoFit}
         onToggleAutoFit={() => setAutoFit((prev) => !prev)}
         onExport={handleExport}
@@ -725,6 +743,8 @@ export function App() {
             currentTheme={currentTheme}
             zoom={zoom}
             onZoomChange={setZoom}
+            fontScale={fontScale}
+            onFontScaleChange={handleFontScaleChange}
             autoFit={autoFit}
             onToggleAutoFit={() => setAutoFit((prev) => !prev)}
             canvasRef={canvasRef}
