@@ -60,8 +60,9 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   }, [code, codeType]);
 
   const srcDoc = useMemo(() => {
-    const background = useAsBackground && userImage
-      ? `background-color:${theme.background};background-image:url(${JSON.stringify(userImage)});background-size:cover;background-position:center;`
+    const safeUserImage = userImage ? userImage.replace(/['"\\]/g, '') : '';
+    const background = useAsBackground && safeUserImage
+      ? `background-color:${theme.background};background-image:url('${safeUserImage}');background-size:cover;background-position:center;background-repeat:no-repeat;`
       : `background:${theme.background};`;
 
     const fontLinks = `
@@ -115,7 +116,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         }
         document.addEventListener('DOMContentLoaded', () => { initRoughDeclarative(); send('render-ready'); });
         setTimeout(() => { initRoughDeclarative(); send('render-ready'); }, 50);
-      </script></head><body>${code}</body></html>`;
+      </script></head><body style="${background}">${code}</body></html>`;
     }
 
     const safeCode = escapeScriptValue(code);
@@ -128,7 +129,34 @@ export const CustomCodeCanvas: React.FC<Props> = ({
       try { const run=new Function('canvas','ctx','width','height','rough',${safeCode}); run(canvas,ctx,width,height,window.rough); send('render-ready'); }
       catch(error){ send('render-error',{message:error instanceof Error?error.message:String(error)}); }
       addEventListener('message',(event)=>{ if(event.data?.type==='yuwbrndr-export'&&event.data?.frameId===frameId){
-        try { const scale=Math.max(1,Number(event.data.scale)||1); const output=document.createElement('canvas'); output.width=width*scale; output.height=height*scale; const outputCtx=output.getContext('2d'); outputCtx.drawImage(canvas,0,0,output.width,output.height); send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')}); }
+        try {
+          const scale=Math.max(1,Number(event.data.scale)||1);
+          const output=document.createElement('canvas');
+          output.width=width*scale;
+          output.height=height*scale;
+          const outputCtx=output.getContext('2d');
+          const finish=()=>{
+            outputCtx.drawImage(canvas,0,0,output.width,output.height);
+            send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')});
+          };
+          if(${escapeScriptValue(useAsBackground && !!userImage)}){
+            const bgImg=new Image();
+            bgImg.onload=()=>{
+              try{ outputCtx.drawImage(bgImg,0,0,output.width,output.height); }catch(e){}
+              finish();
+            };
+            bgImg.onerror=()=>{
+              outputCtx.fillStyle=${escapeScriptValue(theme.background)};
+              outputCtx.fillRect(0,0,output.width,output.height);
+              finish();
+            };
+            bgImg.src=${escapeScriptValue(userImage || '')};
+          } else {
+            outputCtx.fillStyle=${escapeScriptValue(theme.background)};
+            outputCtx.fillRect(0,0,output.width,output.height);
+            finish();
+          }
+        }
         catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
       }});
     </script></body></html>`;
@@ -160,7 +188,15 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   }
 
   return (
-    <div className="design-canvas w-full h-full relative overflow-hidden" style={{ background: theme.background }}>
+    <div 
+      className="design-canvas w-full h-full relative overflow-hidden" 
+      style={{ 
+        backgroundColor: theme.background,
+        backgroundImage: useAsBackground && userImage ? `url("${userImage}")` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
       <iframe
         title="Sandboxed design preview"
         data-yuwbrndr-preview={codeType}
