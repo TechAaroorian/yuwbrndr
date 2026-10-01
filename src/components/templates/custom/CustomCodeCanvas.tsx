@@ -60,8 +60,9 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   }, [code, codeType]);
 
   const srcDoc = useMemo(() => {
-    const background = useAsBackground && userImage
-      ? `background-color:${theme.background};background-image:url(${JSON.stringify(userImage)});background-size:cover;background-position:center;`
+    const safeUserImage = userImage ? userImage.replace(/['"\\]/g, '') : '';
+    const background = useAsBackground && safeUserImage
+      ? `background-color:${theme.background};background-image:url('${safeUserImage}');background-size:cover;background-position:center;background-repeat:no-repeat;`
       : `background:${theme.background};`;
 
     const fontLinks = `
