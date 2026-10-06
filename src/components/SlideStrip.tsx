@@ -45,15 +45,20 @@ export const SlideStrip: React.FC<Props> = ({
         <button
           key={slide.id}
           onClick={() => onSelect(slide.id)}
-          className={`shrink-0 min-w-[76px] px-2.5 py-1.5 rounded-lg border text-left transition-colors ${
+          className={`shrink-0 min-w-[80px] px-2.5 py-1.5 rounded-lg border text-left transition-all hover:-translate-y-[1px] ${
             slide.id === activeSlideId
-              ? 'border-indigo-500/60 bg-indigo-500/20 text-indigo-200'
+              ? 'border-indigo-500/60 bg-indigo-500/20 text-indigo-200 shadow-sm'
               : 'border-white/10 bg-studio-850 text-slate-400 hover:text-slate-200 hover:bg-white/5'
           }`}
           title={slide.name}
         >
-          <span className="block text-[9px] font-mono uppercase opacity-70">Slide {index + 1}</span>
-          <span className="block max-w-[92px] truncate text-[11px] font-semibold">{slide.name}</span>
+          <div className="flex items-center justify-between text-[9px] font-mono uppercase opacity-75">
+            <span>Slide {String(index + 1).padStart(2, '0')}</span>
+            <span className={slide.id === activeSlideId ? 'text-indigo-400' : 'text-slate-500'}>
+              {slide.id === activeSlideId ? '✦' : '✧'}
+            </span>
+          </div>
+          <span className="block max-w-[92px] truncate text-[11px] font-semibold mt-0.5">{slide.name}</span>
         </button>
       ))}
 

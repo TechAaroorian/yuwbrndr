@@ -19,7 +19,8 @@ import {
   Sun,
   MoreVertical
 } from 'lucide-react';
-import { ASPECT_PRESETS, COLOR_THEMES, AppTheme, AspectPreset, ColorTheme } from '../types/studio';
+import { ASPECT_PRESETS, COLOR_THEMES, AppTheme, StudioPalette, AspectPreset, ColorTheme } from '../types/studio';
+import { AarSelect } from './AarSelect';
 
 interface Props {
   currentPreset: AspectPreset;
@@ -40,6 +41,8 @@ interface Props {
   onOpenAbout: () => void;
   appTheme: AppTheme;
   onAppThemeChange: (theme: AppTheme) => void;
+  appPalette: StudioPalette;
+  onAppPaletteChange: (palette: StudioPalette) => void;
   isExporting: boolean;
   copiedImage: boolean;
   isSidebarOpen?: boolean;
@@ -71,6 +74,8 @@ export const Header: React.FC<Props> = ({
   onOpenAbout,
   appTheme,
   onAppThemeChange,
+  appPalette,
+  onAppPaletteChange,
   isExporting,
   copiedImage,
   isSidebarOpen = true,
@@ -118,11 +123,11 @@ export const Header: React.FC<Props> = ({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg whitespace-nowrap">Yuwbrndr</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium whitespace-nowrap shrink-0 hidden sm:inline">
-              <span className="hidden xl:inline">Design by Code · Design to All</span>
-              <span className="xl:hidden">Design by Code</span>
+              <span className="hidden xl:inline">Arcane Atelier · Modern Alchemy</span>
+              <span className="xl:hidden">Arcane Atelier</span>
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand Illustration Platform</p>
+          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand &amp; Transmutation Bench</p>
         </div>
 
         <div className="hidden sm:flex items-center rounded-lg border border-white/10 bg-studio-950 p-1" aria-label="Document type">
@@ -130,13 +135,13 @@ export const Header: React.FC<Props> = ({
             onClick={() => onDocumentModeChange('design')}
             className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'design' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
           >
-            Single design
+            ✦ Design Altar
           </button>
           <button
             onClick={() => onDocumentModeChange('slides')}
             className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'slides' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
           >
-            Slide deck
+            ⟡ Grimoire Deck
           </button>
         </div>
       </div>
@@ -310,10 +315,38 @@ export const Header: React.FC<Props> = ({
 
       {/* Right Actions: Responsive Desktop & Mobile */}
       <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* App Theme Toggle (Accessible on all screens) */}
+        {/* Arcane Atelier: Appearance & Realm Selectors (Desktop & Tablet) */}
+        <div className="hidden sm:flex items-center gap-1.5">
+          <AarSelect
+            compact
+            menuAlign="right"
+            value={appTheme}
+            onChange={(val) => onAppThemeChange(val as AppTheme)}
+            options={[
+              { value: 'light', label: '☀️ Light', shortLabel: '☀️ Light' },
+              { value: 'dark', label: '🌙 Dark', shortLabel: '🌙 Dark' },
+              { value: 'system', label: '💻 System', shortLabel: '💻 System' },
+            ]}
+          />
+          <AarSelect
+            compact
+            menuAlign="right"
+            value={appPalette}
+            onChange={(val) => onAppPaletteChange(val as StudioPalette)}
+            options={[
+              { value: 'obsidian', label: '✦ Obsidian (Night Atelier)', shortLabel: '✦ Obsidian' },
+              { value: 'parchment', label: '✧ Parchment (Ancient Vellum)', shortLabel: '✧ Parchment' },
+              { value: 'jade', label: '⟡ Celestial Jade', shortLabel: '⟡ Jade' },
+              { value: 'forest', label: '🌿 Forest (Botanical)', shortLabel: '🌿 Forest' },
+              { value: 'iris', label: '🔮 Iris (Mystic)', shortLabel: '🔮 Iris' },
+            ]}
+          />
+        </div>
+
+        {/* Mobile Quick Theme Toggle */}
         <button
           onClick={cycleAppTheme}
-          className="p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
+          className="sm:hidden p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
           title={`Theme: ${appTheme}`}
           aria-label={`Theme: ${appTheme}`}
         >
