@@ -119,11 +119,11 @@ export const Header: React.FC<Props> = ({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg whitespace-nowrap">Yuwbrndr</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium whitespace-nowrap shrink-0 hidden sm:inline">
-              <span className="hidden xl:inline">Arcane Atelier · Modern Alchemy</span>
-              <span className="xl:hidden">Arcane Atelier</span>
+              <span className="hidden xl:inline">Developer Brand Studio</span>
+              <span className="xl:hidden">Brand Studio</span>
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand &amp; Transmutation Bench</p>
+          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand &amp; Social Card Studio</p>
         </div>
 
         <div className="hidden sm:flex items-center rounded-lg border border-white/10 bg-studio-950 p-1" aria-label="Document type">
@@ -131,13 +131,13 @@ export const Header: React.FC<Props> = ({
             onClick={() => onDocumentModeChange('design')}
             className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'design' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
           >
-            ✦ Design Altar
+            ✦ Single Graphic
           </button>
           <button
             onClick={() => onDocumentModeChange('slides')}
             className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'slides' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
           >
-            ⟡ Grimoire Deck
+            ⟡ Slide Deck
           </button>
         </div>
       </div>
@@ -221,11 +221,11 @@ export const Header: React.FC<Props> = ({
             value={appPalette}
             onChange={(val) => onAppPaletteChange(val as StudioPalette)}
             options={[
-              { value: 'obsidian', label: '✦ Obsidian (Night Atelier)', shortLabel: '✦ Obsidian' },
-              { value: 'parchment', label: '✧ Parchment (Ancient Vellum)', shortLabel: '✧ Parchment' },
-              { value: 'jade', label: '⟡ Celestial Jade', shortLabel: '⟡ Jade' },
-              { value: 'forest', label: '🌿 Forest (Botanical)', shortLabel: '🌿 Forest' },
-              { value: 'iris', label: '🔮 Iris (Mystic)', shortLabel: '🔮 Iris' },
+              { value: 'obsidian', label: '✦ Obsidian (Dark)', shortLabel: '✦ Obsidian' },
+              { value: 'parchment', label: '✧ Parchment (Light)', shortLabel: '✧ Parchment' },
+              { value: 'jade', label: '⟡ Jade', shortLabel: '⟡ Jade' },
+              { value: 'forest', label: '🌿 Forest', shortLabel: '🌿 Forest' },
+              { value: 'iris', label: '🔮 Iris', shortLabel: '🔮 Iris' },
             ]}
           />
         </div>
