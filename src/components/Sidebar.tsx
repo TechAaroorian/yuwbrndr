@@ -107,8 +107,8 @@ export const Sidebar: React.FC<Props> = ({
       {/* Top Header Row with Collapse Button */}
       <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-studio-950/40">
         <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400 flex items-center gap-1.5">
-          <span className="text-indigo-400">✧</span>
-          <span>Incantation Station</span>
+          <span className="text-indigo-400">✦</span>
+          <span>Studio Controls</span>
         </span>
         {onToggle && (
           <button
@@ -143,7 +143,7 @@ export const Sidebar: React.FC<Props> = ({
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            ✦ Archetypes
+            ✦ Templates
           </button>
           <button
             onClick={() => setActiveTab('assets')}
@@ -153,7 +153,7 @@ export const Sidebar: React.FC<Props> = ({
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            ⟡ Artifacts & Runes
+            ⟡ Assets &amp; Media
           </button>
         </div>
 
