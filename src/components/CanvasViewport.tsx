@@ -112,16 +112,17 @@ export const CanvasViewport: React.FC<Props> = ({
         </button>
       )}
 
-      {/* Top Floating Platform Info & Resolution Banner */}
-      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0">
+      {/* Top Floating Platform Info & Transmutation Status Ribbon */}
+      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0 shadow-sm backdrop-blur-md">
         <div className="flex items-center gap-2 truncate">
           <div className="flex items-center gap-1.5 truncate text-[10px] sm:text-[11px]">
+            <span className="text-indigo-400 font-bold shrink-0">⟡</span>
             <span className="font-bold text-slate-100 truncate">{currentPreset.name}</span>
             <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold shrink-0">
               {currentPreset.aspectRatio}
             </span>
             <span className="text-cyan-400 font-bold shrink-0 hidden xs:inline">{currentPreset.width} × {currentPreset.height} px</span>
-            <span className="text-slate-500 shrink-0">({Math.round(zoom * 100)}% zoom)</span>
+            <span className="text-slate-500 shrink-0 font-mono">({Math.round(zoom * 100)}% zoom)</span>
             <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
               <button
                 onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
@@ -187,7 +188,7 @@ export const CanvasViewport: React.FC<Props> = ({
         </div>
       )}
 
-      {/* CENTERED SCALED CANVAS CONTAINER WITH EXACT BOUNDING BOX */}
+      {/* The Sacred Altar Viewport */}
       <div 
         ref={canvasContainerRef}
         className="flex-1 w-full flex items-center justify-center overflow-auto p-4 min-h-0 min-w-0 relative"
@@ -199,6 +200,8 @@ export const CanvasViewport: React.FC<Props> = ({
         />
 
         <div
+          className="aar-altar"
+          data-corner-brackets="true"
           style={{
             width: `${canvasWidth}px`,
             height: `${canvasHeight}px`,

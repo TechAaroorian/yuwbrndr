@@ -6,6 +6,7 @@ import {
   COLOR_THEMES, 
   ColorTheme,
   AppTheme,
+  StudioPalette,
   UploadedAsset
 } from './types/studio';
 import { Header } from './components/Header';
@@ -113,6 +114,10 @@ export function App() {
   const [appTheme, setAppTheme] = useState<AppTheme>(() => {
     const saved = localStorage.getItem('yuwbrndr-theme');
     return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+  });
+  const [appPalette, setAppPalette] = useState<StudioPalette>(() => {
+    const saved = localStorage.getItem('yuwbrndr-palette');
+    return (saved === 'obsidian' || saved === 'parchment' || saved === 'jade' || saved === 'forest' || saved === 'iris') ? saved : 'obsidian';
   });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -253,13 +258,15 @@ export function App() {
     const applyTheme = () => {
       const resolved = appTheme === 'system' ? (media.matches ? 'dark' : 'light') : appTheme;
       document.documentElement.dataset.theme = resolved;
+      document.documentElement.dataset.palette = appPalette;
       document.documentElement.classList.toggle('dark', resolved === 'dark');
       localStorage.setItem('yuwbrndr-theme', appTheme);
+      localStorage.setItem('yuwbrndr-palette', appPalette);
     };
     applyTheme();
     media.addEventListener('change', applyTheme);
     return () => media.removeEventListener('change', applyTheme);
-  }, [appTheme]);
+  }, [appTheme, appPalette]);
 
   const hasLocalImages = useMemo(() => {
     return hasLocalUploadedImages(uploadedAssets, userImage, customCode);
@@ -658,7 +665,11 @@ export function App() {
     : false;
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-studio-950 text-slate-100">
+    <div
+      className="flex flex-col h-screen w-screen overflow-hidden bg-studio-950 text-slate-100"
+      data-theme={appTheme === 'system' ? undefined : appTheme}
+      data-palette={appPalette}
+    >
       {/* Top Navigation Bar */}
       <Header
         currentPreset={currentPreset}
@@ -679,6 +690,8 @@ export function App() {
         onOpenAbout={() => setIsAboutOpen(true)}
         appTheme={appTheme}
         onAppThemeChange={setAppTheme}
+        appPalette={appPalette}
+        onAppPaletteChange={setAppPalette}
         isExporting={isExporting}
         copiedImage={copiedImage}
         isSidebarOpen={isSidebarOpen}

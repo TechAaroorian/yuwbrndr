@@ -102,8 +102,9 @@ export const Sidebar: React.FC<Props> = ({
       >
       {/* Top Header Row with Collapse Button */}
       <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between shrink-0 bg-studio-950/40">
-        <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400">
-          Templates & Assets
+        <span className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-400 flex items-center gap-1.5">
+          <span className="text-indigo-400">✧</span>
+          <span>Incantation Station</span>
         </span>
         {onToggle && (
           <button
@@ -130,8 +131,26 @@ export const Sidebar: React.FC<Props> = ({
 
       <div className="p-4 space-y-4">
         <div className="grid grid-cols-2 gap-1 rounded-lg border border-white/10 bg-studio-950 p-1">
-          <button onClick={() => setActiveTab('templates')} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'templates' ? 'bg-studio-700 text-white' : 'text-slate-400 hover:text-white'}`}>Templates</button>
-          <button onClick={() => setActiveTab('assets')} className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${activeTab === 'assets' ? 'bg-studio-700 text-white' : 'text-slate-400 hover:text-white'}`}>Assets</button>
+          <button
+            onClick={() => setActiveTab('templates')}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
+              activeTab === 'templates'
+                ? 'bg-studio-700 text-white shadow-sm'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            ✦ Archetypes
+          </button>
+          <button
+            onClick={() => setActiveTab('assets')}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
+              activeTab === 'assets'
+                ? 'bg-studio-700 text-white shadow-sm'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            ⟡ Artifacts & Runes
+          </button>
         </div>
 
         {activeTab === 'templates' && <div className="p-3 rounded-xl bg-studio-850 border border-white/10 space-y-3">
