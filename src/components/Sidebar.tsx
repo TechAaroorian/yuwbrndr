@@ -12,7 +12,7 @@ import {
   Type,
   Smile
 } from 'lucide-react';
-import { UploadedAsset } from '../types/studio';
+import { UploadedAsset, ColorTheme, COLOR_THEMES } from '../types/studio';
 
 interface Props {
   customCodeType: 'html' | 'canvas';
@@ -21,6 +21,8 @@ interface Props {
   onOpenFonts?: () => void;
   onOpenStickers?: () => void;
   onClearCode: () => void;
+  currentTheme?: ColorTheme;
+  onSelectTheme?: (theme: ColorTheme) => void;
   userImage: string | null;
   setUserImage: React.Dispatch<React.SetStateAction<string | null>>;
   useAsBackground: boolean;
@@ -43,6 +45,8 @@ export const Sidebar: React.FC<Props> = ({
   onOpenFonts,
   onOpenStickers,
   onClearCode,
+  currentTheme,
+  onSelectTheme,
   userImage,
   setUserImage,
   useAsBackground,
@@ -176,6 +180,29 @@ export const Sidebar: React.FC<Props> = ({
             </button>
           )}
           <button onClick={() => onLoadSample(customCodeType)} className="w-full py-2 px-3 rounded-lg border border-white/10 bg-studio-800 hover:bg-studio-700 text-xs font-semibold transition-colors">Start with a sample</button>
+
+          {/* Canvas Art Theme Palette */}
+          {currentTheme && onSelectTheme && (
+            <div className="pt-2.5 border-t border-white/10 space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>CANVAS PALETTE</span>
+                <span className="text-indigo-400 font-semibold">{currentTheme.name}</span>
+              </div>
+              <div className="grid grid-cols-5 gap-1.5">
+                {Object.values(COLOR_THEMES).map((th) => (
+                  <button
+                    key={th.id}
+                    onClick={() => onSelectTheme(th)}
+                    className={`h-7 rounded-lg border transition-all flex items-center justify-center hover:scale-105 active:scale-95 ${
+                      th.id === currentTheme.id ? 'border-white ring-2 ring-indigo-500/50 scale-105 shadow-sm' : 'border-white/20'
+                    }`}
+                    style={{ backgroundColor: th.primary }}
+                    title={th.name}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>}
 
         {activeTab === 'assets' && <><div className="grid grid-cols-2 gap-2">

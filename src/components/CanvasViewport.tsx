@@ -121,8 +121,32 @@ export const CanvasViewport: React.FC<Props> = ({
             <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold shrink-0">
               {currentPreset.aspectRatio}
             </span>
-            <span className="text-cyan-400 font-bold shrink-0 hidden xs:inline">{currentPreset.width} × {currentPreset.height} px</span>
-            <span className="text-slate-500 shrink-0 font-mono">({Math.round(zoom * 100)}% zoom)</span>
+            {/* Viewport Zoom Controls */}
+            <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
+              <button
+                onClick={() => onZoomChange(Math.max(0.2, Math.round((zoom - 0.05) * 100) / 100))}
+                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
+                title="Zoom Out (-)"
+              >
+                -
+              </button>
+              <button
+                onClick={onToggleAutoFit}
+                className="px-1 py-0.5 rounded text-slate-300 hover:text-indigo-300 hover:bg-white/10 text-[10px] font-mono"
+                title="Canvas Zoom (Click to Fit)"
+              >
+                {Math.round(zoom * 100)}%
+              </button>
+              <button
+                onClick={() => onZoomChange(Math.min(2.0, Math.round((zoom + 0.05) * 100) / 100))}
+                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
+                title="Zoom In (+)"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Font Scale Controls */}
             <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
               <button
                 onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}

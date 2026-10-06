@@ -3,13 +3,10 @@ import {
   Download, 
   Copy, 
   Check, 
-  ZoomIn, 
-  ZoomOut, 
   ChevronDown,
   HelpCircle,
   Share2,
   Sparkles,
-  Maximize2,
   PanelLeftClose,
   PanelLeftOpen,
   BookOpen,
@@ -88,7 +85,6 @@ export const Header: React.FC<Props> = ({
   onDocumentModeChange,
 }) => {
   const [showExportMenu, setShowExportMenu] = useState(false);
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showPresetMenu, setShowPresetMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [customExportName, setCustomExportName] = useState('');
@@ -146,146 +142,25 @@ export const Header: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Center Controls: Platform Selector & Zoom (Desktop & Tablet) */}
-      <div className="hidden md:flex items-center gap-2 bg-studio-950 p-1 rounded-lg border border-white/10">
-        {/* Platform Preset Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setShowPresetMenu(!showPresetMenu)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-white/5 text-xs font-medium text-slate-200 transition-colors"
-          >
-            <Share2 className="w-3.5 h-3.5 text-indigo-400" />
-            <span>{currentPreset.platform}: {currentPreset.aspectRatio}</span>
-            <ChevronDown className="w-3 h-3 opacity-70" />
-          </button>
-
-          {showPresetMenu && (
-            <div className="absolute left-0 mt-2 w-72 rounded-xl border border-white/10 bg-studio-900 shadow-2xl p-2 z-40 space-y-1">
-              <div className="flex items-center justify-between px-2 py-1 text-[10px] font-mono uppercase text-slate-400">
-                <span>Select Platform Format</span>
-                <span className="text-indigo-400 font-bold">2026 Optimal</span>
-              </div>
-              <div className="max-h-64 overflow-y-auto space-y-1 pr-1">
-                {ASPECT_PRESETS.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => {
-                      onSelectPreset(p);
-                      setShowPresetMenu(false);
-                    }}
-                    className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-mono transition-all text-left ${
-                      p.id === currentPreset.id
-                        ? 'bg-indigo-600 text-white font-bold'
-                        : 'text-slate-300 hover:bg-white/5'
-                    }`}
-                  >
-                    <div>
-                      <div className="font-sans font-semibold text-slate-100">{p.name}</div>
-                      <div className="text-[10px] text-slate-400">{p.width} × {p.height} ({p.aspectRatio})</div>
-                    </div>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
-                      {p.platform.split(' ')[0]}
-                    </span>
-                  </button>
-                ))}
-              </div>
-              <div className="pt-2 border-t border-white/10">
-                <button
-                  onClick={() => {
-                    setShowPresetMenu(false);
-                    onOpenPlatformGuide();
-                  }}
-                  className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 text-xs font-semibold"
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                  <span>Open Full Resolution Guide</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Zoom & Auto-Fit Controls */}
-        <div className="flex items-center gap-1 pl-1">
-          {onToggleAutoFit && (
-            <button
-              onClick={onToggleAutoFit}
-              className={`px-2 py-0.5 rounded text-[11px] font-mono transition-colors flex items-center gap-1 ${
-                autoFit
-                  ? 'bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 font-bold'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5 border border-white/10'
-              }`}
-              title="Auto-Fit Canvas to Viewport"
-            >
-              <Maximize2 className="w-3 h-3" />
-              <span>Fit</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => onZoomChange(Math.max(0.2, zoom - 0.05))}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-            title="Zoom Out"
-          >
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-          <span className="text-xs font-mono text-slate-300 min-w-[2.75rem] text-center">
-            {Math.round(zoom * 100)}%
-          </span>
-          <button
-            onClick={() => onZoomChange(Math.min(2.0, zoom + 0.05))}
-            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-            title="Zoom In"
-          >
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {/* Font Size Scaling Controls */}
-        <div className="flex items-center gap-1 border-l border-white/10 pl-2">
-          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider hidden lg:inline">Font</span>
-          <button
-            onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
-            className="px-1.5 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors font-mono text-xs font-bold"
-            title="Decrease Font Size (A-)"
-          >
-            A-
-          </button>
-          <button
-            onClick={() => onFontScaleChange(1.0)}
-            className="text-xs font-mono text-slate-300 hover:text-indigo-300 min-w-[2.5rem] text-center transition-colors"
-            title="Click to reset font size to 100%"
-          >
-            {Math.round(fontScale * 100)}%
-          </button>
-          <button
-            onClick={() => onFontScaleChange(Math.min(2.0, Math.round((fontScale + 0.05) * 100) / 100))}
-            className="px-1.5 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/5 transition-colors font-mono text-xs font-bold"
-            title="Increase Font Size (A+)"
-          >
-            A+
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Preset Trigger (< md) */}
-      <div className="md:hidden relative">
+      {/* Center Controls: Responsive Platform Preset Selector */}
+      <div className="relative">
         <button
           onClick={() => setShowPresetMenu(!showPresetMenu)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-studio-950 border border-white/10 text-xs text-slate-200 font-medium max-w-[140px] sm:max-w-[180px] truncate"
+          className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-studio-950 border border-white/10 hover:border-white/20 text-xs font-medium text-slate-200 transition-colors max-w-[140px] xs:max-w-[180px] sm:max-w-none"
         >
           <Share2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-          <span className="truncate">{currentPreset.aspectRatio}</span>
+          <span className="hidden md:inline">{currentPreset.platform}: {currentPreset.aspectRatio}</span>
+          <span className="md:hidden truncate">{currentPreset.aspectRatio}</span>
           <ChevronDown className="w-3 h-3 opacity-70 shrink-0" />
         </button>
 
         {showPresetMenu && (
-          <div className="absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1">
+          <div className="absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 rounded-2xl sm:rounded-xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1">
             <div className="flex items-center justify-between px-2 py-1 text-[10px] font-mono uppercase text-slate-400">
-              <span>Platform Format</span>
+              <span>Select Platform Format</span>
               <span className="text-indigo-400 font-bold">{currentPreset.aspectRatio}</span>
             </div>
-            <div className="max-h-60 overflow-y-auto space-y-1 pr-1">
+            <div className="max-h-64 overflow-y-auto space-y-1 pr-1">
               {ASPECT_PRESETS.map((p) => (
                 <button
                   key={p.id}
@@ -308,6 +183,18 @@ export const Header: React.FC<Props> = ({
                   </span>
                 </button>
               ))}
+            </div>
+            <div className="pt-2 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setShowPresetMenu(false);
+                  onOpenPlatformGuide();
+                }}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 text-xs font-semibold"
+              >
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>Open Full Resolution Guide</span>
+              </button>
             </div>
           </div>
         )}
@@ -385,42 +272,6 @@ export const Header: React.FC<Props> = ({
           </svg>
         </a>
 
-        {/* Theme Palette Dropdown (Desktop) */}
-        <div className="hidden sm:block relative">
-          <button
-            onClick={() => setShowThemeMenu(!showThemeMenu)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-medium text-slate-200 transition-colors"
-          >
-            <span 
-              className="w-3 h-3 rounded-full border border-white/20 shrink-0"
-              style={{ backgroundColor: currentTheme.primary }} 
-            />
-            <span className="hidden md:inline">{currentTheme.name}</span>
-            <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
-          </button>
-
-          {showThemeMenu && (
-            <div className="absolute right-0 mt-2 w-48 rounded-xl border border-white/10 bg-studio-900 shadow-2xl p-1.5 z-40">
-              <div className="text-[10px] font-mono uppercase text-slate-500 px-2 py-1">Theme Palette</div>
-              {Object.values(COLOR_THEMES).map((th) => (
-                <button
-                  key={th.id}
-                  onClick={() => {
-                    onSelectTheme(th);
-                    setShowThemeMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs transition-colors ${
-                    th.id === currentTheme.id ? 'bg-indigo-600/30 text-white font-semibold' : 'text-slate-300 hover:bg-white/5'
-                  }`}
-                >
-                  <span className="w-3.5 h-3.5 rounded-full border border-white/20" style={{ backgroundColor: th.primary }} />
-                  <span>{th.name}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* AI Prompt Generator Button (Desktop & Tablet) */}
         {onOpenAiPrompt && (
           <button
@@ -458,20 +309,22 @@ export const Header: React.FC<Props> = ({
           <span className="hidden md:inline">{sharedCopied ? 'Link Copied!' : 'Share'}</span>
         </button>}
 
-        {/* Copy Image Button (Desktop) */}
-        <button
-          onClick={onCopyImage}
-          disabled={isExporting}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
-          title="Copy rendered PNG"
-        >
-          {copiedImage ? (
-            <Check className="w-3.5 h-3.5 text-emerald-400" />
-          ) : (
-            <Copy className="w-3.5 h-3.5 text-slate-300" />
-          )}
-          <span className="hidden md:inline">{copiedImage ? 'Copied' : 'Copy'}</span>
-        </button>
+        {/* Copy Image Button (Desktop - Design Altar Only to prevent duplicate action in Grimoire Deck) */}
+        {documentMode === 'design' && (
+          <button
+            onClick={onCopyImage}
+            disabled={isExporting}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
+            title="Copy rendered PNG to clipboard"
+          >
+            {copiedImage ? (
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Copy className="w-3.5 h-3.5 text-slate-300" />
+            )}
+            <span className="hidden md:inline">{copiedImage ? 'Copied' : 'Copy'}</span>
+          </button>
+        )}
 
         {/* Export Dropdown */}
         <div className="relative">
@@ -509,6 +362,24 @@ export const Header: React.FC<Props> = ({
                   />
                   <span className="text-[10px] font-mono text-slate-500 shrink-0">.png</span>
                 </div>
+              </div>
+
+              {/* Copy PNG Option */}
+              <div className="pb-1 border-b border-white/10">
+                <button
+                  onClick={() => {
+                    onCopyImage();
+                    setShowExportMenu(false);
+                  }}
+                  disabled={isExporting}
+                  className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    {copiedImage ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-indigo-400" />}
+                    <span>{copiedImage ? 'PNG Copied to Clipboard!' : 'Copy PNG to Clipboard'}</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-500">Clipboard</span>
+                </button>
               </div>
 
               <div>
