@@ -714,6 +714,8 @@ export function App() {
           onOpenFonts={() => setIsFontsOpen(true)}
           onOpenStickers={() => setIsStickersOpen(true)}
           onClearCode={handleClearCode}
+          currentTheme={currentTheme}
+          onSelectTheme={setCurrentTheme}
           userImage={userImage}
           setUserImage={setUserImage}
           useAsBackground={useAsBackground}
