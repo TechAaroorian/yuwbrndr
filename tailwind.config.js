@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  important: ".design-canvas",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -20,6 +21,7 @@ export default {
     'font-playfair',
     'font-cinzel',
   ],
+  corePlugins: { preflight: false },
   darkMode: 'class',
   theme: {
     extend: {

@@ -17,24 +17,24 @@ const capabilities = [
 export const CapabilitiesModal: React.FC<Props> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[80] bg-black/60 p-4 flex items-center justify-center" onMouseDown={onClose}>
-      <section className="w-full max-w-3xl max-h-[86vh] overflow-auto rounded-2xl border border-white/10 bg-studio-900 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
-        <header className="sticky top-0 flex items-start justify-between gap-4 border-b border-white/10 bg-studio-900 px-6 py-5">
+    <div className="aar-u-fixed aar-u-inset-0 aar-u-z--80 aar-u-bg-black-60 aar-u-p-4 aar-u-flex aar-u-items-center aar-u-justify-center" onMouseDown={onClose}>
+      <section className="aar-u-w-full aar-u-max-w-3xl aar-u-max-h--86vh aar-u-overflow-auto aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-surface " onMouseDown={(event) => event.stopPropagation()}>
+        <header className="aar-u-sticky aar-u-top-0 aar-u-flex aar-u-items-start aar-u-justify-between aar-u-gap-4 aar-u-border-b aar-u-border-border aar-u-bg-surface aar-u-px-6 aar-u-py-5">
           <div>
-            <div className="flex items-center gap-2 text-lg font-bold text-slate-100"><Code2 className="w-5 h-5 text-indigo-400" /> Design capabilities</div>
-            <p className="mt-1 text-sm text-slate-400">What the editor can render safely and reliably today.</p>
+            <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-lg aar-u-font-bold aar-u-text-text"><Code2 className="aar-u-w-5 aar-u-h-5 aar-u-text-primary" /> Design capabilities</div>
+            <p className="aar-u-mt-1 aar-u-text-sm aar-u-text-text-muted">What the editor can render safely and reliably today.</p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white" aria-label="Close"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="aar-button " aria-label="Close" data-size="sm"><X className="aar-u-w-5 aar-u-h-5" /></button>
         </header>
-        <div className="p-6 space-y-3">
+        <div className="aar-u-p-6 aar-u-space-y-3">
           {capabilities.map(([name, status, description]) => (
-            <div key={name} className="grid gap-3 rounded-xl border border-white/10 bg-studio-850 p-4 sm:grid-cols-[1fr_auto]">
-              <div><div className="font-semibold text-slate-100">{name}</div><div className="mt-1 text-sm leading-relaxed text-slate-400">{description}</div></div>
-              <div className="flex items-center gap-1.5 self-start rounded-full border border-white/10 px-2.5 py-1 text-xs font-semibold text-slate-300"><Check className="w-3.5 h-3.5 text-emerald-400" />{status}</div>
+            <div key={name} className="aar-u-grid aar-u-gap-3 aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-background aar-u-p-4 aar-u-sm-grid-cols--1fr-auto">
+              <div><div className="aar-u-font-semibold aar-u-text-text">{name}</div><div className="aar-u-mt-1 aar-u-text-sm aar-u-leading-relaxed aar-u-text-text-muted">{description}</div></div>
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-self-start aar-u-rounded-full aar-u-border aar-u-border-border aar-u-px-2.5 aar-u-py-1 aar-u-text-xs aar-u-font-semibold aar-u-text-text"><Check className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success" />{status}</div>
             </div>
           ))}
-          <div className="flex gap-3 rounded-xl border border-indigo-500/20 bg-indigo-500/10 p-4 text-sm text-indigo-100">
-            <ShieldCheck className="w-5 h-5 shrink-0 text-indigo-300" />
+          <div className="aar-u-flex aar-u-gap-3 aar-u-rounded aar-u-border aar-u-border-indigo-500-20 aar-u-bg-indigo-500-10 aar-u-p-4 aar-u-text-sm aar-u-text-indigo-100">
+            <ShieldCheck className="aar-u-w-5 aar-u-h-5 aar-u-shrink-0 aar-u-text-primary" />
             <p>HTML scripts are disabled. Canvas JavaScript runs in a sandbox without access to the application origin. External libraries will only be added through a future reviewed allowlist.</p>
           </div>
         </div>

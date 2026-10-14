@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
-import { Code2, Sparkles } from 'lucide-react';
+import { Code2, Sparkles, Upload } from 'lucide-react';
 import roughScript from 'roughjs/bundled/rough.js?raw';
 import { ColorTheme } from '../../../types/studio';
 import { generateRuntimeUtilityCss } from '../../../utils/runtimeStyles';
@@ -163,28 +163,111 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
       }});
     </script></body></html>`;
-  }, [code, codeType, frameId, height, runtimeCss, theme.background, useAsBackground, userImage, width]);
+  }, [code, codeType, fontScale, frameId, height, runtimeCss, theme.background, useAsBackground, userImage, width]);
 
   if (isEmpty) {
     return (
-      <div className="design-canvas w-full h-full flex flex-col items-center justify-center p-12 text-center" style={{ background: theme.background }}>
-        <div className="w-14 h-14 rounded-xl border flex items-center justify-center mb-4" style={{ background: `${theme.primary}20`, borderColor: `${theme.primary}50`, color: theme.accent }}>
-          <Code2 className="w-7 h-7" />
-        </div>
-        <h3 className="text-2xl font-bold text-white mb-2">Start your design</h3>
-        <p className="text-sm text-slate-400 mb-6 max-w-md">Choose a template, write HTML and CSS, or use the advanced Canvas JavaScript mode.</p>
-        <div className="flex flex-wrap gap-2 justify-center">
-          {onOpenAiPrompt && (
-            <button
-              onClick={onOpenAiPrompt}
-              className="px-4 py-2 rounded-lg border border-cyan-500/40 bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
+      <div
+        className="aar-u-w-full aar-u-h-full aar-u-flex aar-u-items-center aar-u-justify-center aar-u-p-8 aar-u-select-none"
+        style={{
+          backgroundColor: theme.background,
+          width: `${width}px`,
+          height: `${height}px`,
+        }}
+      >
+        <div
+          className="aar-canvas-empty"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            gap: '0.75rem',
+            maxWidth: '32rem',
+            margin: '0 auto',
+          }}
+        >
+          <div
+            className="aar-canvas-empty-icon"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '3rem',
+              height: '3rem',
+              borderRadius: '0.75rem',
+              background: `color-mix(in srgb, ${theme.primary} 15%, transparent)`,
+              color: theme.accent,
+            }}
+          >
+            <Code2 size={24} />
+          </div>
+          <div
+            className="aar-canvas-empty-text"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
+            <h3
+              className="aar-u-text-xl aar-u-font-bold aar-u-text-text"
+              style={{ margin: 0, lineHeight: 1.25 }}
             >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              Generate with AI
-            </button>
-          )}
-          {onPasteSample && <button onClick={() => onPasteSample('html')} className="px-4 py-2 rounded-lg border border-white/10 bg-white/5 text-slate-200 text-sm font-semibold flex items-center gap-2 hover:bg-white/10 transition-colors"><Sparkles className="w-4 h-4" />Load sample</button>}
-          {onTriggerUpload && <button onClick={onTriggerUpload} className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">Upload image</button>}
+              Start your design
+            </h3>
+            <p
+              className="aar-text-muted aar-u-text-sm"
+              style={{ margin: 0, lineHeight: 1.45, maxWidth: '28rem' }}
+            >
+              Choose a template, write HTML and CSS, or use the advanced Canvas JavaScript mode.
+            </p>
+          </div>
+          <div
+            className="aar-canvas-empty-actions"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              marginTop: '0.25rem',
+            }}
+          >
+            {onOpenAiPrompt && (
+              <button
+                onClick={onOpenAiPrompt}
+                className="aar-button"
+                data-variant="ai"
+                data-size="sm"
+              >
+                <Sparkles size={14} />
+                <span>Generate with AI</span>
+              </button>
+            )}
+            {onPasteSample && (
+              <button
+                onClick={() => onPasteSample('html')}
+                className="aar-button"
+                data-size="sm"
+              >
+                <Code2 size={14} />
+                <span>Load sample</span>
+              </button>
+            )}
+            {onTriggerUpload && (
+              <button
+                onClick={onTriggerUpload}
+                className="aar-button"
+                data-variant="primary"
+                data-size="sm"
+              >
+                <Upload size={14} />
+                <span>Upload image</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -192,8 +275,12 @@ export const CustomCodeCanvas: React.FC<Props> = ({
 
   return (
     <div 
-      className="design-canvas w-full h-full relative overflow-hidden" 
+      className="design-canvas relative overflow-hidden" 
       style={{ 
+        width: `${width}px`,
+        height: `${height}px`,
+        maxWidth: `${width}px`,
+        maxHeight: `${height}px`,
         backgroundColor: theme.background,
         backgroundImage: useAsBackground && userImage ? `url("${userImage}")` : undefined,
         backgroundSize: 'cover',
@@ -206,7 +293,13 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         data-frame-id={frameId}
         sandbox="allow-scripts allow-same-origin"
         srcDoc={srcDoc}
-        className="w-full h-full border-0 bg-transparent"
+        style={{
+          width: '100%',
+          height: '100%',
+          border: 'none',
+          display: 'block',
+          background: 'transparent',
+        }}
       />
       {renderError && (
         <div className="absolute bottom-4 left-4 right-4 p-3 rounded-lg bg-rose-950/95 border border-rose-500/50 text-rose-200 text-xs font-mono">

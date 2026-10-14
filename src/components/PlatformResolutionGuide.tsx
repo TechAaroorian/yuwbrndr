@@ -28,45 +28,45 @@ export const PlatformResolutionGuide: React.FC<Props> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in">
-      <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-studio-900 shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
+    <div className="aar-u-fixed aar-u-inset-0 aar-u-z-50 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-p-3 aar-u-sm-p-4 aar-u-bg-black-75  aar-u-animate-in aar-u-fade-in">
+      <div className="aar-u-w-full aar-u-max-w-4xl aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-surface  aar-u-flex aar-u-flex-col aar-u-overflow-hidden aar-u-max-h--90vh">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/10 bg-white/5">
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 shrink-0">
-              <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-px-4 aar-u-sm-px-6 aar-u-py-3 aar-u-sm-py-4 aar-u-border-b aar-u-border-border aar-u-bg-surface-subtle">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2.5 aar-u-sm-gap-3">
+            <div className="aar-u-p-2 aar-u-rounded aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-30 aar-u-shrink-0">
+              <Share2 className="aar-u-w-4 aar-u-h-4 aar-u-sm-w-5 aar-u-sm-h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                <h3 className="font-bold text-slate-100 text-sm sm:text-lg">Social & Web Platform Resolution Guide</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase font-semibold">
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-sm-gap-2 aar-u-flex-wrap">
+                <h3 className="aar-u-font-bold aar-u-text-text aar-u-text-sm aar-u-sm-text-lg">Social & Web Platform Resolution Guide</h3>
+                <span className="aar-u-text-xs aar-u-font-mono aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-bg-emerald-500-20 aar-u-text-emerald-300 aar-u-border aar-u-border-emerald-500-30 aar-u-uppercase aar-u-font-semibold">
                   Updated for 2026 Algorithms
                 </span>
               </div>
-              <p className="text-[11px] sm:text-xs text-slate-400 font-mono mt-0.5">
+              <p className="aar-u-text-sm aar-u-sm-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-mt-0.5">
                 Optimal aspect ratios, safe zones, and compression bypass techniques for crystal-clear exports
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors shrink-0"
+            className="aar-button aar-u-shrink-0" data-size="sm"
           >
-            <X className="w-5 h-5" />
+            <X className="aar-u-w-5 aar-u-h-5" />
           </button>
         </div>
 
         {/* Global Pro-Tips Banner */}
-        <div className="px-4 sm:px-6 py-2.5 sm:py-3 bg-indigo-950/40 border-b border-indigo-500/20 flex items-center gap-2.5 text-xs text-indigo-200">
-          <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
+        <div className="aar-u-px-4 aar-u-sm-px-6 aar-u-py-2.5 aar-u-sm-py-3 aar-u-bg-indigo-950-40 aar-u-border-b aar-u-border-indigo-500-20 aar-u-flex aar-u-items-center aar-u-gap-2.5 aar-u-text-xs aar-u-text-primary">
+          <Sparkles className="aar-u-w-4 aar-u-h-4 aar-u-text-primary aar-u-shrink-0" />
           <span>
             <strong>Pro Tip for Developers:</strong> Social platforms (X, LinkedIn, Meta) re-encode uploaded JPEGs. Always export in <strong>PNG at 2x (Retina)</strong> to keep small code snippets, diagram lines, and text vector-sharp.
           </span>
         </div>
 
         {/* Platform Presets Cards Grid */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 max-h-[70vh]">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="aar-u-p-4 aar-u-sm-p-6 aar-u-overflow-y-auto aar-u-space-y-4 aar-u-max-h--70vh">
+          <div className="aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-lg-grid-cols-3 aar-u-gap-4">
             {ASPECT_PRESETS.map((p) => {
               const isSelected = p.id === currentPreset.id;
               return (
@@ -76,56 +76,56 @@ export const PlatformResolutionGuide: React.FC<Props> = ({
                     onSelectPreset(p);
                     onClose();
                   }}
-                  className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between group ${
+                  className={`aar-u-p-4 aar-u-rounded aar-u-border aar-u-transition-all aar-u-cursor-pointer aar-u-flex aar-u-flex-col aar-u-justify-between aar-u-group ${
                     isSelected
-                      ? 'border-indigo-500 bg-indigo-600/15 shadow-glow-indigo'
-                      : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/[0.08]'
+                      ? 'aar-u-border-indigo-500 aar-u-bg-indigo-600-15 '
+                      : 'aar-u-border-border aar-u-bg-surface-subtle aar-u-hover-border-border aar-u-hover-bg-white-0.08'
                   }`}
                 >
                   <div>
                     {/* Top Row: Platform & Aspect Ratio */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400">
+                    <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-mb-2">
+                      <span className="aar-u-text-sm aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-tracking-wider aar-u-text-primary">
                         {p.platform}
                       </span>
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                      <span className="aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-px-1.5 aar-u-py-0.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-text-text">
                         {p.aspectRatio}
                       </span>
                     </div>
 
                     {/* Name & Dimensions */}
-                    <h4 className="font-bold text-slate-100 text-sm mb-1 group-hover:text-indigo-300 transition-colors">
+                    <h4 className="aar-u-font-bold aar-u-text-text aar-u-text-sm aar-u-mb-1 aar-u-group-hover-text-primary aar-u-transition-colors">
                       {p.name}
                     </h4>
-                    <div className="text-xs font-mono font-extrabold text-cyan-400 mb-2.5">
+                    <div className="aar-u-text-xs aar-u-font-mono aar-u-font-extrabold aar-u-text-primary aar-u-mb-2.5">
                       {p.width} × {p.height} px
                     </div>
 
                     {/* Resolution Tip */}
-                    <p className="text-xs text-slate-300 leading-relaxed mb-3">
+                    <p className="aar-u-text-xs aar-u-text-text aar-u-leading-relaxed aar-u-mb-3">
                       {p.tip}
                     </p>
 
                     {/* Safe Zone Alert */}
                     {p.safeZone && (
-                      <div className="p-2 rounded-lg bg-studio-950/80 border border-white/5 text-[11px] text-amber-300/90 flex items-start gap-1.5 mb-2 font-mono">
-                        <ShieldAlert className="w-3.5 h-3.5 shrink-0 text-amber-400 mt-0.5" />
+                      <div className="aar-u-p-2 aar-u-rounded aar-u-bg-background aar-u-border aar-u-border-border aar-u-text-sm aar-u-text-amber-300-90 aar-u-flex aar-u-items-start aar-u-gap-1.5 aar-u-mb-2 aar-u-font-mono">
+                        <ShieldAlert className="aar-u-w-3.5 aar-u-h-3.5 aar-u-shrink-0 aar-u-text-amber-400 aar-u-mt-0.5" />
                         <span><strong>Safe Zone:</strong> {p.safeZone}</span>
                       </div>
                     )}
                   </div>
 
                   {/* Best For & Select Button */}
-                  <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] text-slate-400 font-mono line-clamp-1">
+                  <div className="aar-u-pt-3 aar-u-border-t aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between">
+                    <span className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-line-clamp-1">
                       {p.bestFor}
                     </span>
                     <button
-                      className={`text-xs px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                      className={`aar-button ${
                         isSelected
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-white/10 text-slate-300 group-hover:bg-indigo-600 group-hover:text-white'
-                      }`}
+                          ? 'aar-u-bg-surface-subtle aar-u-text-text'
+                          : 'aar-u-bg-surface-subtle aar-u-text-text aar-u-group-hover-bg-surface-subtle aar-u-group-hover-text-text'
+                      }`} data-variant="primary" data-size="sm"
                     >
                       {isSelected ? 'Active' : 'Apply'}
                     </button>
@@ -137,14 +137,14 @@ export const PlatformResolutionGuide: React.FC<Props> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between px-6 py-3 border-t border-white/10 bg-white/5 text-xs font-mono text-slate-400">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-px-6 aar-u-py-3 aar-u-border-t aar-u-border-border aar-u-bg-surface-subtle aar-u-text-xs aar-u-font-mono aar-u-text-text-muted">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
+            <CheckCircle className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-emerald-400" />
             <span>High-DPI Retina Rendering Supported (1x, 2x, 4x)</span>
           </div>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 font-semibold transition-colors"
+            className="aar-button " data-size="sm"
           >
             Close Guide
           </button>

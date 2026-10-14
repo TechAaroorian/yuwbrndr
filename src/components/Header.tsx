@@ -1,606 +1,417 @@
-import React, { useState } from 'react';
-import { 
-  Download, 
-  Copy, 
-  Check, 
+import { useEffect, useRef, useState } from 'react';
+import {
+  Download,
+  Copy,
+  Check,
   ChevronDown,
-  HelpCircle,
+  MoreHorizontal,
+  Info,
+  BookOpen,
   Share2,
   Sparkles,
+  Code2,
   PanelLeftClose,
   PanelLeftOpen,
-  BookOpen,
-  Info,
-  Monitor,
-  Moon,
-  Sun,
-  MoreVertical
+  HelpCircle,
 } from 'lucide-react';
-import { ASPECT_PRESETS, COLOR_THEMES, AppTheme, StudioPalette, AspectPreset, ColorTheme } from '../types/studio';
+import { ASPECT_PRESETS, type AspectPreset, type AppTheme } from '../types/studio';
 import { AarSelect } from './AarSelect';
 
 interface Props {
-  currentPreset: AspectPreset;
-  onSelectPreset: (preset: AspectPreset) => void;
-  currentTheme: ColorTheme;
-  onSelectTheme: (theme: ColorTheme) => void;
-  zoom: number;
-  onZoomChange: (newZoom: number) => void;
-  fontScale: number;
-  onFontScaleChange: (newScale: number) => void;
-  autoFit?: boolean;
-  onToggleAutoFit?: () => void;
-  onExport: (scale: 1 | 2 | 4, customName?: string) => void;
-  onCopyImage: () => void;
-  onOpenExamples: () => void;
-  onOpenPlatformGuide: () => void;
-  onOpenCapabilities: () => void;
-  onOpenAbout: () => void;
-  appTheme: AppTheme;
-  onAppThemeChange: (theme: AppTheme) => void;
-  appPalette: StudioPalette;
-  onAppPaletteChange: (palette: StudioPalette) => void;
-  isExporting: boolean;
-  copiedImage: boolean;
-  isSidebarOpen?: boolean;
-  onToggleSidebar?: () => void;
-  onShare: () => void;
-  hasLocalImages: boolean;
-  sharedCopied: boolean;
-  onOpenAiPrompt?: () => void;
   documentMode: 'design' | 'slides';
   onDocumentModeChange: (mode: 'design' | 'slides') => void;
+  currentPreset: AspectPreset;
+  onSelectPreset: (preset: AspectPreset) => void;
+  zoom: number;
+  onZoomChange: (newZoom: number) => void;
+  autoFit: boolean;
+  onToggleAutoFit: () => void;
+  fontScale: number;
+  onFontScaleChange: (newScale: number) => void;
+  appTheme: AppTheme;
+  onAppThemeChange: (theme: AppTheme) => void;
+  onExport: (scale: 1 | 2 | 4, name?: string) => void;
+  isExporting: boolean;
+  hasDesign: boolean;
+  onCopyImage: () => void;
+  copiedImage: boolean;
+  onShare: () => void;
+  sharedCopied: boolean;
+  hasLocalImages: boolean;
+  onOpenAiPrompt: () => void;
+  onOpenAbout: () => void;
+  onOpenCapabilities: () => void;
+  onOpenPlatformGuide: () => void;
+  isSidebarOpen: boolean;
+  onToggleSidebar: () => void;
+  isEditorOpen: boolean;
+  onToggleEditor: () => void;
 }
 
-export const Header: React.FC<Props> = ({
-  currentPreset,
-  onSelectPreset,
-  currentTheme,
-  onSelectTheme,
-  zoom,
-  onZoomChange,
-  fontScale,
-  onFontScaleChange,
-  autoFit,
-  onToggleAutoFit,
-  onExport,
-  onCopyImage,
-  onOpenExamples,
-  onOpenPlatformGuide,
-  onOpenCapabilities,
-  onOpenAbout,
-  appTheme,
-  onAppThemeChange,
-  appPalette,
-  onAppPaletteChange,
-  isExporting,
-  copiedImage,
-  isSidebarOpen = true,
-  onToggleSidebar,
-  onShare,
-  hasLocalImages,
-  sharedCopied,
-  onOpenAiPrompt,
+export function Header({
   documentMode,
   onDocumentModeChange,
-}) => {
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const [showPresetMenu, setShowPresetMenu] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [customExportName, setCustomExportName] = useState('');
-  const themeOptions: AppTheme[] = ['system', 'light', 'dark'];
-  const cycleAppTheme = () => onAppThemeChange(themeOptions[(themeOptions.indexOf(appTheme) + 1) % themeOptions.length]);
-  const AppThemeIcon = appTheme === 'light' ? Sun : appTheme === 'dark' ? Moon : Monitor;
+  currentPreset,
+  onSelectPreset,
+  zoom,
+  onZoomChange,
+  autoFit,
+  onToggleAutoFit,
+  fontScale,
+  onFontScaleChange,
+  appTheme,
+  onAppThemeChange,
+  onExport,
+  isExporting,
+  hasDesign,
+  onCopyImage,
+  copiedImage,
+  onShare,
+  sharedCopied,
+  hasLocalImages,
+  onOpenAiPrompt,
+  onOpenAbout,
+  onOpenCapabilities,
+  onOpenPlatformGuide,
+  isSidebarOpen,
+  onToggleSidebar,
+  isEditorOpen,
+  onToggleEditor,
+}: Props) {
+  const [exportName, setExportName] = useState('');
+  const actionsRef = useRef<HTMLDetailsElement>(null);
+  const exportRef = useRef<HTMLDetailsElement>(null);
+  const presetRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const dismissOutside = (event: PointerEvent) => {
+      for (const ref of [actionsRef, exportRef, presetRef]) {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          ref.current.open = false;
+        }
+      }
+    };
+    document.addEventListener('pointerdown', dismissOutside);
+    return () => document.removeEventListener('pointerdown', dismissOutside);
+  }, []);
+
+  const closeAndRun = (action: () => void) => {
+    if (actionsRef.current) actionsRef.current.open = false;
+    action();
+  };
+
+  const dismiss = (event: React.KeyboardEvent<HTMLDetailsElement>) => {
+    if (event.key === 'Escape') {
+      event.currentTarget.open = false;
+      event.currentTarget.querySelector('summary')?.focus();
+    }
+  };
 
   return (
-    <header className="h-16 border-b border-white/10 bg-studio-900 px-3 sm:px-5 flex items-center justify-between z-40 select-none relative">
-      {/* Brand Title & Sidebar Toggle */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {onToggleSidebar && (
-          <button
-            onClick={onToggleSidebar}
-            className={`hidden md:flex p-2 rounded-lg border transition-colors ${
-              isSidebarOpen
-                ? 'border-white/10 text-slate-400 hover:text-white hover:bg-white/5'
-                : 'border-indigo-500/40 bg-indigo-500/15 text-indigo-300 hover:bg-indigo-500/25'
-            }`}
-            title={isSidebarOpen ? "Collapse Left Panel (Ctrl+B)" : "Expand Left Panel (Ctrl+B)"}
-          >
-            {isSidebarOpen ? (
-              <PanelLeftClose className="w-4 h-4" />
-            ) : (
-              <PanelLeftOpen className="w-4 h-4" />
-            )}
-          </button>
-        )}
+    <header className="aar-app-header aar-studio-header">
+      {/* 1. Brand Identity, Tagline Badge, and Mode Switcher */}
+      <div className="aar-cluster" data-gap="2">
+        <button
+          className="aar-icon-button"
+          data-variant="quiet"
+          onClick={onToggleSidebar}
+          aria-label={isSidebarOpen ? 'Hide tools sidebar' : 'Show tools sidebar'}
+          title="Toggle Tools Sidebar (Ctrl+B)"
+          data-size="sm"
+        >
+          {isSidebarOpen ? <PanelLeftClose size={14} /> : <PanelLeftOpen size={14} />}
+        </button>
 
-        <img src="./yuwbrndr-logo.svg" alt="" className="w-8 h-8 sm:w-9 sm:h-9 shrink-0" />
-        <div className="shrink-0">
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <span className="font-extrabold text-slate-100 tracking-tight text-base sm:text-lg whitespace-nowrap">Yuwbrndr</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-medium whitespace-nowrap shrink-0 hidden sm:inline">
-              <span className="hidden xl:inline">Developer Brand Studio</span>
-              <span className="xl:hidden">Brand Studio</span>
-            </span>
+        <img src="./yuwbrndr-logo.svg" alt="Yuwbrndr" width="18" height="18" />
+        <div>
+          <div className="aar-cluster" data-gap="2">
+            <strong>Yuwbrndr</strong>
+            <span className="aar-badge">Design by Code · Design to All</span>
           </div>
-          <p className="text-[10px] text-slate-400 hidden md:block whitespace-nowrap">Developer Brand &amp; Social Card Studio</p>
         </div>
 
-        <div className="hidden sm:flex items-center rounded-lg border border-white/10 bg-studio-950 p-1" aria-label="Document type">
+        <div className="aar-segmented" role="group" aria-label="Document type">
           <button
+            type="button"
+            aria-pressed={documentMode === 'design'}
             onClick={() => onDocumentModeChange('design')}
-            className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'design' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+            data-size="sm"
           >
-            ✦ Single Graphic
+            Graphic
           </button>
           <button
+            type="button"
+            aria-pressed={documentMode === 'slides'}
             onClick={() => onDocumentModeChange('slides')}
-            className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-colors ${documentMode === 'slides' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+            data-size="sm"
           >
-            ⟡ Slide Deck
+            Slides
           </button>
         </div>
       </div>
 
-      {/* Center Controls: Responsive Platform Preset Selector */}
-      <div className="relative">
-        <button
-          onClick={() => setShowPresetMenu(!showPresetMenu)}
-          className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-studio-950 border border-white/10 hover:border-white/20 text-xs font-medium text-slate-200 transition-colors max-w-[140px] xs:max-w-[180px] sm:max-w-none"
-        >
-          <Share2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-          <span className="hidden md:inline">{currentPreset.platform}: {currentPreset.aspectRatio}</span>
-          <span className="md:hidden truncate">{currentPreset.aspectRatio}</span>
-          <ChevronDown className="w-3 h-3 opacity-70 shrink-0" />
-        </button>
-
-        {showPresetMenu && (
-          <div className="absolute left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 w-72 rounded-2xl sm:rounded-xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1">
-            <div className="flex items-center justify-between px-2 py-1 text-[10px] font-mono uppercase text-slate-400">
-              <span>Select Platform Format</span>
-              <span className="text-indigo-400 font-bold">{currentPreset.aspectRatio}</span>
+      {/* 2. Center Informative Platform Preset Picker & Zoom Bar */}
+      <div className="aar-cluster" data-gap="2">
+        {/* Platform Preset Dropdown */}
+        <details className="aar-menu" ref={presetRef} onKeyDown={dismiss}>
+          <summary className="aar-button" data-size="sm" aria-label="Platform format">
+            <Share2 size={13} className="aar-u-text-primary" />
+            <span>{currentPreset.platform}: {currentPreset.aspectRatio}</span>
+            <span className="aar-badge">{currentPreset.width}×{currentPreset.height}</span>
+            <ChevronDown size={13} />
+          </summary>
+          <div className="aar-menu-dropdown aar-preset-menu-dropdown">
+            <div className="aar-cluster aar-p-2" data-gap="2">
+              <span className="aar-label">Platform Formats</span>
+              <span className="aar-badge" data-tone="success">2026 Optimal</span>
             </div>
-            <div className="max-h-64 overflow-y-auto space-y-1 pr-1">
-              {ASPECT_PRESETS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    onSelectPreset(p);
-                    setShowPresetMenu(false);
-                  }}
-                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-mono transition-all text-left ${
-                    p.id === currentPreset.id
-                      ? 'bg-indigo-600 text-white font-bold'
-                      : 'text-slate-300 hover:bg-white/5'
-                  }`}
-                >
-                  <div className="truncate mr-2">
-                    <div className="font-sans font-semibold text-slate-100 truncate">{p.name}</div>
-                    <div className="text-[10px] text-slate-400">{p.width} × {p.height} ({p.aspectRatio})</div>
-                  </div>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300 shrink-0">
-                    {p.platform.split(' ')[0]}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <div className="pt-2 border-t border-white/10">
+            {ASPECT_PRESETS.map((p) => (
               <button
+                key={p.id}
+                className="aar-menu-item"
+                data-selected={p.id === currentPreset.id}
                 onClick={() => {
-                  setShowPresetMenu(false);
-                  onOpenPlatformGuide();
+                  onSelectPreset(p);
+                  if (presetRef.current) presetRef.current.open = false;
                 }}
-                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 text-xs font-semibold"
+                data-size="sm"
               >
-                <HelpCircle className="w-3.5 h-3.5" />
-                <span>Open Full Resolution Guide</span>
+                <div className="aar-u-flex-1 aar-u-min-w-0">
+                  <div className="aar-u-font-semibold">{p.name}</div>
+                  <div className="aar-text-muted aar-u-text-xs">{p.width} × {p.height} ({p.aspectRatio})</div>
+                </div>
+                <span className="aar-badge">{p.platform.split(' ')[0]}</span>
               </button>
-            </div>
+            ))}
+            <div className="aar-menu-divider" />
+            <button
+              className="aar-menu-item"
+              onClick={() => {
+                if (presetRef.current) presetRef.current.open = false;
+                onOpenPlatformGuide();
+              }}
+              data-size="sm"
+            >
+              <HelpCircle size={14} />
+              <span>Platform Resolution Guide</span>
+            </button>
           </div>
-        )}
-      </div>
+        </details>
 
-      {/* Right Actions: Responsive Desktop & Mobile */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* Arcane Atelier: Appearance & Realm Selectors (Desktop & Tablet) */}
-        <div className="hidden sm:flex items-center gap-1.5">
-          <AarSelect
-            compact
-            menuAlign="right"
-            value={appTheme}
-            onChange={(val) => onAppThemeChange(val as AppTheme)}
-            options={[
-              { value: 'light', label: '☀️ Light', shortLabel: '☀️ Light' },
-              { value: 'dark', label: '🌙 Dark', shortLabel: '🌙 Dark' },
-              { value: 'system', label: '💻 System', shortLabel: '💻 System' },
-            ]}
-          />
-          <AarSelect
-            compact
-            menuAlign="right"
-            value={appPalette}
-            onChange={(val) => onAppPaletteChange(val as StudioPalette)}
-            options={[
-              { value: 'obsidian', label: '✦ Obsidian (Dark)', shortLabel: '✦ Obsidian' },
-              { value: 'parchment', label: '✧ Parchment (Light)', shortLabel: '✧ Parchment' },
-              { value: 'jade', label: '⟡ Jade', shortLabel: '⟡ Jade' },
-              { value: 'forest', label: '🌿 Forest', shortLabel: '🌿 Forest' },
-              { value: 'iris', label: '🔮 Iris', shortLabel: '🔮 Iris' },
-            ]}
-          />
+        {/* Zoom Controls */}
+        <div className="aar-button-group" data-size="sm" role="group" aria-label="Canvas zoom">
+          <button
+            className="aar-button"
+            data-variant="quiet"
+            aria-pressed={autoFit}
+            onClick={onToggleAutoFit}
+            title="Auto-Fit Canvas to Viewport"
+            data-size="sm"
+          >
+            Fit
+          </button>
+          <button
+            className="aar-icon-button"
+            data-variant="quiet"
+            aria-label="Zoom out"
+            onClick={() => onZoomChange(Math.max(0.2, Math.round((zoom - 0.05) * 100) / 100))}
+            data-size="sm"
+          >
+            −
+          </button>
+          <span className="aar-button-group-value">
+            {Math.round(zoom * 100)}%
+          </span>
+          <button
+            className="aar-icon-button"
+            data-variant="quiet"
+            aria-label="Zoom in"
+            onClick={() => onZoomChange(Math.min(2.0, Math.round((zoom + 0.05) * 100) / 100))}
+            data-size="sm"
+          >
+            +
+          </button>
         </div>
 
-        {/* Mobile Quick Theme Toggle */}
-        <button
-          onClick={cycleAppTheme}
-          className="sm:hidden p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title={`Theme: ${appTheme}`}
-          aria-label={`Theme: ${appTheme}`}
-        >
-          <AppThemeIcon className="w-4 h-4" />
-        </button>
-
-        {/* Desktop-only secondary links */}
-        <button
-          onClick={onOpenCapabilities}
-          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title="Capabilities"
-          aria-label="Capabilities"
-        >
-          <BookOpen className="w-4 h-4" />
-        </button>
-
-        <button
-          onClick={onOpenAbout}
-          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 transition-colors"
-          title="About Yuwbrndr"
-          aria-label="About Yuwbrndr"
-        >
-          <Info className="w-4 h-4" />
-        </button>
-
-        <a
-          href="https://github.com/TechAaroorian/yuwbrndr"
-          target="_blank"
-          rel="noreferrer"
-          className="hidden xl:flex p-2 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-300 hover:text-slate-100 transition-colors"
-          title="GitHub"
-          aria-label="GitHub"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.39.97.1-.75.4-1.27.74-1.56-2.57-.3-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18a10.94 10.94 0 0 1 5.75 0c2.19-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.14v3.26c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
-          </svg>
-        </a>
-
-        {/* AI Prompt Generator Button (Desktop & Tablet) */}
-        {onOpenAiPrompt && (
+        {/* Font Scale Controls */}
+        <div className="aar-button-group" data-size="sm" role="group" aria-label="Font scale">
           <button
-            onClick={onOpenAiPrompt}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-xs font-semibold text-cyan-300 hover:text-cyan-200 hover:border-cyan-500/50 transition-all shadow-sm active:scale-95"
-            title="Generate AI Prompt for Design Code (ChatGPT, Claude, Cursor)"
+            className="aar-icon-button"
+            data-variant="quiet"
+            title="Decrease Font Size"
+            onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
+            data-size="sm"
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="hidden md:inline">AI Prompt</span>
+            A−
           </button>
-        )}
+          <span className="aar-button-group-value">
+            {Math.round(fontScale * 100)}%
+          </span>
+          <button
+            className="aar-icon-button"
+            data-variant="quiet"
+            title="Increase Font Size"
+            onClick={() => onFontScaleChange(Math.min(2.0, Math.round((fontScale + 0.05) * 100) / 100))}
+            data-size="sm"
+          >
+            A+
+          </button>
+        </div>
+      </div>
 
-        {/* Share URL Button (Desktop & Tablet) */}
-        {documentMode === 'design' && <button
-          onClick={onShare}
-          disabled={hasLocalImages}
-          className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
-            hasLocalImages
-              ? 'border-white/5 bg-white/5 text-slate-500 cursor-not-allowed opacity-60'
-              : sharedCopied
-              ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-300 shadow-sm'
-              : 'border-white/10 bg-studio-850 hover:bg-studio-800 text-slate-200 hover:text-white'
-          }`}
-          title={
-            hasLocalImages
-              ? 'URL sharing is not available with uploaded images. Use web image URLs (https://...) instead.'
-              : 'Share design via link (code encoded in URL hash)'
-          }
+      {/* 3. Action Commands & Export (Right) */}
+      <div className="aar-app-header-actions">
+        {/* AI Prompt Generator */}
+        <button
+          className="aar-button"
+          data-variant="ai"
+          onClick={onOpenAiPrompt}
+          title="Generate AI Prompt for Design Code"
+          data-size="sm"
         >
-          {sharedCopied ? (
-            <Check className="w-3.5 h-3.5 text-emerald-400" />
-          ) : (
-            <Share2 className={`w-3.5 h-3.5 ${hasLocalImages ? 'text-slate-500' : 'text-cyan-400'}`} />
-          )}
-          <span className="hidden md:inline">{sharedCopied ? 'Link Copied!' : 'Share'}</span>
-        </button>}
+          <Sparkles size={13} />
+          <span>AI Prompt</span>
+        </button>
 
-        {/* Copy Image Button (Desktop - Design Altar Only to prevent duplicate action in Grimoire Deck) */}
+        {/* Share Link */}
         {documentMode === 'design' && (
           <button
-            onClick={onCopyImage}
-            disabled={isExporting}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-studio-850 hover:bg-studio-800 text-xs font-semibold text-slate-200 transition-colors"
-            title="Copy rendered PNG to clipboard"
+            className="aar-button"
+            data-variant="quiet"
+            disabled={hasLocalImages || !hasDesign}
+            title={hasLocalImages ? 'Uploaded images cannot be included in a share URL.' : 'Share design via link'}
+            onClick={onShare}
+            data-size="sm"
           >
-            {copiedImage ? (
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
-            ) : (
-              <Copy className="w-3.5 h-3.5 text-slate-300" />
-            )}
-            <span className="hidden md:inline">{copiedImage ? 'Copied' : 'Copy'}</span>
+            {sharedCopied ? <Check size={13} className="aar-text-muted" /> : <Share2 size={13} />}
+            <span>{sharedCopied ? 'Link copied' : 'Share'}</span>
           </button>
         )}
 
+        {/* Copy PNG */}
+        <button
+          className="aar-button"
+          data-variant="quiet"
+          onClick={onCopyImage}
+          disabled={isExporting || !hasDesign}
+          title="Copy rendered PNG to clipboard"
+          data-size="sm"
+        >
+          {copiedImage ? <Check size={13} className="aar-text-muted" /> : <Copy size={13} />}
+          <span>{copiedImage ? 'Image copied' : 'Copy'}</span>
+        </button>
+
+        {/* Code Editor Toggle */}
+        <button
+          className="aar-button"
+          data-variant="quiet"
+          aria-pressed={isEditorOpen}
+          onClick={onToggleEditor}
+          title="Toggle Code Editor"
+          data-size="sm"
+        >
+          <Code2 size={13} />
+          <span>Code</span>
+        </button>
+
         {/* Export Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setShowExportMenu(!showExportMenu)}
-            disabled={isExporting}
-            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-semibold text-xs transition-colors shadow-sm"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline">{isExporting ? 'Exporting...' : 'Export'}</span>
-            <ChevronDown className="w-3 h-3 opacity-80" />
-          </button>
-
-          {showExportMenu && (
-            <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-2 animate-in fade-in zoom-in-95 duration-150">
-              {/* Optional Custom File Name */}
-              <div className="px-1 pt-1 pb-1.5 border-b border-white/10 space-y-1">
-                <label className="text-[10px] font-mono uppercase text-slate-400 font-bold flex items-center justify-between">
-                  <span>File Name</span>
-                  <span className="text-[9px] text-slate-500 font-normal lowercase">optional</span>
-                </label>
-                <div className="flex items-center gap-1 bg-studio-950 rounded-lg border border-white/10 px-2.5 py-1.5 focus-within:border-indigo-500/60 focus-within:ring-1 focus-within:ring-indigo-500/30 transition-all">
-                  <input
-                    type="text"
-                    value={customExportName}
-                    onChange={(e) => setCustomExportName(e.target.value)}
-                    placeholder={documentMode === 'slides' ? 'slide-name' : 'graphic-name'}
-                    className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none font-mono"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        onExport(2, customExportName);
-                        setShowExportMenu(false);
-                      }
-                    }}
-                  />
-                  <span className="text-[10px] font-mono text-slate-500 shrink-0">.png</span>
-                </div>
+        <details className="aar-menu" ref={exportRef} onKeyDown={dismiss}>
+          <summary className="aar-button" data-variant="primary" aria-label="Export options" data-size="sm">
+            <Download size={14} />
+            <span>{isExporting ? 'Exporting…' : 'Export'}</span>
+            <ChevronDown size={13} />
+          </summary>
+          <div className="aar-menu-dropdown" data-align="end">
+            <div className="aar-u-p-2 aar-stack" data-gap="1.5">
+              <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
+                <span className="aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-font-bold aar-u-text-text-muted">File Name</span>
+                <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted">.png</span>
               </div>
-
-              {/* Copy PNG Option */}
-              <div className="pb-1 border-b border-white/10">
-                <button
-                  onClick={() => {
-                    onCopyImage();
-                    setShowExportMenu(false);
-                  }}
-                  disabled={isExporting}
-                  className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    {copiedImage ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-indigo-400" />}
-                    <span>{copiedImage ? 'PNG Copied to Clipboard!' : 'Copy PNG to Clipboard'}</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-slate-500">Clipboard</span>
-                </button>
-              </div>
-
-              <div>
-                <div className="text-[10px] font-mono uppercase text-slate-400 px-1 py-1 font-bold">
-                  Select Resolution
-                </div>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => {
-                      onExport(1, customExportName);
-                      setShowExportMenu(false);
-                    }}
-                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-                  >
-                    <div>
-                      <div>Standard Resolution</div>
-                      <div className="text-[10px] text-slate-500 font-mono">1x ({currentPreset.width}×{currentPreset.height})</div>
-                    </div>
-                    <span className="font-mono text-[10px] text-slate-500 font-bold">1x</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onExport(2, customExportName);
-                      setShowExportMenu(false);
-                    }}
-                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors bg-indigo-600/10 border border-indigo-500/20"
-                  >
-                    <div>
-                      <div className="font-semibold text-indigo-300">Recommended (2x)</div>
-                      <div className="text-[10px] text-indigo-400/80 font-mono">{currentPreset.width * 2}×{currentPreset.height * 2}</div>
-                    </div>
-                    <span className="font-mono text-[10px] text-indigo-400 font-bold">2x</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      onExport(4, customExportName);
-                      setShowExportMenu(false);
-                    }}
-                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-                  >
-                    <div>
-                      <div className="font-semibold text-cyan-300">Ultra Print (4x)</div>
-                      <div className="text-[10px] text-cyan-500 font-mono">{currentPreset.width * 4}×{currentPreset.height * 4}</div>
-                    </div>
-                    <span className="font-mono text-[10px] text-cyan-400 font-bold">4x</span>
-                  </button>
-                </div>
-              </div>
+              <input
+                className="aar-input aar-u-w-full"
+                value={exportName}
+                onChange={(event) => setExportName(event.target.value)}
+                placeholder="my-design"
+                data-size="sm"
+              />
             </div>
-          )}
-        </div>
 
-        {/* Mobile More Options Dropdown Button (< lg) */}
-        <div className="lg:hidden relative">
-          <button
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 rounded-lg border border-white/10 bg-studio-850 text-slate-300 hover:text-white hover:bg-studio-800 transition-colors"
-            title="More Options"
-          >
-            <MoreVertical className="w-4 h-4" />
-          </button>
+            <div className="aar-menu-divider" />
 
-          {showMobileMenu && (
-            <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-white/15 bg-studio-900 shadow-2xl p-2 z-50 space-y-1 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-2 py-1 text-[10px] font-mono uppercase text-slate-500 font-bold border-b border-white/10">
-                Menu & Settings
-              </div>
-
-              <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-studio-950 border border-white/10">
-                <button onClick={() => { onDocumentModeChange('design'); setShowMobileMenu(false); }} className={`px-2 py-2 rounded-md text-xs font-semibold ${documentMode === 'design' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>Design</button>
-                <button onClick={() => { onDocumentModeChange('slides'); setShowMobileMenu(false); }} className={`px-2 py-2 rounded-md text-xs font-semibold ${documentMode === 'slides' ? 'bg-indigo-600 text-white' : 'text-slate-400'}`}>Slides</button>
-              </div>
-
-              {/* Copy Image Button on Mobile */}
-              <button
-                onClick={() => {
-                  onCopyImage();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <Copy className="w-4 h-4 text-indigo-400" />
-                <span>{copiedImage ? 'PNG Copied!' : 'Copy PNG to Clipboard'}</span>
-              </button>
-
-              {/* Share Design Link on Mobile */}
-              {documentMode === 'design' && <button
-                onClick={() => {
-                  if (!hasLocalImages) {
-                    onShare();
-                    setShowMobileMenu(false);
-                  }
-                }}
-                disabled={hasLocalImages}
-                className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs transition-colors ${
-                  hasLocalImages
-                    ? 'text-slate-500 cursor-not-allowed opacity-60'
-                    : 'text-slate-200 hover:bg-white/5'
-                }`}
-                title={
-                  hasLocalImages
-                    ? 'URL sharing is not available with uploaded images'
-                    : 'Share design via URL link'
-                }
-              >
-                {sharedCopied ? (
-                  <Check className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Share2 className={`w-4 h-4 ${hasLocalImages ? 'text-slate-500' : 'text-cyan-400'}`} />
-                )}
-                <div className="text-left">
-                  <div className={sharedCopied ? 'text-emerald-300 font-semibold' : ''}>
-                    {sharedCopied ? 'Link Copied!' : 'Share Design Link'}
-                  </div>
-                  {hasLocalImages && (
-                    <div className="text-[10px] text-amber-400/80">
-                      Not available with uploaded images
-                    </div>
-                  )}
-                </div>
-              </button>}
-
-              {/* AI Prompt Generator */}
-              {onOpenAiPrompt && (
-                <button
-                  onClick={() => {
-                    onOpenAiPrompt();
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 font-semibold"
-                >
-                  <Sparkles className="w-4 h-4 text-cyan-400" />
-                  <span>AI Prompt Generator</span>
-                </button>
-              )}
-
-              {/* Templates Gallery */}
-              <button
-                onClick={() => {
-                  onOpenExamples();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-                <span>Browse Templates</span>
-              </button>
-
-              {/* Theme Palette */}
-              <div className="pt-1 border-t border-white/10">
-                <div className="px-2.5 py-1 text-[10px] font-mono uppercase text-slate-400 font-semibold">Canvas Palette</div>
-                <div className="grid grid-cols-5 gap-1 px-1 py-1">
-                  {Object.values(COLOR_THEMES).map((th) => (
-                    <button
-                      key={th.id}
-                      onClick={() => {
-                        onSelectTheme(th);
-                        setShowMobileMenu(false);
-                      }}
-                      className={`h-7 rounded-md border flex items-center justify-center transition-transform active:scale-95 ${
-                        th.id === currentTheme.id ? 'border-white ring-1 ring-white/50 scale-105' : 'border-white/20'
-                      }`}
-                      style={{ backgroundColor: th.primary }}
-                      title={th.name}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Platform Resolution Guide */}
-              <button
-                onClick={() => {
-                  onOpenPlatformGuide();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <HelpCircle className="w-4 h-4 text-cyan-400" />
-                <span>Resolution Guide</span>
-              </button>
-
-              {/* Capabilities */}
-              <button
-                onClick={() => {
-                  onOpenCapabilities();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <BookOpen className="w-4 h-4 text-slate-400" />
-                <span>Design Capabilities</span>
-              </button>
-
-              {/* About */}
-              <button
-                onClick={() => {
-                  onOpenAbout();
-                  setShowMobileMenu(false);
-                }}
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <Info className="w-4 h-4 text-slate-400" />
-                <span>About & Responsibility</span>
-              </button>
-
-              {/* GitHub */}
-              <a
-                href="https://github.com/TechAaroorian/yuwbrndr"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs text-slate-200 hover:bg-white/5"
-              >
-                <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.27 3.39.97.1-.75.4-1.27.74-1.56-2.57-.3-5.27-1.28-5.27-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.16 1.18a10.94 10.94 0 0 1 5.75 0c2.19-1.49 3.16-1.18 3.16-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.71 5.38-5.29 5.67.42.36.79 1.06.79 2.14v3.26c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z" />
-                </svg>
-                <span>View on GitHub</span>
-              </a>
+            <div className="aar-u-px-2 aar-u-py-1 aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-font-bold aar-u-text-text-muted">
+              Resolution & Scale
             </div>
-          )}
-        </div>
+
+            {([
+              { scale: 1, label: 'Standard PNG', note: 'Web & Preview', badge: '1×' },
+              { scale: 2, label: 'Retina High-DPI', note: 'Optimal for Social', badge: '2×' },
+              { scale: 4, label: 'Ultra-HD Crisp', note: 'Print & 4K Quality', badge: '4×' },
+            ] as const).map(({ scale, label, note, badge }) => (
+              <button
+                key={scale}
+                className="aar-menu-item aar-u-flex aar-u-items-center aar-u-justify-between aar-u-gap-3"
+                disabled={isExporting || !hasDesign}
+                onClick={() => {
+                  if (exportRef.current) exportRef.current.open = false;
+                  onExport(scale, exportName);
+                }}
+                data-size="sm"
+              >
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-min-w-0">
+                  <span className="aar-badge aar-u-font-mono aar-u-font-bold aar-u-shrink-0" data-tone={scale === 2 ? 'success' : undefined}>
+                    {badge}
+                  </span>
+                  <div className="aar-u-min-w-0">
+                    <div className="aar-u-font-semibold aar-u-text-text aar-u-truncate">{label}</div>
+                    <div className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-truncate">
+                      {currentPreset.width * scale} × {currentPreset.height * scale} px · {note}
+                    </div>
+                  </div>
+                </div>
+                <Download size={13} className="aar-u-text-text-muted aar-u-shrink-0" />
+              </button>
+            ))}
+          </div>
+        </details>
+
+        {/* Settings & Info Dropdown */}
+        <details className="aar-menu" data-menu="studio" ref={actionsRef} onKeyDown={dismiss}>
+          <summary className="aar-icon-button" data-variant="quiet" aria-label="Studio settings" data-size="sm">
+            <MoreHorizontal size={14} />
+          </summary>
+          <div className="aar-menu-dropdown" data-align="end">
+            <div className="aar-p-2">
+              <AarSelect
+                label="Appearance"
+                compact
+                value={appTheme}
+                onChange={(value) => onAppThemeChange(value as AppTheme)}
+                options={[
+                  { value: 'light', label: 'Light' },
+                  { value: 'dark', label: 'Dark' },
+                  { value: 'system', label: 'System' },
+                ]}
+              />
+            </div>
+            <div className="aar-menu-divider" />
+            <button className="aar-menu-item" onClick={() => closeAndRun(onOpenPlatformGuide)} data-size="sm">
+              <HelpCircle size={14} />
+              <span>Resolution guide</span>
+            </button>
+            <button className="aar-menu-item" onClick={() => closeAndRun(onOpenCapabilities)} data-size="sm">
+              <BookOpen size={14} />
+              <span>Capabilities</span>
+            </button>
+            <button className="aar-menu-item" onClick={() => closeAndRun(onOpenAbout)} data-size="sm">
+              <Info size={14} />
+              <span>About Yuwbrndr</span>
+            </button>
+            <a className="aar-menu-item" href="https://github.com/TechAaroorian/yuwbrndr" target="_blank" rel="noreferrer">
+              Source on GitHub
+            </a>
+          </div>
+        </details>
       </div>
     </header>
   );
-};
+}

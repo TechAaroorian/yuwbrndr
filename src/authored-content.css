@@ -1,0 +1,41 @@
+@tailwind utilities;
+/* Direct Font Utilities (guaranteed to apply in user HTML & dynamic presets) */
+.font-comic, [class*="font-comic"] { font-family: 'Comic Neue', cursive, sans-serif !important; }
+.font-caveat, [class*="font-caveat"] { font-family: 'Caveat', cursive, sans-serif !important; }
+.font-hand, [class*="font-hand"] { font-family: 'Patrick Hand', cursive, sans-serif !important; }
+.font-arcade, [class*="font-arcade"] { font-family: 'Press Start 2P', monospace !important; }
+.font-bebas, .font-meme, [class*="font-bebas"], [class*="font-meme"] { font-family: 'Bebas Neue', Impact, sans-serif !important; }
+.font-inter, [class*="font-inter"] { font-family: 'Inter', system-ui, sans-serif !important; }
+.font-jakarta, [class*="font-jakarta"] { font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important; }
+.font-outfit, [class*="font-outfit"] { font-family: 'Outfit', system-ui, sans-serif !important; }
+.font-space, [class*="font-space"] { font-family: 'Space Grotesk', system-ui, sans-serif !important; }
+.font-syne, [class*="font-syne"] { font-family: 'Syne', system-ui, sans-serif !important; }
+.font-mono, .font-jetbrains, [class*="font-mono"], [class*="font-jetbrains"] { font-family: 'JetBrains Mono', monospace !important; }
+.font-fira, [class*="font-fira"] { font-family: 'Fira Code', monospace !important; }
+.font-playfair, [class*="font-playfair"] { font-family: 'Playfair Display', serif !important; }
+.font-cinzel, [class*="font-cinzel"] { font-family: 'Cinzel', serif !important; }
+
+/* Meme text stroke utility */
+.meme-text-stroke {
+  text-shadow: 
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+    -3px  0   0 #000,
+     3px  0   0 #000,
+     0   -3px 0 #000,
+     0    3px 0 #000;
+}
+
+/* Canvas checkerboard pattern for transparent exports */
+.canvas-checkerboard {
+  background-image: linear-gradient(45deg, #12141e 25%, transparent 25%), 
+                    linear-gradient(-45deg, #12141e 25%, transparent 25%), 
+                    linear-gradient(45deg, transparent 75%, #12141e 75%), 
+                    linear-gradient(-45deg, transparent 75%, #12141e 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+

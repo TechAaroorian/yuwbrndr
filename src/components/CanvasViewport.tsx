@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AspectPreset, ColorTheme } from '../types/studio';
+import { AspectPreset, ColorTheme, ASPECT_PRESETS } from '../types/studio';
 import { CustomCodeCanvas } from './templates/custom/CustomCodeCanvas';
-import { Sparkles, ChevronRight, Maximize2, PanelLeftOpen } from 'lucide-react';
+import { Info, LayoutTemplate, ChevronRight, ChevronDown, Sparkles, Code2 } from 'lucide-react';
 
 interface Props {
   currentPreset: AspectPreset;
   currentTheme: ColorTheme;
   zoom: number;
   onZoomChange: (newZoom: number) => void;
+  onManualZoom: (newZoom: number) => void;
   fontScale: number;
   onFontScaleChange: (newScale: number) => void;
   autoFit: boolean;
@@ -20,9 +21,9 @@ interface Props {
   onLoadSample: (type: 'html' | 'canvas') => void;
   onTriggerUpload?: () => void;
   onOpenPlatformGuide: () => void;
-  isSidebarOpen?: boolean;
-  onToggleSidebar?: () => void;
+  onSelectPreset: (preset: AspectPreset) => void;
   onOpenAiPrompt?: () => void;
+  onOpenTemplates: () => void;
 }
 
 export const CanvasViewport: React.FC<Props> = ({
@@ -30,6 +31,7 @@ export const CanvasViewport: React.FC<Props> = ({
   currentTheme,
   zoom,
   onZoomChange,
+  onManualZoom,
   fontScale,
   onFontScaleChange,
   autoFit,
@@ -42,9 +44,9 @@ export const CanvasViewport: React.FC<Props> = ({
   onLoadSample,
   onTriggerUpload,
   onOpenPlatformGuide,
-  isSidebarOpen = true,
-  onToggleSidebar,
+  onSelectPreset,
   onOpenAiPrompt,
+  onOpenTemplates,
 }) => {
   const [showTip, setShowTip] = useState<boolean>(true);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -93,167 +95,92 @@ export const CanvasViewport: React.FC<Props> = ({
       if (observer) observer.disconnect();
       window.removeEventListener('resize', calculateFit);
     };
-  }, [currentPreset.width, currentPreset.height, showTip, autoFit, onZoomChange, isSidebarOpen]);
+  }, [currentPreset.width, currentPreset.height, showTip, autoFit, onZoomChange]);
 
   const canvasWidth = Math.round(currentPreset.width * zoom);
   const canvasHeight = Math.round(currentPreset.height * zoom);
 
   return (
-    <main className="flex-1 h-full min-h-0 bg-studio-950 overflow-hidden flex flex-col items-center justify-between p-2 sm:p-4 relative select-none min-w-0">
-      {/* Floating Expand Sidebar Button when sidebar is collapsed (Desktop only) */}
-      {!isSidebarOpen && onToggleSidebar && (
-        <button
-          onClick={onToggleSidebar}
-          className="hidden lg:flex absolute left-3 top-3 z-30 items-center gap-1.5 px-3 py-1.5 rounded-xl bg-studio-900/90 border border-white/15 text-xs font-semibold text-slate-200 hover:text-white hover:bg-studio-800 shadow-xl backdrop-blur-md transition-all hover:border-indigo-500/40 group active:scale-95"
-          title="Expand Left Panel (Ctrl+B)"
-        >
-          <PanelLeftOpen className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
-          <span>Templates & Assets</span>
-        </button>
-      )}
+    <section aria-label="Design preview" className="aar-canvas-viewport aar-u-flex-1 aar-u-min-h-0 aar-u-bg-background aar-u-overflow-hidden aar-u-flex aar-u-flex-col aar-u-items-center aar-u-p-3 aar-u-relative aar-u-select-none aar-u-min-w-0">
+      {/* Top Floating Platform Info Card */}
+      <div className="aar-canvas-card">
+        <div className="aar-canvas-card-header aar-u-flex aar-u-items-center aar-u-justify-between aar-u-flex-nowrap">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-min-w-0 aar-u-truncate">
+            <span className="aar-u-font-bold aar-u-text-text aar-u-text-xs aar-u-truncate">{currentPreset.name}</span>
+            <span className="aar-badge">{currentPreset.aspectRatio}</span>
+            <span className="aar-u-font-bold aar-u-text-primary aar-u-text-xs aar-u-shrink-0">{currentPreset.width} × {currentPreset.height} px</span>
+            <span className="aar-text-muted aar-u-text-xs aar-u-shrink-0">({Math.round(zoom * 100)}%)</span>
+          </div>
 
-      {/* Top Floating Platform Info & Transmutation Status Ribbon */}
-      <div className="w-full max-w-2xl z-20 flex items-center justify-between gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg border border-white/10 bg-studio-900 text-xs shrink-0 shadow-sm backdrop-blur-md">
-        <div className="flex items-center gap-2 truncate">
-          <div className="flex items-center gap-1.5 truncate text-[10px] sm:text-[11px]">
-            <span className="text-indigo-400 font-bold shrink-0">⟡</span>
-            <span className="font-bold text-slate-100 truncate">{currentPreset.name}</span>
-            <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-semibold shrink-0">
-              {currentPreset.aspectRatio}
-            </span>
-            {/* Viewport Zoom Controls */}
-            <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
-              <button
-                onClick={() => onZoomChange(Math.max(0.2, Math.round((zoom - 0.05) * 100) / 100))}
-                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
-                title="Zoom Out (-)"
-              >
-                -
-              </button>
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-shrink-0">
+            {!autoFit && (
               <button
                 onClick={onToggleAutoFit}
-                className="px-1 py-0.5 rounded text-slate-300 hover:text-indigo-300 hover:bg-white/10 text-[10px] font-mono"
-                title="Canvas Zoom (Click to Fit)"
+                className="aar-button"
+                data-size="xs"
+                title="Fit to Screen"
               >
-                {Math.round(zoom * 100)}%
+                Fit
               </button>
-              <button
-                onClick={() => onZoomChange(Math.min(2.0, Math.round((zoom + 0.05) * 100) / 100))}
-                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
-                title="Zoom In (+)"
-              >
-                +
-              </button>
-            </div>
-
-            {/* Font Scale Controls */}
-            <div className="flex items-center gap-0.5 border-l border-white/10 pl-1.5 ml-0.5">
-              <button
-                onClick={() => onFontScaleChange(Math.max(0.6, Math.round((fontScale - 0.05) * 100) / 100))}
-                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
-                title="Decrease Font Size (A-)"
-              >
-                A-
-              </button>
-              <button
-                onClick={() => onFontScaleChange(1.0)}
-                className="px-1 py-0.5 rounded text-slate-300 hover:text-indigo-300 hover:bg-white/10 text-[10px] font-mono"
-                title="Reset Font Size to 100%"
-              >
-                {Math.round(fontScale * 100)}%
-              </button>
-              <button
-                onClick={() => onFontScaleChange(Math.min(2.0, Math.round((fontScale + 0.05) * 100) / 100))}
-                className="px-1 py-0.5 rounded text-slate-400 hover:text-white hover:bg-white/10 text-[10px] font-mono font-bold"
-                title="Increase Font Size (A+)"
-              >
-                A+
-              </button>
-            </div>
+            )}
+            <button
+              onClick={onOpenPlatformGuide}
+              className="aar-button aar-u-flex aar-u-items-center aar-u-gap-0.5"
+              data-variant="quiet"
+              data-size="xs"
+            >
+              <span className="aar-u-text-primary aar-u-font-semibold">Specs</span>
+              <ChevronRight size={12} className="aar-u-text-primary" />
+            </button>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {!autoFit && (
+        {/* Platform Optimization Tip inside info card */}
+        {showTip && currentPreset.tip && (
+          <div className="aar-canvas-card-tip aar-u-flex aar-u-items-center aar-u-justify-between aar-u-flex-nowrap">
+            <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-min-w-0 aar-u-truncate">
+              <Sparkles size={13} className="aar-u-text-primary aar-u-shrink-0" />
+              <span className="aar-text-muted aar-u-text-xs aar-u-truncate">{currentPreset.tip}</span>
+            </div>
             <button
-              onClick={onToggleAutoFit}
-              className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded bg-indigo-600/30 text-indigo-300 hover:bg-indigo-600/40 border border-indigo-500/30 text-[10px] sm:text-[11px] font-semibold transition-colors"
-              title="Fit to Screen"
+              onClick={() => setShowTip(false)}
+              className="aar-icon-button aar-text-muted aar-u-shrink-0"
+              data-variant="quiet"
+              data-size="xs"
+              title="Dismiss tip"
+              aria-label="Dismiss tip"
             >
-              <Maximize2 className="w-3 h-3" />
-              <span>Fit</span>
+              ✕
             </button>
-          )}
-
-          <button
-            onClick={onOpenPlatformGuide}
-            className="inline-flex items-center gap-0.5 text-[10px] sm:text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
-          >
-            <span>Specs</span>
-            <ChevronRight className="w-3 h-3" />
-          </button>
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* Platform Optimization Tip Pill */}
-      {showTip && currentPreset.tip && (
-        <div className="w-full max-w-2xl mt-2 px-3.5 py-1.5 rounded-lg bg-studio-900 border border-white/10 text-[11px] text-slate-400 flex items-center justify-between gap-2 font-sans shrink-0">
-          <div className="flex items-center gap-1.5 truncate">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-            <span className="truncate">{currentPreset.tip}</span>
-          </div>
-          <button 
-            onClick={() => setShowTip(false)}
-            className="text-slate-500 hover:text-slate-300 text-xs font-mono p-0.5 shrink-0"
-            title="Dismiss tip"
-          >
-            ✕
-          </button>
-        </div>
-      )}
-
       {/* The Sacred Altar Viewport */}
-      <div 
+      <div
         ref={canvasContainerRef}
-        className="flex-1 w-full flex items-center justify-center overflow-auto p-4 min-h-0 min-w-0 relative"
+        className="aar-u-flex-1 aar-u-w-full aar-u-flex aar-u-items-center aar-u-justify-center aar-u-overflow-auto aar-u-p-4 aar-u-min-h-0 aar-u-min-w-0 aar-u-relative"
       >
         {/* Invisible absolute sentinel for exact layout measurement */}
-        <div 
+        <div
           ref={sentinelRef}
-          className="absolute inset-4 pointer-events-none opacity-0"
+          className="aar-u-absolute aar-u-inset-4 aar-u-pointer-events-none aar-u-opacity-0"
         />
 
         <div
-          className="aar-altar"
-          data-corner-brackets="true"
+          className="aar-canvas-frame"
+          data-fit={autoFit}
           style={{
-            width: `${canvasWidth}px`,
-            height: `${canvasHeight}px`,
-            maxWidth: autoFit ? '100%' : undefined,
-            maxHeight: autoFit ? '100%' : undefined,
-            aspectRatio: `${currentPreset.width} / ${currentPreset.height}`,
-            position: 'relative',
-            flexShrink: 0,
-            transition: 'width 0.15s ease-out, height 0.15s ease-out',
-          }}
+            '--aar-canvas-frame-width': `${canvasWidth}px`,
+            '--aar-canvas-frame-height': `${canvasHeight}px`,
+            '--aar-canvas-width': `${currentPreset.width}px`,
+            '--aar-canvas-height': `${currentPreset.height}px`,
+            '--aar-canvas-ratio': `${currentPreset.width} / ${currentPreset.height}`,
+            '--aar-canvas-zoom': zoom,
+          } as React.CSSProperties}
         >
-          <div 
-            className="origin-top-left shadow-2xl rounded-xl overflow-hidden border border-white/15"
-            style={{
-              transform: `scale(${zoom})`,
-              width: `${currentPreset.width}px`,
-              height: `${currentPreset.height}px`,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              transition: 'transform 0.15s ease-out',
-            }}
-          >
-            <div 
-              ref={canvasRef} 
-              className="w-full h-full relative"
-              style={{ width: `${currentPreset.width}px`, height: `${currentPreset.height}px` }}
-            >
+          <div className="aar-canvas-preview aar-u-origin-top-left aar-u-overflow-hidden">
+            <div ref={canvasRef} className="aar-u-w-full aar-u-h-full aar-u-relative">
               <CustomCodeCanvas
                 codeType={customCodeType}
                 code={customCode}
@@ -271,6 +198,6 @@ export const CanvasViewport: React.FC<Props> = ({
           </div>
         </div>
       </div>
-    </main>
+    </section>
   );
 };

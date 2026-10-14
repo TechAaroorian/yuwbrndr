@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Sparkles,
+  Bot,
   X,
   Copy,
   Check,
@@ -154,66 +154,66 @@ const AiPromptModalDialog: React.FC<Props> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[80] bg-black/75 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center animate-in fade-in duration-200 select-none overflow-y-auto"
+      className="aar-u-fixed aar-u-inset-0 aar-u-z--80 aar-u-bg-black-75  aar-u-p-3 aar-u-sm-p-6 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-animate-in aar-u-fade-in aar-u-duration-200 aar-u-select-none aar-u-overflow-y-auto"
       onMouseDown={onClose}
     >
       <section
-        className="w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-2xl border border-white/15 bg-studio-900 shadow-2xl flex flex-col text-slate-100"
+        className="aar-u-w-full aar-u-max-w-4xl aar-u-max-h--92vh aar-u-overflow-y-auto aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-surface  aar-u-flex aar-u-flex-col aar-u-text-text"
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <header className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-white/10 bg-studio-900/95 backdrop-blur-md px-5 sm:px-7 py-4 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-500 p-0.5 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
-              <div className="w-full h-full bg-studio-950 rounded-[10px] flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-cyan-300" />
+        <header className="aar-u-sticky aar-u-top-0 aar-u-z-20 aar-u-flex aar-u-items-start aar-u-justify-between aar-u-gap-4 aar-u-border-b aar-u-border-border aar-u-bg-surface  aar-u-px-5 aar-u-sm-px-7 aar-u-py-4 aar-u-shrink-0">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-3">
+            <div className="aar-u-w-10 aar-u-h-10 aar-u-rounded aar-u-bg-gradient-to-tr aar-u-from-indigo-600 aar-u-to-cyan-500 aar-u-p-0.5  aar-u-shadow-indigo-500-20 aar-u-flex aar-u-items-center aar-u-justify-center">
+              <div className="aar-u-w-full aar-u-h-full aar-u-bg-background aar-u-rounded--10px aar-u-flex aar-u-items-center aar-u-justify-center">
+                <Bot className="aar-u-w-5 aar-u-h-5 aar-u-text-primary" />
               </div>
             </div>
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-flex-wrap">
+                <h2 className="aar-u-text-base aar-u-sm-text-lg aar-u-font-bold aar-u-text-text aar-u-tracking-tight">
                   Intent-Driven AI Prompts
                 </h2>
-                <span className="px-2 py-0.5 text-[10px] font-mono font-semibold rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                <span className="aar-u-px-2 aar-u-py-0.5 aar-u-text-xs aar-u-font-mono aar-u-font-semibold aar-u-rounded aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-30">
                   Design by Code · Design to All
                 </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                <span className="aar-u-px-2 aar-u-py-0.5 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-rounded aar-u-bg-cyan-500-20 aar-u-text-primary aar-u-border aar-u-border-cyan-500-30">
                   Yuwbrndr Specs
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5 max-w-2xl">
+              <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-0.5 aar-u-max-w-2xl">
                 Provide plain text, bullet points, or a documentation URL. Yuwbrndr translates that intent into structured code with built-in visual hierarchy, contrast ratios, and safe-zone margins.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
-            aria-label="Close modal"
+            className="aar-button "
+            aria-label="Close modal" data-size="sm"
           >
-            <X className="w-5 h-5" />
+            <X className="aar-u-w-5 aar-u-h-5" />
           </button>
         </header>
 
         {/* Modal Body */}
-        <div className="p-5 sm:p-7 space-y-6">
+        <div className="aar-u-p-5 aar-u-sm-p-7 aar-u-space-y-6">
           {/* STEP 1: Core Configuration Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-gap-5">
             {/* Left Column: Ratio & Engine */}
-            <div className="space-y-4">
+            <div className="aar-u-space-y-4">
               {/* Screen Ratio & Platform */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-300">
-                    <Layout className="w-3.5 h-3.5 text-indigo-400" />
+                <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-mb-2">
+                  <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text">
+                    <Layout className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
                     <span>1. Target Screen Ratio & Safe Zone</span>
                   </label>
-                  <span className="text-[10px] font-mono text-cyan-300">
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-text-primary">
                     {activePreset.aspectRatio} · {activePreset.width}×{activePreset.height}px
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="aar-u-grid aar-u-grid-cols-1 aar-u-sm-grid-cols-2 aar-u-gap-2">
                   {ASPECT_PRESETS.map((p) => {
                     const isSelected = p.id === selectedPresetId;
                     return (
@@ -221,19 +221,19 @@ const AiPromptModalDialog: React.FC<Props> = ({
                         key={p.id}
                         type="button"
                         onClick={() => setSelectedPresetId(p.id)}
-                        className={`p-2.5 rounded-xl border text-left transition-all relative ${
+                        className={`aar-button aar-u-relative ${
                           isSelected
-                            ? 'border-indigo-500 bg-indigo-600/20 text-white shadow-sm ring-1 ring-indigo-500/50'
-                            : 'border-white/10 bg-studio-850 text-slate-300 hover:bg-white/5 hover:border-white/20'
-                        }`}
+                            ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-indigo-500-50'
+                            : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle aar-u-hover-border-border'
+                        }`} data-variant="primary" data-size="sm"
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold truncate">{p.name}</span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-cyan-300 shrink-0">
+                        <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
+                          <span className="aar-u-text-xs aar-u-font-semibold aar-u-truncate">{p.name}</span>
+                          <span className="aar-u-text-xs aar-u-font-mono aar-u-px-1.5 aar-u-py-0.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-text-primary aar-u-shrink-0">
                             {p.aspectRatio}
                           </span>
                         </div>
-                        <div className="text-[10px] text-slate-400 font-mono mt-1">
+                        <div className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-mt-1">
                           {p.width} × {p.height} px
                         </div>
                       </button>
@@ -243,10 +243,10 @@ const AiPromptModalDialog: React.FC<Props> = ({
 
                 {/* Platform Safe Zone Notice */}
                 {activePreset.safeZone && (
-                  <div className="mt-2 flex items-start gap-2 p-2 rounded-lg bg-indigo-950/40 border border-indigo-500/30 text-[11px] text-indigo-200">
-                    <Shield className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
+                  <div className="aar-u-mt-2 aar-u-flex aar-u-items-start aar-u-gap-2 aar-u-p-2 aar-u-rounded aar-u-bg-indigo-950-40 aar-u-border aar-u-border-indigo-500-30 aar-u-text-sm aar-u-text-primary">
+                    <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0 aar-u-mt-0.5" />
                     <span>
-                      <strong className="font-semibold text-indigo-300">Safe-Zone:</strong> {activePreset.safeZone}
+                      <strong className="aar-u-font-semibold aar-u-text-primary">Safe-Zone:</strong> {activePreset.safeZone}
                     </span>
                   </div>
                 )}
@@ -254,25 +254,25 @@ const AiPromptModalDialog: React.FC<Props> = ({
 
               {/* Rendering Engine: HTML vs Canvas */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-300 mb-2">
-                  <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Code2 className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
                   <span>2. Rendering Engine</span>
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="aar-u-grid aar-u-grid-cols-2 aar-u-gap-2">
                   <button
                     type="button"
                     onClick={() => setSelectedEngine('html')}
-                    className={`p-3 rounded-xl border text-left transition-all ${
+                    className={`aar-button ${
                       selectedEngine === 'html'
-                        ? 'border-cyan-500 bg-cyan-500/15 text-white shadow-sm ring-1 ring-cyan-500/40'
-                        : 'border-white/10 bg-studio-850 text-slate-300 hover:bg-white/5'
-                    }`}
+                        ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-cyan-500-40'
+                        : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                    }`} data-size="sm"
                   >
-                    <div className="font-bold text-xs flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-cyan-400" />
                       HTML + Tailwind CSS
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-1 leading-snug">
+                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
                       UnoCSS Wind4 runtime utilities, flex/grid layouts, inline SVGs. (No &lt;script&gt;).
                     </p>
                   </button>
@@ -280,17 +280,17 @@ const AiPromptModalDialog: React.FC<Props> = ({
                   <button
                     type="button"
                     onClick={() => setSelectedEngine('canvas')}
-                    className={`p-3 rounded-xl border text-left transition-all ${
+                    className={`aar-button ${
                       selectedEngine === 'canvas'
-                        ? 'border-indigo-500 bg-indigo-500/15 text-white shadow-sm ring-1 ring-indigo-500/40'
-                        : 'border-white/10 bg-studio-850 text-slate-300 hover:bg-white/5'
-                    }`}
+                        ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-indigo-500-40'
+                        : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                    }`} data-size="sm"
                   >
-                    <div className="font-bold text-xs flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-indigo-400" />
+                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-indigo-400" />
                       Canvas 2D JS (Advanced)
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-1 leading-snug">
+                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
                       Runs in isolated sandbox via (canvas, ctx, width, height). Geometric & isometric graphics.
                     </p>
                   </button>
@@ -299,14 +299,14 @@ const AiPromptModalDialog: React.FC<Props> = ({
             </div>
 
             {/* Right Column: Style Archetype, Theme Palette, and Idea Presets */}
-            <div className="space-y-4">
+            <div className="aar-u-space-y-4">
               {/* Style Archetype */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-300 mb-2">
-                  <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Layers className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
                   <span>3. Design Layout Archetype</span>
                 </label>
-                <div className="space-y-1.5">
+                <div className="aar-u-space-y-1.5">
                   {(Object.keys(ARCHETYPE_LABELS) as DesignArchetype[]).map((arch) => {
                     const info = ARCHETYPE_LABELS[arch];
                     const isSelected = selectedArchetype === arch;
@@ -315,19 +315,19 @@ const AiPromptModalDialog: React.FC<Props> = ({
                         key={arch}
                         type="button"
                         onClick={() => setSelectedArchetype(arch)}
-                        className={`w-full p-2 rounded-lg border text-left text-xs transition-all flex items-center justify-between ${
+                        className={`aar-button aar-u-w-full aar-u-flex aar-u-justify-between ${
                           isSelected
-                            ? 'border-indigo-500/60 bg-indigo-500/20 text-white font-medium'
-                            : 'border-white/10 bg-studio-850 text-slate-300 hover:bg-white/5'
-                        }`}
+                            ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text aar-u-font-medium'
+                            : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                        }`} data-size="sm"
                       >
                         <div>
-                          <div className="font-semibold text-slate-200">{info.name}</div>
-                          <div className="text-[10px] text-slate-400 truncate max-w-[280px]">
+                          <div className="aar-u-font-semibold aar-u-text-text">{info.name}</div>
+                          <div className="aar-u-text-xs aar-u-text-text-muted aar-u-truncate aar-u-max-w--280px">
                             {info.description}
                           </div>
                         </div>
-                        {isSelected && <Check className="w-4 h-4 text-indigo-400 shrink-0" />}
+                        {isSelected && <Check className="aar-u-w-4 aar-u-h-4 aar-u-text-primary aar-u-shrink-0" />}
                       </button>
                     );
                   })}
@@ -336,25 +336,25 @@ const AiPromptModalDialog: React.FC<Props> = ({
 
               {/* Color Palette */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-300 mb-2">
-                  <Palette className="w-3.5 h-3.5 text-cyan-400" />
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Palette className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
                   <span>4. Color Palette</span>
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="aar-u-flex aar-u-flex-wrap aar-u-gap-2">
                   {Object.values(COLOR_THEMES).map((th) => (
                     <button
                       key={th.id}
                       type="button"
                       onClick={() => setSelectedThemeId(th.id)}
-                      className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs transition-all ${
+                      className={`aar-button aar-u-flex aar-u-gap-2 ${
                         selectedThemeId === th.id
-                          ? 'border-indigo-500 bg-indigo-500/20 text-white'
-                          : 'border-white/10 bg-studio-850 text-slate-300 hover:bg-white/5'
-                      }`}
+                          ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text'
+                          : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                      }`} data-size="sm"
                     >
                       <span
-                        className="w-3 h-3 rounded-full border border-white/20 shrink-0"
-                        style={{ backgroundColor: th.primary }}
+                        className="aar-swatch aar-u-w-3 aar-u-h-3 aar-u-rounded-full aar-u-border aar-u-border-border aar-u-shrink-0"
+                        style={{ '--aar-swatch-color': th.primary } as React.CSSProperties}
                       />
                       <span>{th.name}</span>
                     </button>
@@ -365,37 +365,37 @@ const AiPromptModalDialog: React.FC<Props> = ({
           </div>
 
           {/* STEP 2: Intent Selection & User Input */}
-          <div className="space-y-3 rounded-xl border border-white/10 bg-studio-950/60 p-4">
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <label className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-slate-300">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+          <div className="aar-u-space-y-3 aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-background aar-u-p-4">
+            <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-flex-wrap aar-u-gap-2">
+              <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text">
+                <Lightbulb className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-amber-400" />
                 <span>5. Intent Translation & Input</span>
               </label>
 
               {/* Real-time Format Badge */}
-              <div className="flex items-center gap-1.5">
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
                 {isUrl ? (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    <Link2 className="w-3 h-3" /> URL Mode
+                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-cyan-500-20 aar-u-text-primary aar-u-border aar-u-border-cyan-500-40">
+                    <Link2 className="aar-u-w-3 aar-u-h-3" /> URL Mode
                   </span>
                 ) : isBullets ? (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                    <ListFilter className="w-3 h-3" /> Bullet Points Mode
+                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-40">
+                    <ListFilter className="aar-u-w-3 aar-u-h-3" /> Bullet Points Mode
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/15">
-                    <FileText className="w-3 h-3" /> Plain Text Mode
+                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-surface-subtle aar-u-text-text aar-u-border aar-u-border-border">
+                    <FileText className="aar-u-w-3 aar-u-h-3" /> Plain Text Mode
                   </span>
                 )}
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <span className="aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-emerald-500-15 aar-u-text-emerald-300 aar-u-border aar-u-border-emerald-500-30">
                   {detected.label}
                 </span>
               </div>
             </div>
 
             {/* Intent Selector Bar */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[10px] font-mono text-slate-400 uppercase mr-1">Layout Intent:</span>
+            <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-flex-wrap">
+              <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted aar-u-uppercase aar-u-mr-1">Layout Intent:</span>
               {INTENT_OPTIONS.map((item) => {
                 const isActive = selectedIntent === item.id;
                 return (
@@ -403,11 +403,11 @@ const AiPromptModalDialog: React.FC<Props> = ({
                     key={item.id}
                     type="button"
                     onClick={() => setSelectedIntent(item.id)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                    className={`aar-button ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-sm'
-                        : 'bg-studio-850 hover:bg-white/10 text-slate-300 border border-white/10'
-                    }`}
+                        ? 'aar-u-bg-surface-subtle aar-u-text-text '
+                        : 'aar-u-bg-background aar-u-hover-bg-surface-subtle aar-u-text-text aar-u-border aar-u-border-border'
+                    }`} data-variant="primary" data-size="sm"
                   >
                     {item.label}
                   </button>
@@ -421,18 +421,18 @@ const AiPromptModalDialog: React.FC<Props> = ({
               value={instruction}
               onChange={(e) => setInstruction(e.target.value)}
               placeholder="Paste raw text, bullet points (e.g. • Feature 1 • Metric 2), or a documentation URL..."
-              className="w-full rounded-xl border border-white/15 bg-studio-900 px-3.5 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-sans"
+              className="aar-textarea"
             />
 
             {/* Quick Sample Prompts */}
-            <div className="flex items-center gap-1.5 flex-wrap pt-1">
-              <span className="text-[10px] font-mono text-slate-500 uppercase">Try quick format:</span>
+            <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-flex-wrap aar-u-pt-1">
+              <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted aar-u-uppercase">Try quick format:</span>
               {SAMPLE_IDEAS.map((sample, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => setInstruction(sample.text)}
-                  className="px-2 py-0.5 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] text-slate-300 transition-colors"
+                  className="aar-button " data-size="sm"
                 >
                   {sample.label}
                 </button>
@@ -440,17 +440,17 @@ const AiPromptModalDialog: React.FC<Props> = ({
             </div>
 
             {/* Built-in Guarantees Pill Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-white/5 text-[11px] text-slate-400">
-              <div className="flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <div className="aar-u-grid aar-u-grid-cols-1 aar-u-sm-grid-cols-3 aar-u-gap-2 aar-u-pt-2 aar-u-border-t aar-u-border-border aar-u-text-sm aar-u-text-text-muted">
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                <Zap className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-amber-400 aar-u-shrink-0" />
                 <span><strong>Visual Hierarchy:</strong> 5 strict levels</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Scale className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                <Scale className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success aar-u-shrink-0" />
                 <span><strong>Contrast:</strong> WCAG 4.5:1+ guaranteed</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0" />
                 <span><strong>Safe Zones:</strong> Platform overlay proof</span>
               </div>
             </div>
@@ -460,48 +460,48 @@ const AiPromptModalDialog: React.FC<Props> = ({
           <button
             type="button"
             onClick={handleGeneratePrompt}
-            className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-sm shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+            className="aar-button aar-u-w-full aar-u-flex aar-u-justify-center aar-u-gap-2" data-size="sm"
           >
-            <Sparkles className="w-4 h-4 text-cyan-200" />
+            <Bot className="aar-u-w-4 aar-u-h-4 aar-u-text-primary" />
             <span>Generate Structured Code Instruction for AI</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="aar-u-w-4 aar-u-h-4" />
           </button>
 
           {/* STEP 3: Generated Output Card */}
           {generatedPrompt && (
             <div
               ref={outputRef}
-              className="rounded-2xl border border-cyan-500/30 bg-studio-950/80 p-4 sm:p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-200"
+              className="aar-u-rounded aar-u-border aar-u-border-cyan-500-30 aar-u-bg-background aar-u-p-4 aar-u-sm-p-5 aar-u-space-y-3 aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200"
             >
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
+              <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-border-b aar-u-border-border aar-u-pb-3">
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
+                  <span className="aar-u-w-2.5 aar-u-h-2.5 aar-u-rounded-full aar-u-bg-emerald-400 aar-u-animate-pulse" />
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-tracking-wider aar-u-text-success">
                     Instruction Prompt Ready for AI
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted">
                     ({activePreset.width}×{activePreset.height} · {selectedEngine.toUpperCase()})
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
                   <button
                     type="button"
                     onClick={handleCopyPrompt}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    className={`aar-button aar-u-flex aar-u-gap-1.5 ${
                       copied
-                        ? 'bg-emerald-500 text-white shadow-sm'
-                        : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-glow-indigo'
-                    }`}
+                        ? 'aar-u-bg-emerald-500 aar-u-text-text '
+                        : 'aar-u-bg-surface-subtle aar-u-hover-bg-surface-subtle aar-u-text-text '
+                    }`} data-variant="primary" data-size="sm"
                   >
                     {copied ? (
                       <>
-                        <Check className="w-3.5 h-3.5" />
+                        <Check className="aar-u-w-3.5 aar-u-h-3.5" />
                         <span>Copied to Clipboard!</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3.5 h-3.5" />
+                        <Copy className="aar-u-w-3.5 aar-u-h-3.5" />
                         <span>Copy Prompt for AI</span>
                       </>
                     )}
@@ -510,45 +510,45 @@ const AiPromptModalDialog: React.FC<Props> = ({
               </div>
 
               {/* Instructions notice */}
-              <p className="text-[11px] text-slate-300 leading-relaxed bg-white/5 p-2.5 rounded-lg border border-white/10">
+              <p className="aar-u-text-sm aar-u-text-text aar-u-leading-relaxed aar-u-bg-surface-subtle aar-u-p-2.5 aar-u-rounded aar-u-border aar-u-border-border">
                 💡 <strong>How to use:</strong> Copy the text below and paste it into <strong>ChatGPT, Claude, Gemini, Cursor, or v0</strong>. The generated code can be pasted back into Yuwbrndr&apos;s code editor or tested below.
               </p>
 
               {/* Prompt Text Preview Box */}
-              <div className="relative">
+              <div className="aar-u-relative">
                 <textarea
                   readOnly
                   rows={8}
                   value={generatedPrompt}
-                  className="w-full rounded-xl border border-white/10 bg-studio-900/90 p-3 text-xs font-mono text-slate-300 leading-relaxed focus:outline-none resize-none select-text"
+                  className="aar-textarea"
                 />
               </div>
 
               {/* Instant Paste & Apply Back Option */}
-              <div className="pt-2 border-t border-white/10 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-300 font-semibold">
+              <div className="aar-u-pt-2 aar-u-border-t aar-u-border-border aar-u-space-y-2">
+                <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text aar-u-font-semibold">
                     Paste AI-generated code to test immediately:
                   </span>
                   {appliedNotice && (
-                    <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Applied to Canvas!
+                    <span className="aar-u-text-xs aar-u-font-bold aar-u-text-success aar-u-flex aar-u-items-center aar-u-gap-1">
+                      <CheckCircle2 className="aar-u-w-3.5 aar-u-h-3.5" /> Applied to Canvas!
                     </span>
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="aar-u-flex aar-u-gap-2">
                   <input
                     type="text"
                     value={testCode}
                     onChange={(e) => setTestCode(e.target.value)}
                     placeholder="Paste AI response code here (or snippet)..."
-                    className="flex-1 rounded-lg border border-white/10 bg-studio-900 px-3 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                    className="aar-input" data-size="sm"
                   />
                   <button
                     type="button"
                     onClick={handleApplyCode}
                     disabled={!testCode.trim()}
-                    className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:pointer-events-none text-white text-xs font-bold shrink-0 transition-colors"
+                    className="aar-button aar-u-shrink-0" data-size="sm"
                   >
                     Apply to Canvas
                   </button>

@@ -39,92 +39,88 @@ export const SlideStrip: React.FC<Props> = ({
   isExporting,
   copiedImage,
 }) => (
-  <div className="shrink-0 border-b border-white/10 bg-studio-900 px-2 sm:px-3 py-2 flex items-center gap-2 select-none">
-    <div className="flex items-center gap-1.5 overflow-x-auto min-w-0 flex-1 pb-0.5">
+  <div className="aar-slide-strip aar-stack">
+    <div className="aar-slide-strip-items">
       {slides.map((slide, index) => (
         <button
           key={slide.id}
           onClick={() => onSelect(slide.id)}
-          className={`shrink-0 min-w-[80px] px-2.5 py-1.5 rounded-lg border text-left transition-all hover:-translate-y-[1px] ${
-            slide.id === activeSlideId
-              ? 'border-indigo-500/60 bg-indigo-500/20 text-indigo-200 shadow-sm'
-              : 'border-white/10 bg-studio-850 text-slate-400 hover:text-slate-200 hover:bg-white/5'
-          }`}
-          title={slide.name}
+          className="aar-slide-thumb" aria-pressed={slide.id === activeSlideId}
+          title={slide.name} data-size="sm"
         >
-          <div className="flex items-center justify-between text-[9px] font-mono uppercase opacity-75">
+          <div className="aar-slide-thumb-meta">
             <span>Slide {String(index + 1).padStart(2, '0')}</span>
-            <span className={slide.id === activeSlideId ? 'text-indigo-400' : 'text-slate-500'}>
-              {slide.id === activeSlideId ? '✦' : '✧'}
+            <span className={slide.id === activeSlideId ? 'aar-u-text-primary' : 'aar-u-text-text-muted'}>
+              {slide.id === activeSlideId ? <Check size={12} aria-hidden="true" /> : null}
             </span>
           </div>
-          <span className="block max-w-[92px] truncate text-[11px] font-semibold mt-0.5">{slide.name}</span>
+          <span className="aar-slide-thumb-title">{slide.name}</span>
         </button>
       ))}
 
       <button
         onClick={onAdd}
         disabled={slides.length >= MAX_SLIDES}
-        className="shrink-0 inline-flex items-center gap-1 px-2.5 py-2 rounded-lg border border-dashed border-white/20 text-[11px] font-semibold text-slate-400 hover:text-white hover:border-indigo-500/50 disabled:opacity-40 disabled:cursor-not-allowed"
-        title={slides.length >= MAX_SLIDES ? `Maximum ${MAX_SLIDES} slides` : 'Add blank slide'}
+        className="aar-button aar-u-shrink-0 aar-u-inline-flex aar-u-gap-1"
+        title={slides.length >= MAX_SLIDES ? `Maximum ${MAX_SLIDES} slides` : 'Add blank slide'} data-size="sm"
       >
-        <Plus className="w-3.5 h-3.5" />
+        <Plus className="aar-u-w-3.5 aar-u-h-3.5" />
         {slides.length}/{MAX_SLIDES}
       </button>
     </div>
 
-    <div className="flex items-center gap-1 shrink-0 border-l border-white/10 pl-2">
+    <div className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-shrink-0 aar-u-border-l aar-u-border-border aar-u-pl-2">
       <button
         onClick={onDuplicate}
         disabled={slides.length >= MAX_SLIDES}
-        className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        title="Duplicate active slide"
+        className="aar-button "
+        title="Duplicate active slide" data-size="sm"
       >
-        <CopyPlus className="w-3.5 h-3.5" />
+        <CopyPlus className="aar-u-w-3.5 aar-u-h-3.5" />
       </button>
       <button
         onClick={onDelete}
         disabled={slides.length === 1}
-        className="p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-rose-300 hover:bg-rose-500/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        title="Delete active slide"
+        className="aar-button "
+        title="Delete active slide" data-size="sm"
       >
-        <Trash2 className="w-3.5 h-3.5" />
+        <Trash2 className="aar-u-w-3.5 aar-u-h-3.5" />
       </button>
       <button
         onClick={onCopy}
         disabled={isExporting}
-        className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-white/10 text-[11px] font-semibold text-slate-300 hover:text-white hover:bg-white/5 disabled:opacity-50 transition-colors"
-        title="Copy active slide as PNG"
+        className="aar-button aar-u-hidden aar-u-sm-inline-flex aar-u-gap-1.5"
+        title="Copy active slide as PNG" data-size="sm"
       >
-        {copiedImage ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-        <span className="hidden xl:inline">{copiedImage ? 'Copied' : 'Copy slide'}</span>
+        {copiedImage ? <Check className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-emerald-400" /> : <Copy className="aar-u-w-3.5 aar-u-h-3.5" />}
+        <span className="aar-u-hidden aar-u-xl-inline">{copiedImage ? 'Copied' : 'Copy slide'}</span>
       </button>
       <button
         onClick={onExportAll}
         disabled={isExporting}
-        className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border border-indigo-500/35 bg-indigo-500/10 text-[11px] font-semibold text-indigo-200 hover:bg-indigo-500/20 disabled:opacity-50 transition-colors"
-        title="Export all slides as numbered PNGs in a ZIP file"
+        className="aar-button aar-u-hidden aar-u-md-inline-flex aar-u-gap-1.5"
+        title="Export all slides as numbered PNGs in a ZIP file" data-size="sm"
       >
-        <Archive className="w-3.5 h-3.5" />
-        <span className="hidden 2xl:inline">Export ZIP</span>
+        <Archive className="aar-u-w-3.5 aar-u-h-3.5" />
+        <span className="aar-u-hidden aar-u-2xl-inline">Export ZIP</span>
       </button>
       <button
         onClick={onExportPdf}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 p-1.5 sm:px-2.5 sm:py-2 rounded-lg border border-emerald-500/35 bg-emerald-500/10 text-[11px] font-semibold text-emerald-200 hover:bg-emerald-500/20 disabled:opacity-50 transition-colors"
-        title="Export all slides as a multi-page PDF"
+        className="aar-button aar-u-inline-flex aar-u-gap-1.5"
+        title="Export all slides as a multi-page PDF" data-size="sm"
       >
-        <FileDown className="w-3.5 h-3.5 text-emerald-300" />
-        <span className="hidden xl:inline">Export PDF</span>
+        <FileDown className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-emerald-300" />
+        <span className="aar-u-hidden aar-u-xl-inline">Export PDF</span>
       </button>
       <button
         onClick={onExport}
         disabled={isExporting}
-        className="inline-flex items-center gap-1.5 p-1.5 sm:px-2.5 sm:py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-[11px] font-semibold text-white disabled:opacity-50 transition-colors shadow-sm"
-        title="Export active slide as PNG at 2x"
+        className="aar-button aar-u-inline-flex aar-u-gap-1.5" data-variant="primary"
+        title="Export active slide as PNG at 2x" data-size="sm"
       >
-        <Download className="w-3.5 h-3.5" />
-        <span className="hidden xl:inline">Export slide</span>
+        <Download className="aar-u-w-3.5 aar-u-h-3.5" />
+        <span className="aar-u-hidden aar-u-xl-inline">Export slide</span>
       </button>
     </div>
   </div>
