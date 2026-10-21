@@ -216,15 +216,15 @@ export const COLOR_THEMES: Record<string, ColorTheme> = {
   },
   minimalist: {
     id: 'minimalist',
-    name: 'Pure Monochrome',
+    name: 'Paper White',
     primary: '#ffffff',
-    secondary: '#94a3b8',
-    accent: '#e2e8f0',
-    background: '#151618',
-    surface: '#202124',
-    border: 'transparent',
-    text: '#ffffff',
-    muted: '#888888',
+    secondary: '#e2e8f0',
+    accent: '#2563eb',
+    background: '#ffffff',
+    surface: '#f8fafc',
+    border: 'rgba(15, 23, 42, 0.08)',
+    text: '#0f172a',
+    muted: '#64748b',
   },
 };
 

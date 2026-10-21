@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import { 
   AspectPreset, 
@@ -30,7 +30,6 @@ import {
   MAX_SHARE_URL_LENGTH,
   ShareUrlError,
 } from './utils/shareUrl';
-import { Code2, Eye, Bot, X, Maximize2, Minimize2 } from 'lucide-react';
 import { LayoutGuide } from './components/LayoutGuide';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB max per file
@@ -82,9 +81,16 @@ export function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+  const [appTheme, setAppTheme] = useState<AppTheme>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('yuwbrndr-theme') : null;
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+  });
   const [autoFit, setAutoFit] = useState<boolean>(true); // Auto-arrange & fit canvas size by default
   const [currentPreset, setCurrentPreset] = useState<AspectPreset>(ASPECT_PRESETS[0]);
-  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(COLOR_THEMES.midnight);
+  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(() => {
+    const isDark = appTheme === 'dark' || (appTheme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    return isDark ? COLOR_THEMES.midnight : COLOR_THEMES.minimalist;
+  });
   const [zoom, setZoom] = useState<number>(0.55);
   const [fontScale, setFontScale] = useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -102,6 +108,17 @@ export function App() {
       localStorage.setItem("yuwbrndr-font-scale", clamped.toString());
     }
   };
+
+  const handleAppThemeChange = (newTheme: AppTheme) => {
+    setAppTheme(newTheme);
+    setCurrentTheme((prev) => {
+      const isDefault = prev.id === 'midnight' || prev.id === 'minimalist';
+      if (!isDefault) return prev;
+      const isDark = newTheme === 'dark' || (newTheme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return isDark ? COLOR_THEMES.midnight : COLOR_THEMES.minimalist;
+    });
+  };
+
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
@@ -115,10 +132,6 @@ export function App() {
   const [isPlatformGuideOpen, setIsPlatformGuideOpen] = useState<boolean>(false);
   const [uploadedAssets, setUploadedAssets] = useState<UploadedAsset[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [appTheme, setAppTheme] = useState<AppTheme>(() => {
-    const saved = localStorage.getItem('yuwbrndr-theme');
-    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
-  });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
@@ -200,16 +213,32 @@ export function App() {
 
   const handleAddSlide = () => {
     if (slides.length >= MAX_SLIDES) return;
+    const currentSlide = slides.find((slide) => slide.id === activeSlideId);
+    const sourceCode = currentSlide ? currentSlide.code : customCode;
+    const sourceCodeType = currentSlide ? currentSlide.codeType : customCodeType;
     const slide: StudioSlide = {
       id: crypto.randomUUID(),
       name: `Slide ${slides.length + 1}`,
-      codeType: customCodeType,
-      code: '',
+      codeType: sourceCodeType,
+      code: sourceCode,
     };
     setSlides((current) => [...current, slide]);
     setActiveSlideId(slide.id);
-    setCustomCode('');
+    setCustomCodeType(sourceCodeType);
+    setCustomCode(sourceCode);
     setAutoFit(true);
+  };
+
+  const handleCopyPreviousSlide = () => {
+    if (slides.length <= 1) return;
+    const currentIndex = slides.findIndex((slide) => slide.id === activeSlideId);
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+    const previousSlide = slides[previousIndex];
+    if (!previousSlide) return;
+    setCustomCodeType(previousSlide.codeType);
+    handleCodeChange(previousSlide.code);
+    setExportNotice(`Copied design from ${previousSlide.name}`);
+    setTimeout(() => setExportNotice(null), 3000);
   };
 
   const handleDuplicateSlide = () => {
@@ -446,7 +475,7 @@ export function App() {
       });
       setExportNotice(`Exported ${fileName} (${currentPreset.width * scale} × ${currentPreset.height * scale}px)`);
       setTimeout(() => setExportNotice(null), 3000);
-    } catch (err) {
+    } catch {
       alert('Export failed. Please check browser console.');
     } finally {
       setIsExporting(false);
@@ -662,7 +691,7 @@ export function App() {
         fontScale={fontScale}
         onFontScaleChange={handleFontScaleChange}
         appTheme={appTheme}
-        onAppThemeChange={setAppTheme}
+        onAppThemeChange={handleAppThemeChange}
         onExport={handleExport}
         isExporting={isExporting}
         hasDesign={!!customCode.trim()}
@@ -756,6 +785,7 @@ export function App() {
             onTriggerUpload={() => setIsSidebarOpen(true)}
             onSelectPreset={handleSelectPresetFormat}
             onOpenTemplates={() => setIsSidebarOpen(true)}
+            onCopyPreviousSlide={documentMode === 'slides' && slides.length > 1 ? handleCopyPreviousSlide : undefined}
           />
         </main>
 
@@ -860,10 +890,10 @@ export function App() {
       {exportNotice && (
         <div
           role="status"
-          className={`aar-u-fixed aar-u-bottom-5 aar-u-left-1-2 aar-u--translate-x-1-2 aar-u-z--70 aar-u-rounded aar-u-border aar-u-px-4 aar-u-py-2.5 aar-u-text-sm aar-u-font-semibold   aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200 ${
+          className={`aar-u-fixed aar-u-bottom-5 aar-u-left-1-2 aar-u--translate-x-1-2 aar-u-z--70 aar-u-rounded aar-u-border aar-u-px-4 aar-u-py-2.5 aar-u-text-sm aar-u-font-semibold aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200 ${
             isErrorNotice
-              ? 'aar-u-border-amber-500-40 aar-u-bg-surface aar-u-text-amber-300 aar-u-shadow-amber-500-10'
-              : 'aar-u-border-emerald-500-40 aar-u-bg-surface aar-u-text-emerald-300 aar-u-shadow-emerald-500-10'
+              ? 'aar-u-border-amber-500-40 aar-u-bg-surface aar-u-text-amber-300'
+              : 'aar-u-border-emerald-500-40 aar-u-bg-surface aar-u-text-emerald-300'
           }`}
         >
           {exportNotice}

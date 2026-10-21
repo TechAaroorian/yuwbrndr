@@ -24,6 +24,7 @@ interface Props {
   onSelectPreset: (preset: AspectPreset) => void;
   onOpenAiPrompt?: () => void;
   onOpenTemplates: () => void;
+  onCopyPreviousSlide?: () => void;
 }
 
 export const CanvasViewport: React.FC<Props> = ({
@@ -47,6 +48,7 @@ export const CanvasViewport: React.FC<Props> = ({
   onSelectPreset,
   onOpenAiPrompt,
   onOpenTemplates,
+  onCopyPreviousSlide,
 }) => {
   const [showTip, setShowTip] = useState<boolean>(true);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -193,6 +195,7 @@ export const CanvasViewport: React.FC<Props> = ({
                 onPasteSample={onLoadSample}
                 onTriggerUpload={onTriggerUpload}
                 onOpenAiPrompt={onOpenAiPrompt}
+                onCopyPreviousSlide={onCopyPreviousSlide}
               />
             </div>
           </div>

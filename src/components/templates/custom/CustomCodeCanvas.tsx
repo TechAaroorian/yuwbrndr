@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useMemo, useState } from 'react';
-import { Code2, Sparkles, Upload } from 'lucide-react';
+import { Code2, Sparkles, Upload, Copy } from 'lucide-react';
 import roughScript from 'roughjs/bundled/rough.js?raw';
 import { ColorTheme } from '../../../types/studio';
 import { generateRuntimeUtilityCss } from '../../../utils/runtimeStyles';
@@ -16,6 +16,7 @@ interface Props {
   onPasteSample?: (type: 'html' | 'canvas') => void;
   onTriggerUpload?: () => void;
   onOpenAiPrompt?: () => void;
+  onCopyPreviousSlide?: () => void;
 }
 
 const escapeScriptValue = (value: unknown) =>
@@ -33,6 +34,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
   onPasteSample,
   onTriggerUpload,
   onOpenAiPrompt,
+  onCopyPreviousSlide,
 }) => {
   const reactId = useId();
   const frameId = useMemo(() => `preview-${reactId.replace(/:/g, '')}`, [reactId]);
@@ -85,12 +87,78 @@ export const CustomCodeCanvas: React.FC<Props> = ({
     `;
 
     const baseFontSize = Math.round(16 * (fontScale || 1.0) * 100) / 100;
-    const base = `html{font-size:${baseFontSize}px;--font-scale:${fontScale || 1.0}}html,body{width:100%;height:100%;margin:0;overflow:hidden}*{box-sizing:border-box}body{${background}}`;
+    const base = `html{font-size:${baseFontSize}px;--font-scale:${fontScale || 1.0}}html,body{width:100%;height:100%;margin:0;overflow:hidden}*{box-sizing:border-box}body{${background}color:${theme.text};}`;
+
+    const isDark = theme.id !== 'minimalist';
+    const htmlThemeAttrs = `class="${isDark ? 'dark' : ''}" data-theme="${isDark ? 'dark' : 'light'}"`;
+
+    const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob: https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src * data: blob:; media-src * data: blob:; script-src 'unsafe-inline' 'unsafe-eval' blob: data:; connect-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'none';">`;
+
+    const securityPreamble = `
+      const frameId = ${escapeScriptValue(frameId)};
+      const host = window.parent;
+      const targetOrigin = window.location.origin;
+      const send = (type, payload = {}) => {
+        try { host.postMessage({ source: 'yuwbrndr-preview', frameId, type, ...(payload || {}) }, targetOrigin || '*'); } catch (_) {}
+      };
+      (function() {
+        const neutralize = (target, prop, getter) => {
+          let curr = target;
+          while (curr && curr !== Object.prototype) {
+            try {
+              Object.defineProperty(curr, prop, {
+                get: getter,
+                set: () => {},
+                configurable: false,
+                enumerable: false
+              });
+            } catch (_) {}
+            try { curr = Object.getPrototypeOf(curr); } catch (_) { break; }
+          }
+        };
+
+        // Host window traversal & isolation
+        neutralize(window, 'parent', () => null);
+        neutralize(window, 'top', () => null);
+        neutralize(window, 'frameElement', () => null);
+        neutralize(window, 'opener', () => null);
+
+        // Storage & cookie isolation
+        neutralize(window, 'localStorage', () => null);
+        neutralize(window, 'sessionStorage', () => null);
+        neutralize(window, 'indexedDB', () => null);
+        neutralize(window, 'caches', () => null);
+        neutralize(document, 'cookie', () => '');
+        neutralize(document, 'domain', () => '');
+
+        // Communication & Worker channels
+        neutralize(window, 'BroadcastChannel', () => function() { throw new Error('BroadcastChannel is disabled in preview.'); });
+        neutralize(window, 'SharedWorker', () => function() { throw new Error('SharedWorker is disabled in preview.'); });
+        neutralize(window, 'Worker', () => function() { throw new Error('Worker is disabled in preview.'); });
+
+        // Network exfiltration APIs (defense-in-depth along with CSP connect-src 'none')
+        neutralize(window, 'fetch', () => () => Promise.reject(new Error('Network access is disabled in preview.')));
+        neutralize(window, 'XMLHttpRequest', () => function() { throw new Error('Network access is disabled in preview.'); });
+        neutralize(window, 'WebSocket', () => function() { throw new Error('WebSocket is disabled in preview.'); });
+        neutralize(window, 'EventSource', () => function() { throw new Error('EventSource is disabled in preview.'); });
+        neutralize(window, 'RTCPeerConnection', () => function() { throw new Error('WebRTC is disabled in preview.'); });
+        neutralize(window, 'webkitRTCPeerConnection', () => function() { throw new Error('WebRTC is disabled in preview.'); });
+
+        // Navigation & popups
+        neutralize(window, 'open', () => () => null);
+
+        // Navigator permissions & telemetry
+        if (typeof navigator !== 'undefined') {
+          try {
+            Object.defineProperty(navigator, 'serviceWorker', { get: () => null, configurable: false });
+            Object.defineProperty(navigator, 'sendBeacon', { value: () => false, configurable: false, writable: false });
+          } catch (_) {}
+        }
+      })();
+    `;
 
     if (codeType === 'html') {
-      return `<!doctype html><html><head><meta charset="utf-8">${fontLinks}<style>${base}\n${fontStyles}\n${runtimeCss}</style><script>${roughScript}</script><script>
-        const frameId=${escapeScriptValue(frameId)};
-        const send=(type,payload={})=>parent.postMessage({source:'yuwbrndr-preview',frameId,type,...payload},'*');
+      return `<!doctype html><html ${htmlThemeAttrs}><head><meta charset="utf-8">${csp}<script>${securityPreamble}</script>${fontLinks}<style>${base}\n${fontStyles}\n${runtimeCss}</style><script>${roughScript}</script><script>
         window.addEventListener('error',(event)=>{ send('render-error',{message:event.message||String(event.error)}); });
         function initRoughDeclarative(){
           if(!window.rough) return;
@@ -119,16 +187,14 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         }
         document.addEventListener('DOMContentLoaded', () => { initRoughDeclarative(); send('render-ready'); });
         setTimeout(() => { initRoughDeclarative(); send('render-ready'); }, 50);
-      </script></head><body style="${background}">${code}</body></html>`;
+      </script></head><body style="${background}color:${theme.text};">${code}</body></html>`;
     }
 
     const safeCode = escapeScriptValue(code);
-    return `<!doctype html><html><head><meta charset="utf-8">${fontLinks}<style>${base}${fontStyles}canvas{display:block;width:100%;height:100%}</style><script>${roughScript}</script></head><body><canvas id="canvas" width="${width}" height="${height}"></canvas><script>
-      const frameId=${escapeScriptValue(frameId)};
+    return `<!doctype html><html ${htmlThemeAttrs}><head><meta charset="utf-8">${csp}<script>${securityPreamble}</script>${fontLinks}<style>${base}${fontStyles}canvas{display:block;width:100%;height:100%}</style><script>${roughScript}</script></head><body><canvas id="canvas" width="${width}" height="${height}"></canvas><script>
       const canvas=document.getElementById('canvas');
       const ctx=canvas.getContext('2d');
       const width=${width}; const height=${height};
-      const send=(type,payload={})=>parent.postMessage({source:'yuwbrndr-preview',frameId,type,...payload},'*');
       try { const run=new Function('canvas','ctx','width','height','rough',${safeCode}); run(canvas,ctx,width,height,window.rough); send('render-ready'); }
       catch(error){ send('render-error',{message:error instanceof Error?error.message:String(error)}); }
       addEventListener('message',(event)=>{ if(event.data?.type==='yuwbrndr-export'&&event.data?.frameId===frameId){
@@ -163,7 +229,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
       }});
     </script></body></html>`;
-  }, [code, codeType, fontScale, frameId, height, runtimeCss, theme.background, useAsBackground, userImage, width]);
+  }, [code, codeType, fontScale, frameId, height, runtimeCss, theme.background, theme.id, theme.text, useAsBackground, userImage, width]);
 
   if (isEmpty) {
     return (
@@ -213,14 +279,14 @@ export const CustomCodeCanvas: React.FC<Props> = ({
             }}
           >
             <h3
-              className="aar-u-text-xl aar-u-font-bold aar-u-text-text"
-              style={{ margin: 0, lineHeight: 1.25 }}
+              className="aar-u-text-xl aar-u-font-bold"
+              style={{ margin: 0, lineHeight: 1.25, color: theme.text }}
             >
               Start your design
             </h3>
             <p
-              className="aar-text-muted aar-u-text-sm"
-              style={{ margin: 0, lineHeight: 1.45, maxWidth: '28rem' }}
+              className="aar-u-text-sm"
+              style={{ margin: 0, lineHeight: 1.45, maxWidth: '28rem', color: theme.muted }}
             >
               Choose a template, write HTML and CSS, or use the advanced Canvas JavaScript mode.
             </p>
@@ -235,6 +301,17 @@ export const CustomCodeCanvas: React.FC<Props> = ({
               marginTop: '0.25rem',
             }}
           >
+            {onCopyPreviousSlide && (
+              <button
+                onClick={onCopyPreviousSlide}
+                className="aar-button"
+                data-variant="primary"
+                data-size="sm"
+              >
+                <Copy size={14} />
+                <span>Copy current slide</span>
+              </button>
+            )}
             {onOpenAiPrompt && (
               <button
                 onClick={onOpenAiPrompt}
@@ -260,7 +337,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
               <button
                 onClick={onTriggerUpload}
                 className="aar-button"
-                data-variant="primary"
+                data-variant="quiet"
                 data-size="sm"
               >
                 <Upload size={14} />
@@ -275,7 +352,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
 
   return (
     <div 
-      className="design-canvas relative overflow-hidden" 
+      className="aar-canvas-artboard aar-u-relative aar-u-overflow-hidden aar-u-w-full aar-u-h-full" 
       style={{ 
         width: `${width}px`,
         height: `${height}px`,
@@ -302,7 +379,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
         }}
       />
       {renderError && (
-        <div className="absolute bottom-4 left-4 right-4 p-3 rounded-lg bg-rose-950/95 border border-rose-500/50 text-rose-200 text-xs font-mono">
+        <div className="aar-banner aar-u-absolute aar-u-bottom-4 aar-u-left-4 aar-u-right-4 aar-u-font-mono aar-u-text-xs" data-tone="danger">
           <strong>Execution error:</strong> {renderError}
         </div>
       )}

@@ -27,11 +27,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { formatHtml } from '../utils/formatCode';
-import { CODE_PRESETS, CodePreset } from '../utils/codePresets';
 import { lintHtmlCode, lintJsCode } from '../utils/codeLinter';
 import { UploadedAsset } from '../types/studio';
-
-export type EditorDockMode = 'sidebar' | 'bottom' | 'split' | 'fullscreen';
 
 interface Props {
   codeType: 'html' | 'canvas';
@@ -40,13 +37,9 @@ interface Props {
   onChange: (value: string) => void;
   onClear: () => void;
   onLoadSample: (type: 'html' | 'canvas') => void;
-  dockMode?: EditorDockMode;
-  onDockModeChange?: (mode: EditorDockMode) => void;
   userImage?: string | null;
   uploadedAssets?: UploadedAsset[];
   onInsertImage?: (url: string) => void;
-  height?: string;
-  isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   isWide?: boolean;
   onToggleWide?: () => void;
@@ -60,13 +53,9 @@ export const FullCodeEditor: React.FC<Props> = ({
   onChange,
   onClear,
   onLoadSample,
-  dockMode,
-  onDockModeChange,
   userImage,
   uploadedAssets = [],
   onInsertImage,
-  height = '100%',
-  isCollapsed,
   onToggleCollapse,
   isWide,
   onToggleWide,
@@ -75,7 +64,6 @@ export const FullCodeEditor: React.FC<Props> = ({
   const [fontSize, setFontSize] = useState<number>(13);
   const [wordWrap, setWordWrap] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
-  const [showPresets, setShowPresets] = useState<boolean>(false);
   const [showSnippets, setShowSnippets] = useState<boolean>(false);
   const [diagnosticsCount, setDiagnosticsCount] = useState<number>(0);
 
@@ -123,7 +111,7 @@ export const FullCodeEditor: React.FC<Props> = ({
 
 
     return list;
-  }, [codeType, wordWrap, fontSize, handleLintHtml, handleLintJs]);
+  }, [codeType, wordWrap, handleLintHtml, handleLintJs]);
 
   // Copy code to clipboard
   const handleCopy = () => {
@@ -152,13 +140,6 @@ export const FullCodeEditor: React.FC<Props> = ({
       onChange(code + '\n' + snippet);
     }
     setShowSnippets(false);
-  };
-
-  // Load selected preset
-  const handleSelectPreset = (preset: CodePreset) => {
-    setCodeType(preset.type);
-    onChange(preset.code);
-    setShowPresets(false);
   };
 
   const lineCount = useMemo(() => {
