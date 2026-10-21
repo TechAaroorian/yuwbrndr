@@ -2,12 +2,13 @@ import React, { useState, useMemo, useCallback } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { html } from '@codemirror/lang-html';
 import { javascript } from '@codemirror/lang-javascript';
-import { oneDark } from '@codemirror/theme-one-dark';
+import { syntaxHighlighting, HighlightStyle } from '@codemirror/language';
+import { tags } from '@lezer/highlight';
 import { EditorView } from '@codemirror/view';
 import { linter, lintGutter, Diagnostic } from '@codemirror/lint';
 import { 
   Code2, 
-  Sparkles, 
+  Bot,
   Trash2, 
   Copy, 
   Check, 
@@ -22,14 +23,12 @@ import {
   AlertCircle,
   CheckCircle2,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Sparkles
 } from 'lucide-react';
 import { formatHtml } from '../utils/formatCode';
-import { CODE_PRESETS, CodePreset } from '../utils/codePresets';
 import { lintHtmlCode, lintJsCode } from '../utils/codeLinter';
 import { UploadedAsset } from '../types/studio';
-
-export type EditorDockMode = 'sidebar' | 'bottom' | 'split' | 'fullscreen';
 
 interface Props {
   codeType: 'html' | 'canvas';
@@ -38,13 +37,9 @@ interface Props {
   onChange: (value: string) => void;
   onClear: () => void;
   onLoadSample: (type: 'html' | 'canvas') => void;
-  dockMode?: EditorDockMode;
-  onDockModeChange?: (mode: EditorDockMode) => void;
   userImage?: string | null;
   uploadedAssets?: UploadedAsset[];
   onInsertImage?: (url: string) => void;
-  height?: string;
-  isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   isWide?: boolean;
   onToggleWide?: () => void;
@@ -58,13 +53,9 @@ export const FullCodeEditor: React.FC<Props> = ({
   onChange,
   onClear,
   onLoadSample,
-  dockMode,
-  onDockModeChange,
   userImage,
   uploadedAssets = [],
   onInsertImage,
-  height = '100%',
-  isCollapsed,
   onToggleCollapse,
   isWide,
   onToggleWide,
@@ -73,7 +64,6 @@ export const FullCodeEditor: React.FC<Props> = ({
   const [fontSize, setFontSize] = useState<number>(13);
   const [wordWrap, setWordWrap] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
-  const [showPresets, setShowPresets] = useState<boolean>(false);
   const [showSnippets, setShowSnippets] = useState<boolean>(false);
   const [diagnosticsCount, setDiagnosticsCount] = useState<number>(0);
 
@@ -105,86 +95,23 @@ export const FullCodeEditor: React.FC<Props> = ({
 
     // Gutter error/warning markers
     list.push(lintGutter());
+    list.push(syntaxHighlighting(HighlightStyle.define([
+      { tag: [tags.keyword, tags.tagName], class: 'aar-syntax-keyword' },
+      { tag: [tags.string, tags.attributeValue], class: 'aar-syntax-string' },
+      { tag: [tags.comment], class: 'aar-syntax-comment' },
+      { tag: [tags.number, tags.attributeName], class: 'aar-syntax-value' },
+    ])));
+
 
     // Soft word wrap
     if (wordWrap) {
       list.push(EditorView.lineWrapping);
     }
 
-    // Enhanced Vibrant Dark Theme with High-Contrast Syntax Highlighting
-    list.push(
-      EditorView.theme({
-        '&': {
-          fontSize: `${fontSize}px`,
-          backgroundColor: '#060710 !important',
-        },
-        '.cm-gutters': {
-          backgroundColor: '#04050b !important',
-          color: '#475569 !important',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08) !important',
-        },
-        '.cm-lineNumbers .cm-gutterElement': {
-          padding: '0 4px 0 2px !important',
-          minWidth: '18px !important',
-          textAlign: 'right !important',
-        },
-        '.cm-activeLine': {
-          backgroundColor: 'rgba(99, 102, 241, 0.09) !important',
-        },
-        '.cm-activeLineGutter': {
-          backgroundColor: 'rgba(99, 102, 241, 0.18) !important',
-          color: '#818cf8 !important',
-        },
-        '.cm-cursor': {
-          borderLeftColor: '#38bdf8 !important',
-          borderLeftWidth: '2px !important',
-        },
-        '.cm-selectionBackground': {
-          backgroundColor: 'rgba(99, 102, 241, 0.35) !important',
-        },
-        // Tag names (div, span, h1, etc.)
-        '.cm-tag, .tok-tag': {
-          color: '#38bdf8 !important',
-          fontWeight: '600',
-        },
-        // Attribute names (class, style, src, id)
-        '.cm-attribute, .tok-attributeName': {
-          color: '#c084fc !important',
-        },
-        // Strings & Tailwind class values
-        '.cm-string, .tok-string': {
-          color: '#34d399 !important',
-        },
-        // Comments
-        '.cm-comment, .tok-comment': {
-          color: '#64748b !important',
-          fontStyle: 'italic',
-        },
-        // Numbers and Keywords
-        '.tok-keyword, .cm-keyword': {
-          color: '#f43f5e !important',
-        },
-        '.tok-number, .cm-number': {
-          color: '#fb923c !important',
-        },
-        // Lint squiggly markers
-        '.cm-lintRange-error': {
-          backgroundImage: `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='3'%3E<path d='m0 2.5 l3 -2 l3 2' stroke='%23f43f5e' fill='none' stroke-width='1.2'/></svg>") !important`,
-        },
-        '.cm-lintRange-warning': {
-          backgroundImage: `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='6' height='3'%3E<path d='m0 2.5 l3 -2 l3 2' stroke='%23fbbf24' fill='none' stroke-width='1.2'/></svg>") !important`,
-        },
-        '.cm-lintGutter-error': {
-          color: '#f43f5e !important',
-        },
-        '.cm-lintGutter-warning': {
-          color: '#fbbf24 !important',
-        },
-      })
-    );
+
 
     return list;
-  }, [codeType, wordWrap, fontSize, handleLintHtml, handleLintJs]);
+  }, [codeType, wordWrap, handleLintHtml, handleLintJs]);
 
   // Copy code to clipboard
   const handleCopy = () => {
@@ -215,64 +142,49 @@ export const FullCodeEditor: React.FC<Props> = ({
     setShowSnippets(false);
   };
 
-  // Load selected preset
-  const handleSelectPreset = (preset: CodePreset) => {
-    setCodeType(preset.type);
-    onChange(preset.code);
-    setShowPresets(false);
-  };
-
   const lineCount = useMemo(() => {
     return code ? code.split('\n').length : 0;
   }, [code]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-studio-900 border-l border-white/10 overflow-hidden shadow-2xl select-none">
+    <div style={{ '--aar-editor-font-size': `${fontSize}px` } as React.CSSProperties} className="aar-editor-codemirror aar-u-flex aar-u-flex-col aar-u-h-full aar-u-w-full aar-u-bg-surface aar-u-overflow-hidden aar-u-select-none">
       {/* MOBILE EXPANDED FULLSCREEN BAR (only show editor with minimize option on mobile) */}
       {isWide && (
-        <div className="lg:hidden flex items-center justify-between px-3.5 py-2.5 bg-studio-950 border-b border-white/10 select-none shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-            <span className="font-mono text-xs font-semibold text-slate-200">
+        <div className="aar-u-lg-hidden aar-u-flex aar-u-items-center aar-u-justify-between aar-u-px-4 aar-u-py-2.5 aar-u-bg-background aar-u-border-b aar-u-border-border aar-u-select-none aar-u-shrink-0">
+          <div className="aar-toolbar-group">
+            <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-indigo-500 aar-u-animate-pulse" />
+            <span className="aar-u-font-mono aar-u-text-xs aar-u-font-semibold aar-u-text-text">
               {codeType === 'html' ? 'HTML + CSS' : 'Canvas JS'} Editor
             </span>
           </div>
 
           <button
             onClick={onToggleWide}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-glow-indigo transition-all active:scale-95"
-            title="Minimize Editor"
+            className="aar-button aar-u-flex aar-u-gap-1.5" data-variant="primary"
+            title="Minimize Editor" data-size="sm"
           >
-            <Minimize2 className="w-3.5 h-3.5" />
+            <Minimize2 className="aar-u-w-3.5 aar-u-h-3.5" />
             <span>Minimize</span>
           </button>
         </div>
       )}
 
       {/* TOP HEADER TOOLBAR (Hidden on mobile when expanded) */}
-      <div className={`flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-studio-850 border-b border-white/10 text-xs shrink-0 ${
-        isWide ? 'hidden lg:flex' : 'flex'
+      <div className={`aar-u-flex aar-u-flex-wrap aar-u-items-center aar-u-justify-between aar-u-gap-2 aar-u-px-3 aar-u-py-1.5 aar-u-bg-surface-subtle aar-u-text-xs aar-u-shrink-0 ${
+        isWide ? 'aar-u-hidden aar-u-lg-flex' : 'aar-u-flex'
       }`}>
         {/* Left: Engine Switcher & Presets */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center bg-black/50 p-0.5 rounded-lg border border-white/10">
+        <div className="aar-toolbar-group aar-editor-commands">
+          <div className="aar-segmented" aria-label="Code language">
             <button
-              onClick={() => setCodeType('html')}
-              className={`px-2.5 py-1 rounded-md font-mono text-[11px] font-semibold transition-all ${
-                codeType === 'html'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              onClick={() => setCodeType('html')} aria-pressed={codeType === 'html'}
+              className="aar-segmented-item" data-size="sm"
             >
               HTML + CSS
             </button>
             <button
-              onClick={() => setCodeType('canvas')}
-              className={`px-2.5 py-1 rounded-md font-mono text-[11px] font-semibold transition-all ${
-                codeType === 'canvas'
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              onClick={() => setCodeType('canvas')} aria-pressed={codeType === 'canvas'}
+              className="aar-segmented-item" data-size="sm"
             >
               Canvas JS · Advanced
             </button>
@@ -282,29 +194,31 @@ export const FullCodeEditor: React.FC<Props> = ({
           {onOpenAiPrompt && (
             <button
               onClick={onOpenAiPrompt}
-              className="px-2.5 py-1 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 flex items-center gap-1.5 text-[11px] font-semibold transition-all shadow-sm"
+              className="aar-button aar-u-flex aar-u-gap-1.5"
+              data-variant="ai"
+              data-size="sm"
               title="Generate AI Prompt for Design Code (ChatGPT, Claude, etc.)"
             >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">AI Prompt</span>
+              <Sparkles className="aar-u-w-3.5 aar-u-h-3.5" />
+              <span className="aar-u-hidden aar-u-sm-inline">AI Prompt</span>
             </button>
           )}
 
           {/* Quick Snippets Inserter */}
           {codeType === 'html' && (
-            <div className="relative">
+            <div className="aar-u-relative">
               <button
                 onClick={() => setShowSnippets(!showSnippets)}
-                className="px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center gap-1.5 text-[11px] font-medium transition-all"
-                title="Insert Ready-made UI Components"
+                className="aar-button aar-u-flex aar-u-gap-1.5"
+                title="Insert Ready-made UI Components" data-size="sm"
               >
-                <PlusCircle className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="hidden sm:inline">Add Element</span>
+                <PlusCircle className="aar-u-w-3.5 aar-u-h-3.5 aar-text-muted" />
+                <span className="aar-u-hidden aar-u-sm-inline">Add Element</span>
               </button>
 
               {showSnippets && (
-                <div className="absolute top-full left-0 mt-1.5 w-60 bg-[#0f1325] border border-white/15 rounded-xl shadow-2xl p-1.5 z-50 space-y-1">
-                  <div className="px-2 py-1 text-[10px] font-mono uppercase text-slate-500 font-bold border-b border-white/10">
+                <div className="aar-u-absolute aar-u-top-full aar-u-left-0 aar-u-mt-1.5 aar-u-w-60 aar-u-bg-surface aar-u-border aar-u-border-border aar-u-rounded  aar-u-p-1.5 aar-u-z-50 aar-u-space-y-1">
+                  <div className="aar-u-px-2 aar-u-py-1 aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-text-text-muted aar-u-font-bold aar-u-border-b aar-u-border-border">
                     Quick Components
                   </div>
                   <button
@@ -313,7 +227,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                         `<div class="grid grid-cols-2 gap-4 my-4">\n  <div class="p-4 rounded-xl bg-slate-900/80 border border-white/10">\n    <h3 class="font-bold text-white">Left Column</h3>\n  </div>\n  <div class="p-4 rounded-xl bg-slate-900/80 border border-white/10">\n    <h3 class="font-bold text-white">Right Column</h3>\n  </div>\n</div>`
                       )
                     }
-                    className="w-full text-left p-2 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white"
+                    className="aar-button aar-u-w-full" data-size="sm"
                   >
                     📦 2-Column Grid
                   </button>
@@ -323,7 +237,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                         `<span class="px-3 py-1 rounded-md text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">⚡ Feature Badge</span>`
                       )
                     }
-                    className="w-full text-left p-2 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white"
+                    className="aar-button aar-u-w-full" data-size="sm"
                   >
                     🏷️ Status / Feature Badge
                   </button>
@@ -333,7 +247,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                         `<div class="p-3 rounded-xl bg-slate-900/60 border border-white/5 flex items-center gap-3">\n  <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-300 font-mono font-bold text-sm flex items-center justify-center shrink-0">1</span>\n  <span class="text-sm font-semibold text-slate-200">Point description here</span>\n</div>`
                       )
                     }
-                    className="w-full text-left p-2 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white"
+                    className="aar-button aar-u-w-full" data-size="sm"
                   >
                     🔢 Numbered Step Item
                   </button>
@@ -343,7 +257,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                         `<div class="p-4 rounded-xl bg-slate-900/90 border border-white/10 text-center shadow-lg">\n  <p class="text-sm font-medium text-slate-300">\n    Key Takeaway: <span class="text-cyan-300 font-bold">Important takeaway sentence here.</span>\n  </p>\n</div>`
                       )
                     }
-                    className="w-full text-left p-2 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white"
+                    className="aar-button aar-u-w-full" data-size="sm"
                   >
                     💡 Key Takeaway Box
                   </button>
@@ -353,14 +267,14 @@ export const FullCodeEditor: React.FC<Props> = ({
                         `<div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-cyan-500/15 blur-3xl pointer-events-none"></div>`
                       )
                     }
-                    className="w-full text-left p-2 rounded-lg hover:bg-white/5 text-xs text-slate-300 hover:text-white"
+                    className="aar-button aar-u-w-full" data-size="sm"
                   >
                     ✨ Ambient Glow Blur
                   </button>
 
                   {uploadedAssets.length > 0 && onInsertImage ? (
-                    <div className="pt-1 border-t border-white/10 space-y-1">
-                      <div className="px-2 py-0.5 text-[10px] font-mono uppercase text-indigo-400 font-bold">
+                    <div className="aar-u-pt-1 aar-u-border-t aar-u-border-border aar-u-space-y-1">
+                      <div className="aar-u-px-2 aar-u-py-0.5 aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-text-primary aar-u-font-bold">
                         Uploaded Assets ({uploadedAssets.length}/5)
                       </div>
                       {uploadedAssets.map((asset) => (
@@ -370,11 +284,11 @@ export const FullCodeEditor: React.FC<Props> = ({
                             onInsertImage(asset.url);
                             setShowSnippets(false);
                           }}
-                          className="w-full text-left p-1.5 rounded-lg hover:bg-emerald-500/20 text-xs text-emerald-300 font-medium truncate flex items-center gap-1.5"
-                          title={`Insert ${asset.name}`}
+                          className="aar-button aar-u-w-full aar-u-flex aar-u-gap-1.5"
+                          title={`Insert ${asset.name}`} data-size="sm"
                         >
-                          <img src={asset.url} alt="" className="w-3.5 h-3.5 rounded object-cover shrink-0 border border-emerald-500/30" />
-                          <span className="truncate">Insert: {asset.name}</span>
+                          <img src={asset.url} alt="" className="aar-u-w-3.5 aar-u-h-3.5 aar-u-rounded aar-u-object-cover aar-u-shrink-0 aar-u-border aar-u-border-emerald-500-30" />
+                          <span className="aar-u-truncate">Insert: {asset.name}</span>
                         </button>
                       ))}
                     </div>
@@ -384,7 +298,7 @@ export const FullCodeEditor: React.FC<Props> = ({
                         onInsertImage(userImage);
                         setShowSnippets(false);
                       }}
-                      className="w-full text-left p-2 rounded-lg hover:bg-emerald-500/20 text-xs text-emerald-300 font-medium"
+                      className="aar-button aar-u-w-full" data-size="sm"
                     >
                       🖼️ Insert Uploaded Image
                     </button>
@@ -396,80 +310,80 @@ export const FullCodeEditor: React.FC<Props> = ({
         </div>
 
         {/* Right: Formatting, Tools & Width Adjusters */}
-        <div className="flex items-center gap-1.5">
+        <div className="aar-toolbar-group">
           {/* Format HTML button */}
           {codeType === 'html' && (
             <button
               onClick={handleFormat}
-              className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all"
-              title="Auto-format HTML Indentation"
+              className="aar-button "
+              title="Auto-format HTML Indentation" data-size="sm"
             >
-              <AlignLeft className="w-3.5 h-3.5" />
+              <AlignLeft className="aar-u-w-3.5 aar-u-h-3.5" />
             </button>
           )}
 
           {/* Word Wrap Toggle */}
           <button
             onClick={() => setWordWrap(!wordWrap)}
-            className={`p-1.5 rounded-lg border transition-all ${
+            className={`aar-button ${
               wordWrap
-                ? 'border-indigo-500/50 bg-indigo-500/20 text-indigo-300'
-                : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
+                ? 'aar-u-bg-surface-subtle aar-u-text-primary'
+                : 'aar-u-bg-surface-subtle aar-u-text-text-muted aar-u-hover-text-text'
             }`}
-            title={wordWrap ? 'Word Wrap: ON' : 'Word Wrap: OFF'}
+            title={wordWrap ? 'Word Wrap: ON' : 'Word Wrap: OFF'} data-size="sm"
           >
-            <WrapText className="w-3.5 h-3.5" />
+            <WrapText className="aar-u-w-3.5 aar-u-h-3.5" />
           </button>
 
           {/* Font Size Adjusters */}
-          <div className="flex items-center border border-white/10 rounded-lg bg-black/40 p-0.5">
+          <div className="aar-button-group" data-size="sm" role="group" aria-label="Editor font size">
             <button
               onClick={() => setFontSize((s) => Math.max(11, s - 1))}
-              className="p-1 hover:text-white text-slate-400"
-              title="Decrease Font Size"
+              className="aar-button "
+              title="Decrease Font Size" aria-label="Decrease Font Size" data-size="sm"
             >
-              <ZoomOut className="w-3 h-3" />
+              <ZoomOut className="aar-u-w-3 aar-u-h-3" />
             </button>
-            <span className="text-[10px] font-mono px-1 text-slate-400">{fontSize}px</span>
+            <span className="aar-button-group-value" aria-label="Editor font size value">{fontSize}px</span>
             <button
               onClick={() => setFontSize((s) => Math.min(20, s + 1))}
-              className="p-1 hover:text-white text-slate-400"
-              title="Increase Font Size"
+              className="aar-button "
+              title="Increase Font Size" aria-label="Increase Font Size" data-size="sm"
             >
-              <ZoomIn className="w-3 h-3" />
+              <ZoomIn className="aar-u-w-3 aar-u-h-3" />
             </button>
           </div>
 
           {/* Copy Code */}
           <button
             onClick={handleCopy}
-            className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-all"
-            title="Copy Code to Clipboard"
+            className="aar-button "
+            title="Copy Code to Clipboard" data-size="sm"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success" /> : <Copy className="aar-u-w-3.5 aar-u-h-3.5" />}
           </button>
 
           {/* Clear Code */}
           <button
             onClick={onClear}
-            className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-rose-500/20 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 transition-all"
-            title="Clear canvas"
+            className="aar-button "
+            title="Clear canvas" data-size="sm"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="aar-u-w-3.5 aar-u-h-3.5" />
           </button>
 
           {/* Width Expand / Fullscreen Toggle */}
           {onToggleWide && (
             <button
               onClick={onToggleWide}
-              className={`p-1.5 rounded-lg border transition-all ${
+              className={`aar-button ${
                 isWide
-                  ? 'border-indigo-500/50 bg-indigo-500/20 text-indigo-300'
-                  : 'border-white/10 bg-white/5 text-slate-400 hover:text-white'
+                  ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-primary'
+                  : 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text-muted aar-u-hover-text-text'
               }`}
-              title={isWide ? 'Minimize Editor View' : 'Expand Editor Fullscreen'}
+              title={isWide ? 'Minimize Editor View' : 'Expand Editor Fullscreen'} data-size="sm"
             >
-              {isWide ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              {isWide ? <Minimize2 className="aar-u-w-3.5 aar-u-h-3.5" /> : <Maximize2 className="aar-u-w-3.5 aar-u-h-3.5" />}
             </button>
           )}
 
@@ -477,21 +391,21 @@ export const FullCodeEditor: React.FC<Props> = ({
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="p-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all ml-0.5"
-              title="Collapse Editor Panel"
+              className="aar-button aar-u-ml-0.5"
+              title="Collapse Editor Panel" data-size="sm"
             >
-              <ChevronRight className="w-3.5 h-3.5" />
+              <ChevronRight className="aar-u-w-3.5 aar-u-h-3.5" />
             </button>
           )}
         </div>
       </div>
 
       {/* MAIN CODEMIRROR WORKBENCH AREA */}
-      <div className="flex-1 min-h-0 relative overflow-hidden">
+      <div className="aar-u-flex-1 aar-u-min-h-0 aar-u-relative aar-u-overflow-hidden">
         <CodeMirror
           value={code}
           height="100%"
-          theme={oneDark}
+          theme="none"
           extensions={extensions}
           onChange={(val) => onChange(val)}
           placeholder={
@@ -499,7 +413,7 @@ export const FullCodeEditor: React.FC<Props> = ({
               ? '<!-- Type or paste HTML + CSS here. Tailwind-compatible utilities are generated at runtime. -->\n<div class="w-full h-full p-8 bg-slate-900 text-white flex flex-col justify-center items-center">\n  <h1 class="text-[64px] font-extrabold text-cyan-400">Design Title</h1>\n  <p class="text-slate-400 mt-2">Adjust content, colors, and layout in real time.</p>\n</div>'
               : '// Canvas 2D Code (canvas, ctx, width, height are available)\nctx.fillStyle = "#090a10";\nctx.fillRect(0, 0, width, height);\n\nctx.fillStyle = "#38bdf8";\nctx.font = "bold 36px Inter, sans-serif";\nctx.fillText("Dynamic Canvas", 60, 100);'
           }
-          className="h-full font-mono text-sm overflow-auto"
+          className="aar-u-h-full aar-u-font-mono aar-u-text-sm aar-u-overflow-auto"
           basicSetup={{
             lineNumbers: true,
             highlightActiveLineGutter: true,
@@ -515,32 +429,32 @@ export const FullCodeEditor: React.FC<Props> = ({
       </div>
 
       {/* BOTTOM STATUS & LINTING DIAGNOSTICS BAR (Hidden on mobile when expanded) */}
-      <div className={`flex items-center justify-between px-3.5 py-1.5 bg-studio-850 border-t border-white/10 text-[11px] font-mono text-slate-400 select-none shrink-0 ${
-        isWide ? 'hidden lg:flex' : 'flex'
+      <div className={`aar-statusbar aar-u-px-4 aar-u-py-1.5 aar-u-bg-surface-subtle aar-u-text-sm aar-u-font-mono aar-u-text-text-muted aar-u-select-none aar-u-shrink-0 ${
+        isWide ? 'aar-u-hidden aar-u-lg-flex' : 'aar-u-flex'
       }`}>
-        <div className="flex items-center gap-3">
+        <div className="aar-toolbar-group">
           {/* Real-time Lint Diagnostic Status */}
           {diagnosticsCount === 0 ? (
-            <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-text-success aar-u-font-semibold">
+              <CheckCircle2 className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success" />
               <span>Syntax Valid</span>
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 text-rose-400 font-semibold animate-pulse">
-              <AlertCircle className="w-3.5 h-3.5 text-rose-400" />
+            <span className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-text-danger aar-u-font-semibold aar-u-animate-pulse">
+              <AlertCircle className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-danger" />
               <span>{diagnosticsCount} Syntax {diagnosticsCount === 1 ? 'Issue' : 'Issues'}</span>
             </span>
           )}
 
-          <span className="text-slate-600">|</span>
+          <span className="aar-u-text-text-muted">|</span>
           <span>{lineCount} lines</span>
           <span>{code.length} chars</span>
         </div>
 
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="aar-toolbar-group aar-u-text-text-muted">
           <span>Tab: 2sp</span>
           <span>UTF-8</span>
-          <span className="text-indigo-400 font-semibold">{codeType.toUpperCase()}</span>
+          <span className="aar-u-text-primary aar-u-font-semibold">{codeType.toUpperCase()}</span>
         </div>
       </div>
     </div>

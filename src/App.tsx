@@ -11,7 +11,6 @@ import {
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { CanvasViewport } from './components/CanvasViewport';
-import { CustomCodeCanvas } from './components/templates/custom/CustomCodeCanvas';
 import { CodeInspector } from './components/CodeInspector';
 import { PlatformResolutionGuide } from './components/PlatformResolutionGuide';
 import { ExamplesModal } from './components/ExamplesModal';
@@ -20,7 +19,7 @@ import { StickersModal } from './components/StickersModal';
 import { CapabilitiesModal } from './components/CapabilitiesModal';
 import { AboutModal } from './components/AboutModal';
 import { AiPromptModal } from './components/AiPromptModal';
-import { FullCodeEditor, EditorDockMode } from './components/FullCodeEditor';
+import { FullCodeEditor } from './components/FullCodeEditor';
 import { MAX_SLIDES, SlideStrip, StudioSlide } from './components/SlideStrip';
 import { exportElementAsPng, copyElementToClipboard, renderElementAsPngBlob } from './utils/exportImage';
 import { CODE_PRESETS, CodePreset } from './utils/codePresets';
@@ -31,7 +30,7 @@ import {
   MAX_SHARE_URL_LENGTH,
   ShareUrlError,
 } from './utils/shareUrl';
-import { Code2, ChevronLeft, Eye, Sparkles, Download } from 'lucide-react';
+import { LayoutGuide } from './components/LayoutGuide';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB max per file
 
@@ -67,19 +66,31 @@ export function App() {
   const [documentMode, setDocumentMode] = useState<'design' | 'slides'>('design');
   const [customCodeType, setCustomCodeType] = useState<'html' | 'canvas'>('html');
   const [customCode, setCustomCode] = useState<string>(''); // Clean empty canvas on initial load!
-  const [dockMode, setDockMode] = useState<EditorDockMode>('sidebar');
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 1024;
-    }
-    return true;
-  }); // Left-side panel collapse/expand
-  const [mobileTab, setMobileTab] = useState<'canvas' | 'code'>('canvas');
-  const [isEditorOpen, setIsEditorOpen] = useState<boolean>(true); // Right-side editor active by default
-  const [isEditorWide, setIsEditorWide] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isEditorOpen, setIsEditorOpen] = useState(true);
+  const [isLayoutGuideOpen, setIsLayoutGuideOpen] = useState(false);
+
+  // Global keyboard shortcuts (Ctrl+B / Cmd+B for sidebar)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        setIsSidebarOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  const [appTheme, setAppTheme] = useState<AppTheme>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('yuwbrndr-theme') : null;
+    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
+  });
   const [autoFit, setAutoFit] = useState<boolean>(true); // Auto-arrange & fit canvas size by default
   const [currentPreset, setCurrentPreset] = useState<AspectPreset>(ASPECT_PRESETS[0]);
-  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(COLOR_THEMES.midnight);
+  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(() => {
+    const isDark = appTheme === 'dark' || (appTheme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    return isDark ? COLOR_THEMES.midnight : COLOR_THEMES.minimalist;
+  });
   const [zoom, setZoom] = useState<number>(0.55);
   const [fontScale, setFontScale] = useState<number>(() => {
     if (typeof window !== "undefined") {
@@ -97,6 +108,17 @@ export function App() {
       localStorage.setItem("yuwbrndr-font-scale", clamped.toString());
     }
   };
+
+  const handleAppThemeChange = (newTheme: AppTheme) => {
+    setAppTheme(newTheme);
+    setCurrentTheme((prev) => {
+      const isDefault = prev.id === 'midnight' || prev.id === 'minimalist';
+      if (!isDefault) return prev;
+      const isDark = newTheme === 'dark' || (newTheme === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      return isDark ? COLOR_THEMES.midnight : COLOR_THEMES.minimalist;
+    });
+  };
+
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [copiedImage, setCopiedImage] = useState<boolean>(false);
   const [copiedShareLink, setCopiedShareLink] = useState<boolean>(false);
@@ -110,10 +132,6 @@ export function App() {
   const [isPlatformGuideOpen, setIsPlatformGuideOpen] = useState<boolean>(false);
   const [uploadedAssets, setUploadedAssets] = useState<UploadedAsset[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [appTheme, setAppTheme] = useState<AppTheme>(() => {
-    const saved = localStorage.getItem('yuwbrndr-theme');
-    return saved === 'light' || saved === 'dark' || saved === 'system' ? saved : 'system';
-  });
   const [isCapabilitiesOpen, setIsCapabilitiesOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
@@ -195,16 +213,32 @@ export function App() {
 
   const handleAddSlide = () => {
     if (slides.length >= MAX_SLIDES) return;
+    const currentSlide = slides.find((slide) => slide.id === activeSlideId);
+    const sourceCode = currentSlide ? currentSlide.code : customCode;
+    const sourceCodeType = currentSlide ? currentSlide.codeType : customCodeType;
     const slide: StudioSlide = {
       id: crypto.randomUUID(),
       name: `Slide ${slides.length + 1}`,
-      codeType: customCodeType,
-      code: '',
+      codeType: sourceCodeType,
+      code: sourceCode,
     };
     setSlides((current) => [...current, slide]);
     setActiveSlideId(slide.id);
-    setCustomCode('');
+    setCustomCodeType(sourceCodeType);
+    setCustomCode(sourceCode);
     setAutoFit(true);
+  };
+
+  const handleCopyPreviousSlide = () => {
+    if (slides.length <= 1) return;
+    const currentIndex = slides.findIndex((slide) => slide.id === activeSlideId);
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : 0;
+    const previousSlide = slides[previousIndex];
+    if (!previousSlide) return;
+    setCustomCodeType(previousSlide.codeType);
+    handleCodeChange(previousSlide.code);
+    setExportNotice(`Copied design from ${previousSlide.name}`);
+    setTimeout(() => setExportNotice(null), 3000);
   };
 
   const handleDuplicateSlide = () => {
@@ -236,17 +270,7 @@ export function App() {
     setCustomCode(replacement.code);
   };
 
-  // Global keyboard shortcut for toggling sidebar: Ctrl+B or Cmd+B
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
-        e.preventDefault();
-        setIsSidebarOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)');
@@ -332,11 +356,6 @@ export function App() {
   const handleManualZoom = (newZ: number) => {
     setAutoFit(false);
     setZoom(newZ);
-  };
-
-  // Toggle Left Sidebar
-  const handleToggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
   };
 
   // Handle Uploading Files with validation: max 2MB per file, max 5 total assets
@@ -428,10 +447,6 @@ export function App() {
     }
     setIsEditorOpen(true);
     setAutoFit(true);
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      setIsSidebarOpen(false);
-      setMobileTab('canvas');
-    }
   };
 
   // Load selected preset from Examples Gallery
@@ -440,10 +455,6 @@ export function App() {
     handleCodeChange(preset.code);
     setIsEditorOpen(true);
     setAutoFit(true);
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      setIsSidebarOpen(false);
-      setMobileTab('canvas');
-    }
   };
 
   // Export Image Handler
@@ -464,7 +475,7 @@ export function App() {
       });
       setExportNotice(`Exported ${fileName} (${currentPreset.width * scale} × ${currentPreset.height * scale}px)`);
       setTimeout(() => setExportNotice(null), 3000);
-    } catch (err) {
+    } catch {
       alert('Export failed. Please check browser console.');
     } finally {
       setIsExporting(false);
@@ -658,69 +669,84 @@ export function App() {
     : false;
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-studio-950 text-slate-100">
-      {/* Top Navigation Bar */}
+    <div
+      className="aar-root aar-workspace aar-studio"
+      data-size="viewport"
+      style={{
+        '--aar-navigation-width': '20rem',
+        '--aar-inspector-width': '28rem',
+      } as React.CSSProperties}
+      data-theme={appTheme}
+      data-density="compact"
+    >
       <Header
-        currentPreset={currentPreset}
-        onSelectPreset={handleSelectPresetFormat}
-        currentTheme={currentTheme}
-        onSelectTheme={setCurrentTheme}
-        zoom={zoom}
-        onZoomChange={handleManualZoom}
-        fontScale={fontScale}
-        onFontScaleChange={handleFontScaleChange}
-        autoFit={autoFit}
-        onToggleAutoFit={() => setAutoFit((prev) => !prev)}
-        onExport={handleExport}
-        onCopyImage={handleCopyImage}
-        onOpenExamples={() => setIsExamplesOpen(true)}
-        onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
-        onOpenCapabilities={() => setIsCapabilitiesOpen(true)}
-        onOpenAbout={() => setIsAboutOpen(true)}
-        appTheme={appTheme}
-        onAppThemeChange={setAppTheme}
-        isExporting={isExporting}
-        copiedImage={copiedImage}
-        isSidebarOpen={isSidebarOpen}
-        onToggleSidebar={handleToggleSidebar}
-        onShare={handleShare}
-        hasLocalImages={hasLocalImages}
-        sharedCopied={copiedShareLink}
-        onOpenAiPrompt={() => setIsAiPromptOpen(true)}
         documentMode={documentMode}
         onDocumentModeChange={handleDocumentModeChange}
+        currentPreset={currentPreset}
+        onSelectPreset={handleSelectPresetFormat}
+        zoom={zoom}
+        onZoomChange={handleManualZoom}
+        autoFit={autoFit}
+        onToggleAutoFit={() => setAutoFit((prev) => !prev)}
+        fontScale={fontScale}
+        onFontScaleChange={handleFontScaleChange}
+        appTheme={appTheme}
+        onAppThemeChange={handleAppThemeChange}
+        onExport={handleExport}
+        isExporting={isExporting}
+        hasDesign={!!customCode.trim()}
+        onCopyImage={handleCopyImage}
+        copiedImage={copiedImage}
+        onShare={handleShare}
+        sharedCopied={copiedShareLink}
+        hasLocalImages={hasLocalImages}
+        onOpenAiPrompt={() => setIsAiPromptOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
+        onOpenCapabilities={() => setIsCapabilitiesOpen(true)}
+        onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+        isEditorOpen={isEditorOpen}
+        onToggleEditor={() => setIsEditorOpen((prev) => !prev)}
       />
 
-      {/* Main Workspace Body: [Left Tools & Presets] | [Center Live Canvas] | [Right Code Editor] */}
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* 1. LEFT TOOLS & ASSETS PANEL (COLLAPSIBLE) */}
-        <Sidebar
-          customCodeType={customCodeType}
-          onLoadSample={handleLoadSample}
-          onOpenExamples={() => setIsExamplesOpen(true)}
-          onOpenFonts={() => setIsFontsOpen(true)}
-          onOpenStickers={() => setIsStickersOpen(true)}
-          onClearCode={handleClearCode}
-          userImage={userImage}
-          setUserImage={setUserImage}
-          useAsBackground={useAsBackground}
-          setUseAsBackground={setUseAsBackground}
-          onInsertImageToCode={handleInsertImageToCode}
-          isOpen={isSidebarOpen}
-          onToggle={handleToggleSidebar}
-          onOpenAiPrompt={() => setIsAiPromptOpen(true)}
-          uploadedAssets={uploadedAssets}
-          onAddAssets={handleAddAssets}
-          onRemoveAsset={handleRemoveAsset}
-          uploadError={uploadError}
-          onClearUploadError={() => setUploadError(null)}
-        />
+      <div className="aar-workspace-body aar-studio-body" data-layout="studio">
+        {/* 1. LEFT NAVIGATION REGION: Tools, Templates & Assets Sidebar */}
+        <aside
+          className="aar-workspace-region aar-studio-sidebar"
+          data-region="navigation"
+          data-collapsed={!isSidebarOpen}
+          aria-hidden={!isSidebarOpen}
+          aria-label="Templates and assets"
+        >
+          <Sidebar
+            customCodeType={customCodeType}
+            onLoadSample={handleLoadSample}
+            onOpenExamples={() => setIsExamplesOpen(true)}
+            onOpenFonts={() => setIsFontsOpen(true)}
+            onOpenStickers={() => setIsStickersOpen(true)}
+            onClearCode={handleClearCode}
+            currentTheme={currentTheme}
+            onSelectTheme={setCurrentTheme}
+            userImage={userImage}
+            setUserImage={setUserImage}
+            useAsBackground={useAsBackground}
+            setUseAsBackground={setUseAsBackground}
+            onInsertImageToCode={handleInsertImageToCode}
+            onOpenAiPrompt={() => setIsAiPromptOpen(true)}
+            uploadedAssets={uploadedAssets}
+            onAddAssets={handleAddAssets}
+            onRemoveAsset={handleRemoveAsset}
+            uploadError={uploadError}
+            onClearUploadError={() => setUploadError(null)}
+          />
+        </aside>
 
-        {/* 2. CENTER CANVAS VIEWPORT */}
-        <div
-          className={`flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden min-w-0 pb-14 lg:pb-0 ${
-            mobileTab === 'canvas' ? 'flex' : 'hidden lg:flex'
-          }`}
+        {/* 2. CENTER CONTENT REGION: Canvas Viewport */}
+        <main
+          className="aar-workspace-region aar-studio-content"
+          data-region="content"
+          aria-label="Canvas workspace"
         >
           {documentMode === 'slides' && (
             <SlideStrip
@@ -743,10 +769,11 @@ export function App() {
             currentTheme={currentTheme}
             zoom={zoom}
             onZoomChange={setZoom}
+            onManualZoom={handleManualZoom}
             fontScale={fontScale}
             onFontScaleChange={handleFontScaleChange}
             autoFit={autoFit}
-            onToggleAutoFit={() => setAutoFit((prev) => !prev)}
+            onToggleAutoFit={() => setAutoFit(true)}
             canvasRef={canvasRef}
             customCodeType={customCodeType}
             customCode={customCode}
@@ -754,212 +781,58 @@ export function App() {
             useAsBackground={useAsBackground}
             onLoadSample={handleLoadSample}
             onOpenPlatformGuide={() => setIsPlatformGuideOpen(true)}
-            isSidebarOpen={isSidebarOpen}
-            onToggleSidebar={handleToggleSidebar}
             onOpenAiPrompt={() => setIsAiPromptOpen(true)}
+            onTriggerUpload={() => setIsSidebarOpen(true)}
+            onSelectPreset={handleSelectPresetFormat}
+            onOpenTemplates={() => setIsSidebarOpen(true)}
+            onCopyPreviousSlide={documentMode === 'slides' && slides.length > 1 ? handleCopyPreviousSlide : undefined}
           />
+        </main>
 
-          {/* Bottom Drawer (optional layout switch) */}
-          {dockMode === 'bottom' && (
-            <div className="h-[360px] w-full p-3 border-t border-white/10 bg-studio-950 flex flex-col shrink-0 z-20 shadow-2xl animate-in slide-in-from-bottom duration-200">
-              <FullCodeEditor
-                codeType={customCodeType}
-                setCodeType={handleCodeTypeChange}
-                code={customCode}
-                onChange={handleCodeChange}
-                onClear={handleClearCode}
-                onLoadSample={handleLoadSample}
-                dockMode={dockMode}
-                onDockModeChange={setDockMode}
-                userImage={userImage}
-                uploadedAssets={uploadedAssets}
-                onInsertImage={handleInsertImageToCode}
-                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* 3. RIGHT SIDE CODE EDITOR (SYNTAX HIGHLIGHTING & LINTING) */}
-        {dockMode !== 'bottom' && (
-          isEditorOpen ? (
-            <div
-              className={`h-[calc(100vh-4rem)] pb-14 lg:pb-0 bg-studio-900 shrink-0 flex-col shadow-2xl transition-all duration-200 ease-out border-l border-white/10 ${
-                mobileTab === 'code' ? 'flex w-full lg:w-[500px]' : 'hidden lg:flex'
-              } ${
-                isEditorWide
-                  ? 'fixed inset-0 z-50 h-screen w-screen pb-0 lg:relative lg:inset-auto lg:h-[calc(100vh-4rem)] lg:w-[680px] xl:w-[740px] lg:z-20'
-                  : 'z-20 lg:w-[500px] xl:w-[580px]'
-              }`}
-            >
-              <FullCodeEditor
-                codeType={customCodeType}
-                setCodeType={handleCodeTypeChange}
-                code={customCode}
-                onChange={handleCodeChange}
-                onClear={handleClearCode}
-                onLoadSample={handleLoadSample}
-                dockMode={dockMode}
-                onDockModeChange={setDockMode}
-                userImage={userImage}
-                uploadedAssets={uploadedAssets}
-                onInsertImage={handleInsertImageToCode}
-                isWide={isEditorWide}
-                onToggleWide={() => setIsEditorWide(!isEditorWide)}
-                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
-                onToggleCollapse={() => {
-                  setIsEditorOpen(false);
-                  setIsEditorWide(false);
-                  setMobileTab('canvas');
-                }}
-              />
-            </div>
-          ) : (
-            /* Collapsed side tab when editor is hidden (Desktop only) */
-            <button
-              onClick={() => setIsEditorOpen(true)}
-              className="hidden lg:flex h-[calc(100vh-4rem)] w-10 bg-studio-900/90 border-l border-white/10 hover:bg-studio-800 transition-colors flex-col items-center justify-center gap-3 text-slate-400 hover:text-white cursor-pointer py-4 shadow-lg shrink-0"
-              title="Expand Right Code Editor"
-            >
-              <ChevronLeft className="w-4 h-4 text-indigo-400" />
-              <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold tracking-wider uppercase rotate-90 whitespace-nowrap text-slate-300">
-                <Code2 className="w-3.5 h-3.5 text-indigo-400 -rotate-90 inline-block" />
-                <span>Code Editor</span>
-              </div>
-            </button>
-          )
-        )}
+        {/* 3. RIGHT INSPECTOR REGION: Code Editor */}
+        <aside
+          className="aar-workspace-region aar-studio-inspector"
+          data-region="inspector"
+          data-collapsed={!isEditorOpen}
+          aria-hidden={!isEditorOpen}
+          aria-label="Code editor"
+        >
+          <FullCodeEditor
+            codeType={customCodeType}
+            setCodeType={handleCodeTypeChange}
+            code={customCode}
+            onChange={handleCodeChange}
+            onClear={handleClearCode}
+            onLoadSample={handleLoadSample}
+            userImage={userImage}
+            uploadedAssets={uploadedAssets}
+            onInsertImage={handleInsertImageToCode}
+            onOpenAiPrompt={() => setIsAiPromptOpen(true)}
+            onToggleCollapse={() => setIsEditorOpen(false)}
+          />
+        </aside>
       </div>
 
-      {/* 4. MOBILE BOTTOM NAVIGATION BAR (< lg) - Hidden when editor is expanded fullscreen on mobile */}
-      <nav className={`lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-studio-900/95 backdrop-blur-md border-t border-white/10 items-center justify-around px-2 z-40 select-none ${
-        mobileTab === 'code' && isEditorWide ? 'hidden' : 'flex'
-      }`}>
-        <button
-          onClick={() => {
-            setMobileTab('canvas');
-            setIsSidebarOpen(false);
-            setIsEditorWide(false);
-          }}
-          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
-            mobileTab === 'canvas' && !isSidebarOpen
-              ? 'text-indigo-400 font-bold'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <Eye className="w-4 h-4" />
-          <span className="text-[10px] font-medium">Canvas</span>
-        </button>
-
-        <button
-          onClick={() => {
-            setMobileTab('code');
-            setIsSidebarOpen(false);
-            setIsEditorOpen(true);
-          }}
-          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
-            mobileTab === 'code' && !isSidebarOpen
-              ? 'text-indigo-400 font-bold'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <Code2 className="w-4 h-4" />
-          <span className="text-[10px] font-medium">Code</span>
-        </button>
-
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className={`flex flex-col items-center justify-center gap-1 flex-1 py-1.5 transition-colors ${
-            isSidebarOpen
-              ? 'text-indigo-400 font-bold'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <Sparkles className="w-4 h-4" />
-          <span className="text-[10px] font-medium">Assets</span>
-        </button>
-
-        <button
-          onClick={() => handleExport(2)}
-          disabled={isExporting}
-          className="flex flex-col items-center justify-center gap-1 flex-1 py-1.5 text-slate-400 hover:text-indigo-300 transition-colors"
-        >
-          <Download className="w-4 h-4 text-cyan-400" />
-          <span className="text-[10px] font-medium">{isExporting ? '...' : 'Export'}</span>
-        </button>
-      </nav>
-
-      {/* Fullscreen IDE Studio Modal with Side Preview (optional) */}
-      {dockMode === 'fullscreen' && (
-        <div className="fixed inset-0 z-50 bg-studio-950 flex flex-col animate-in fade-in duration-200">
-          <div className="h-14 px-6 border-b border-white/10 bg-studio-900 flex items-center justify-between select-none">
-            <div className="flex items-center gap-3">
-              <span className="font-extrabold text-white tracking-tight">Yuwbrndr Fullscreen Code Studio</span>
-              <span className="text-xs px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono">
-                {currentPreset.name} ({currentPreset.width}×{currentPreset.height})
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setDockMode('sidebar')}
-                className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-glow-indigo transition-all"
-              >
-                Close Fullscreen
-              </button>
-            </div>
-          </div>
-
-          <div className="flex-1 flex overflow-hidden p-4 gap-4">
-            <div className="flex-1 h-full min-w-0">
-              <FullCodeEditor
-                codeType={customCodeType}
-                setCodeType={handleCodeTypeChange}
-                code={customCode}
-                onChange={handleCodeChange}
-                onClear={handleClearCode}
-                onLoadSample={handleLoadSample}
-                dockMode={dockMode}
-                onDockModeChange={setDockMode}
-                userImage={userImage}
-                uploadedAssets={uploadedAssets}
-                onInsertImage={handleInsertImageToCode}
-                onOpenAiPrompt={() => setIsAiPromptOpen(true)}
-              />
-            </div>
-
-            <div className="w-[45%] h-full rounded-2xl border border-white/10 bg-studio-900 flex flex-col items-center justify-center p-6 overflow-hidden relative shadow-2xl">
-              <div className="text-[11px] font-mono uppercase text-slate-500 font-bold mb-3">
-                Live Output Preview
-              </div>
-              <div
-                className="origin-center shadow-2xl rounded-2xl overflow-hidden border border-white/15"
-                style={{
-                  transform: `scale(${Math.min(0.55, zoom)})`,
-                  width: `${currentPreset.width}px`,
-                  height: `${currentPreset.height}px`,
-                }}
-              >
-                <div
-                  ref={canvasRef}
-                  className="w-full h-full relative"
-                  style={{ width: `${currentPreset.width}px`, height: `${currentPreset.height}px` }}
-                >
-                  <CustomCodeCanvas
-                    codeType={customCodeType}
-                    code={customCode}
-                    theme={currentTheme}
-                    width={currentPreset.width}
-                    height={currentPreset.height}
-                    userImage={userImage}
-                    useAsBackground={useAsBackground}
-                    onPasteSample={handleLoadSample}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+      <footer className="aar-statusbar">
+        <div className="aar-cluster" data-gap="2">
+          <span>{currentPreset.platform}</span>
+          <span>·</span>
+          <span>{currentPreset.width} × {currentPreset.height} px ({currentPreset.aspectRatio})</span>
+          <span>·</span>
+          <span>{documentMode === 'slides' ? `${slides.length} slides` : 'Single graphic'}</span>
+          <span>·</span>
+          <span>Client-side only · Zero tracking</span>
         </div>
-      )}
+        <div className="aar-cluster" data-gap="2">
+          <button className="aar-button" data-variant="quiet" onClick={() => setIsPlatformGuideOpen(true)} data-size="sm">
+            Resolution Guide
+          </button>
+          <button className="aar-button" data-variant="quiet" onClick={() => setIsCapabilitiesOpen(true)} data-size="sm">
+            Capabilities
+          </button>
+        </div>
+      </footer>
+      <LayoutGuide open={isLayoutGuideOpen} onClose={() => setIsLayoutGuideOpen(false)} />
 
       {/* Examples & Templates Gallery Modal */}
       <ExamplesModal
@@ -1017,10 +890,10 @@ export function App() {
       {exportNotice && (
         <div
           role="status"
-          className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-[70] rounded-xl border px-4 py-2.5 text-sm font-semibold shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-200 ${
+          className={`aar-u-fixed aar-u-bottom-5 aar-u-left-1-2 aar-u--translate-x-1-2 aar-u-z--70 aar-u-rounded aar-u-border aar-u-px-4 aar-u-py-2.5 aar-u-text-sm aar-u-font-semibold aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200 ${
             isErrorNotice
-              ? 'border-amber-500/40 bg-studio-900/95 text-amber-300 shadow-amber-500/10'
-              : 'border-emerald-500/40 bg-studio-900/95 text-emerald-300 shadow-emerald-500/10'
+              ? 'aar-u-border-amber-500-40 aar-u-bg-surface aar-u-text-amber-300'
+              : 'aar-u-border-emerald-500-40 aar-u-bg-surface aar-u-text-emerald-300'
           }`}
         >
           {exportNotice}

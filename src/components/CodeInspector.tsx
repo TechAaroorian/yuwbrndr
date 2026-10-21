@@ -36,54 +36,54 @@ export const CodeInspector: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
-      <div className="w-full max-w-3xl bg-[#090b17] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+    <div className="aar-u-fixed aar-u-inset-0 aar-u-z-50 aar-u-bg-black-80  aar-u-flex aar-u-items-center aar-u-justify-center aar-u-p-4 aar-u-select-none aar-u-animate-in aar-u-fade-in aar-u-duration-200">
+      <div className="aar-u-w-full aar-u-max-w-3xl aar-u-bg--090b17 aar-u-border aar-u-border-border aar-u-rounded aar-u-overflow-hidden  aar-u-flex aar-u-flex-col aar-u-max-h--85vh">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <Code2 className="w-5 h-5 text-indigo-400" />
+        <div className="aar-u-px-6 aar-u-py-4 aar-u-border-b aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2.5">
+            <Code2 className="aar-u-w-5 aar-u-h-5 aar-u-text-primary" />
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight">Inspect Pure Code</h2>
-              <p className="text-[11px] text-slate-400 font-mono">
+              <h2 className="aar-u-text-base aar-u-font-bold aar-u-text-text aar-u-tracking-tight">Inspect Pure Code</h2>
+              <p className="aar-u-text-sm aar-u-text-text-muted aar-u-font-mono">
                 {customCodeType === 'html' ? 'HTML + CSS Markup' : 'Canvas 2D JavaScript'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
             <button
               onClick={handleDownload}
-              className="px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs text-slate-200 font-medium flex items-center gap-1.5 transition-all"
-              title="Download source code"
+              className="aar-button aar-u-flex aar-u-gap-1.5"
+              title="Download source code" data-size="sm"
             >
-              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <Download className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
               <span>Download .{customCodeType === 'html' ? 'html' : 'js'}</span>
             </button>
 
             <button
               onClick={handleCopy}
-              className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md transition-all"
+              className="aar-button aar-u-flex aar-u-gap-1.5" data-variant="primary" data-size="sm"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-emerald-400" /> : <Copy className="aar-u-w-3.5 aar-u-h-3.5" />}
               <span>{copied ? 'Copied!' : 'Copy Code'}</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all ml-1"
+              className="aar-button aar-u-ml-1" data-size="sm"
             >
-              <X className="w-4 h-4" />
+              <X className="aar-u-w-4 aar-u-h-4" />
             </button>
           </div>
         </div>
 
         {/* Code Content */}
-        <div className="p-6 overflow-y-auto flex-1 font-mono text-xs text-slate-200 bg-[#05070f] leading-relaxed select-text whitespace-pre-wrap">
+        <div className="aar-u-p-6 aar-u-overflow-y-auto aar-u-flex-1 aar-u-font-mono aar-u-text-xs aar-u-text-text aar-u-bg--05070f aar-u-leading-relaxed aar-u-select-text aar-u-whitespace-pre-wrap">
           {customCode ? customCode : '<!-- Empty canvas. No code entered yet. -->'}
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-white/10 bg-[#080914] flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <div className="aar-u-px-6 aar-u-py-3 aar-u-border-t aar-u-border-border aar-u-bg--080914 aar-u-flex aar-u-items-center aar-u-justify-between aar-u-text-sm aar-u-font-mono aar-u-text-text-muted">
           <span>Lines: {customCode ? customCode.split('\n').length : 0}</span>
           <span>Characters: {customCode.length}</span>
         </div>

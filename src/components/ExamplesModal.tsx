@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Sparkles, Code2, Check, ArrowRight, Layers } from 'lucide-react';
+import { X, LayoutTemplate, Code2, Check, ArrowRight, Layers } from 'lucide-react';
 import { CODE_PRESETS, CodePreset } from '../utils/codePresets';
 
 interface Props {
@@ -24,38 +24,38 @@ export const ExamplesModal: React.FC<Props> = ({
     : CODE_PRESETS.filter((p) => p.category === selectedCategory);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
-      <div className="w-full max-w-4xl bg-[#0a0d1d] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+    <div className="aar-u-fixed aar-u-inset-0 aar-u-z-50 aar-u-bg-black-80  aar-u-flex aar-u-items-center aar-u-justify-center aar-u-p-4 aar-u-select-none aar-u-animate-in aar-u-fade-in aar-u-duration-200">
+      <div className="aar-u-w-full aar-u-max-w-4xl aar-u-bg-surface aar-u-border aar-u-border-border aar-u-rounded aar-u-overflow-hidden  aar-u-flex aar-u-flex-col aar-u-max-h--85vh">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-              <Sparkles className="w-5 h-5" />
+        <div className="aar-u-px-6 aar-u-py-5 aar-u-border-b aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-3">
+            <div className="aar-u-w-9 aar-u-h-9 aar-u-rounded aar-u-bg-indigo-600-20 aar-u-text-primary aar-u-flex aar-u-items-center aar-u-justify-center aar-u-border aar-u-border-indigo-500-30">
+              <LayoutTemplate className="aar-u-w-5 aar-u-h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">Code Examples & Templates Gallery</h2>
-              <p className="text-xs text-slate-400">Load an editable HTML/CSS or Canvas design</p>
+              <h2 className="aar-u-text-lg aar-u-font-bold aar-u-text-text aar-u-tracking-tight">Code Examples & Templates Gallery</h2>
+              <p className="aar-u-text-xs aar-u-text-text-muted">Load an editable HTML/CSS or Canvas design</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+            className="aar-button " data-size="sm"
           >
-            <X className="w-4 h-4" />
+            <X className="aar-u-w-4 aar-u-h-4" />
           </button>
         </div>
 
         {/* Category Pills */}
-        <div className="px-6 py-3 border-b border-white/10 flex items-center gap-2 overflow-x-auto bg-[#070914]">
+        <div className="aar-u-px-6 aar-u-py-3 aar-u-border-b aar-u-border-border aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-overflow-x-auto aar-u-bg-surface">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
+              className={`aar-button ${
                 selectedCategory === cat
-                  ? 'bg-indigo-600 text-white font-semibold shadow-glow-indigo'
-                  : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-              }`}
+                  ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-font-semibold '
+                  : 'aar-u-bg-surface-subtle aar-u-text-text-muted aar-u-hover-text-text aar-u-hover-bg-surface-subtle'
+              }`} data-variant="primary" data-size="sm"
             >
               {cat}
             </button>
@@ -63,31 +63,31 @@ export const ExamplesModal: React.FC<Props> = ({
         </div>
 
         {/* Presets Grid */}
-        <div className="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="aar-u-p-6 aar-u-overflow-y-auto aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-gap-4">
           {filteredPresets.map((preset) => (
             <div
               key={preset.id}
-              className="p-5 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-indigo-500/50 hover:bg-slate-900/90 transition-all flex flex-col justify-between group shadow-lg"
+              className="aar-u-p-5 aar-u-rounded aar-u-bg-slate-900-60 aar-u-border aar-u-border-border aar-u-hover-border-indigo-500-50 aar-u-hover-bg-slate-900-90 aar-u-transition-all aar-u-flex aar-u-flex-col aar-u-justify-between aar-u-group "
             >
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <div className="aar-u-space-y-2.5">
+                <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
+                  <span className="aar-u-px-2.5 aar-u-py-0.5 aar-u-rounded-md aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-tracking-wider aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-30">
                     {preset.category}
                   </span>
-                  <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold">
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-text-text-muted aar-u-font-semibold">
                     {preset.type === 'html' ? 'HTML + CSS' : 'Canvas 2D JS'}
                   </span>
                 </div>
-                <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors">
+                <h3 className="aar-u-text-base aar-u-font-bold aar-u-text-text aar-u-group-hover-text-primary aar-u-transition-colors">
                   {preset.name}
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                <p className="aar-u-text-xs aar-u-text-text-muted aar-u-leading-relaxed aar-u-font-sans">
                   {preset.description}
                 </p>
               </div>
 
-              <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-slate-500">
+              <div className="aar-u-mt-5 aar-u-pt-3 aar-u-border-t aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between">
+                <span className="aar-u-text-sm aar-u-font-mono aar-u-text-text-muted">
                   {preset.code.split('\n').length} lines
                 </span>
                 <button
@@ -95,10 +95,10 @@ export const ExamplesModal: React.FC<Props> = ({
                     onSelectPreset(preset);
                     onClose();
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md group-hover:scale-105 transition-all"
+                  className="aar-button aar-u-flex aar-u-gap-1.5" data-variant="primary" data-size="sm"
                 >
                   <span>Load into Editor</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="aar-u-w-3.5 aar-u-h-3.5" />
                 </button>
               </div>
             </div>

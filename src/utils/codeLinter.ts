@@ -20,7 +20,6 @@ export function lintHtmlCode(view: EditorView): Diagnostic[] {
   }
 
   // 1. Check for unclosed attribute quotes
-  const quoteRegex = /<([a-zA-Z0-9\-]+)[^>]*?([a-zA-Z\-]+)=["']([^"']*)$/m;
   const lines = text.split('\n');
   let currentOffset = 0;
 
@@ -51,7 +50,7 @@ export function lintHtmlCode(view: EditorView): Diagnostic[] {
 
   const stack: OpenTag[] = [];
   // Match XML/HTML tags: comments <!-- -->, closing </tag>, open <tag ...> or <tag .../>
-  const tagRegex = /<!--[\s\S]*?-->|<\/([a-zA-Z0-9\-]+)>|<([a-zA-Z0-9\-]+)([^>]*)(\/?)>/g;
+  const tagRegex = /<!--[\s\S]*?-->|<\/([a-zA-Z0-9-]+)>|<([a-zA-Z0-9-]+)([^>]*)(\/?)>/g;
   let match: RegExpExecArray | null;
 
   while ((match = tagRegex.exec(text)) !== null) {
@@ -142,13 +141,11 @@ export function lintJsCode(view: EditorView): Diagnostic[] {
   } catch (err: any) {
     const errorMsg = err?.message || 'JavaScript Syntax Error';
     let line = 1;
-    let col = 1;
 
     // Attempt to extract line number from error message
     const lineMatch = errorMsg.match(/line\s+(\d+)/i) || err?.stack?.match(/<anonymous>:(\d+):(\d+)/);
     if (lineMatch) {
       line = parseInt(lineMatch[1], 10);
-      col = lineMatch[2] ? parseInt(lineMatch[2], 10) : 1;
     }
 
     const doc = view.state.doc;

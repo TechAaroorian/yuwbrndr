@@ -53,30 +53,30 @@ export const FontsModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+    <div className="aar-u-fixed aar-u-inset-0 aar-u-z-50 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-p-4 aar-u-sm-p-6 aar-u-animate-in aar-u-fade-in aar-u-duration-200">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        className="aar-u-absolute aar-u-inset-0 aar-u-bg-black-80 "
         onClick={onClose}
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-5xl max-h-[90vh] bg-studio-900 border border-white/15 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-100 z-10">
+      <div className="aar-u-relative aar-u-w-full aar-u-max-w-5xl aar-u-max-h--90vh aar-u-bg-surface aar-u-border aar-u-border-border aar-u-rounded  aar-u-flex aar-u-flex-col aar-u-overflow-hidden aar-u-text-text aar-u-z-10">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-studio-950/60 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
-              <Type className="w-5 h-5" />
+        <div className="aar-u-px-6 aar-u-py-4 aar-u-border-b aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between aar-u-bg-background aar-u-shrink-0">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-3">
+            <div className="aar-u-w-9 aar-u-h-9 aar-u-rounded aar-u-bg-indigo-500-20 aar-u-border aar-u-border-indigo-500-30 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-text-primary">
+              <Type className="aar-u-w-5 aar-u-h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="aar-u-text-lg aar-u-font-bold aar-u-text-text aar-u-flex aar-u-items-center aar-u-gap-2">
                 <span>10 Curated Open-Source Fonts</span>
-                <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span className="aar-u-text-sm aar-u-font-mono aar-u-font-semibold aar-u-px-2 aar-u-py-0.5 aar-u-rounded-full aar-u-bg-emerald-500-20 aar-u-text-emerald-300 aar-u-border aar-u-border-emerald-500-30">
                   100% Commercial Safe
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="aar-u-text-xs aar-u-text-text-muted">
                 OFL & Apache 2.0 licensed typography pre-loaded and ready for Tailwind CSS classes.
               </p>
             </div>
@@ -84,28 +84,28 @@ export const FontsModal: React.FC<Props> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="aar-button " data-size="sm"
           >
-            <X className="w-5 h-5" />
+            <X className="aar-u-w-5 aar-u-h-5" />
           </button>
         </div>
 
         {/* Controls Bar: Search, Category Filter, and Custom Text input */}
-        <div className="p-4 border-b border-white/10 bg-studio-950/30 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="aar-u-p-4 aar-u-border-b aar-u-border-border aar-u-bg-background aar-u-flex aar-u-flex-wrap aar-u-items-center aar-u-justify-between aar-u-gap-3 aar-u-shrink-0">
           {/* Search Input */}
-          <div className="relative flex-1 min-w-[200px] max-w-xs">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <div className="aar-u-relative aar-u-flex-1 aar-u-min-w--200px aar-u-max-w-xs">
+            <Search className="aar-u-w-4 aar-u-h-4 aar-u-text-text-muted aar-u-absolute aar-u-left-3 aar-u-top-1-2 aar-u--translate-y-1-2" />
             <input
               type="text"
               placeholder="Search fonts, styles, keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/60 transition-colors"
+              className="aar-input" data-size="sm"
             />
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-flex-wrap">
             {[
               { id: 'all', label: 'All Fonts (10)' },
               { id: 'sans', label: 'Sans-Serif' },
@@ -116,11 +116,11 @@ export const FontsModal: React.FC<Props> = ({
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`aar-button ${
                   selectedCategory === cat.id
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border border-white/5'
-                }`}
+                    ? 'aar-u-bg-surface-subtle aar-u-text-text '
+                    : 'aar-u-bg-surface-subtle aar-u-text-text-muted aar-u-hover-text-text aar-u-hover-bg-surface-subtle aar-u-border aar-u-border-border'
+                }`} data-variant="primary" data-size="sm"
               >
                 {cat.label}
               </button>
@@ -128,82 +128,82 @@ export const FontsModal: React.FC<Props> = ({
           </div>
 
           {/* Live Preview Text Overrider */}
-          <div className="w-full sm:w-auto flex items-center gap-2">
-            <span className="text-[11px] font-mono text-slate-400 shrink-0">Live Preview:</span>
+          <div className="aar-u-w-full aar-u-sm-w-auto aar-u-flex aar-u-items-center aar-u-gap-2">
+            <span className="aar-u-text-sm aar-u-font-mono aar-u-text-text-muted aar-u-shrink-0">Live Preview:</span>
             <input
               type="text"
               placeholder="Type custom preview text..."
               value={customPreviewText}
               onChange={(e) => setCustomPreviewText(e.target.value)}
-              className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500/60 transition-colors w-full sm:w-56"
+              className="aar-input" data-size="sm"
             />
           </div>
         </div>
 
         {/* Fonts Grid */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="aar-u-flex-1 aar-u-overflow-y-auto aar-u-p-6 aar-u-space-y-4">
+          <div className="aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-gap-4">
             {filteredFonts.map((font) => {
               const isCopied = copiedFontId === font.id;
               return (
                 <div
                   key={font.id}
-                  className="p-5 rounded-2xl bg-studio-950/70 border border-white/10 hover:border-indigo-500/40 transition-all flex flex-col justify-between group shadow-sm"
+                  className="aar-u-p-5 aar-u-rounded aar-u-bg-background aar-u-border aar-u-border-border aar-u-hover-border-indigo-500-40 aar-u-transition-all aar-u-flex aar-u-flex-col aar-u-justify-between aar-u-group "
                 >
-                  <div className="space-y-3">
+                  <div className="aar-u-space-y-3">
                     {/* Top Row: Name, Category, and License */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-white text-base tracking-tight">
+                    <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
+                      <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
+                        <span className="aar-u-font-bold aar-u-text-text aar-u-text-base aar-u-tracking-tight">
                           {font.name}
                         </span>
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white/10 text-slate-300 font-semibold">
+                        <span className="aar-u-text-xs aar-u-font-mono aar-u-uppercase aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-text-text aar-u-font-semibold">
                           {font.category}
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-400 font-mono">
+                      <span className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono">
                         {font.license.split(' ')[0]}
                       </span>
                     </div>
 
                     {/* Description & Best For */}
-                    <p className="text-xs text-slate-400 leading-relaxed">
+                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-leading-relaxed">
                       {font.description}
                     </p>
 
-                    <div className="text-[11px] text-indigo-300/90 font-mono bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20">
+                    <div className="aar-u-text-sm aar-u-text-primary-90 aar-u-font-mono aar-u-bg-indigo-500-10 aar-u-px-2.5 aar-u-py-1 aar-u-rounded aar-u-border aar-u-border-indigo-500-20">
                       🎯 Best for: {font.bestFor}
                     </div>
 
                     {/* Live Font Rendering Preview */}
                     <div 
-                      className="p-4 rounded-xl bg-[#060810] border border-white/10 space-y-1.5 transition-colors overflow-hidden"
-                      style={{ fontFamily: font.cssFamily }}
+                      className="aar-font-sample aar-u-p-4 aar-u-rounded aar-u-bg-surface aar-u-border aar-u-border-border aar-u-space-y-1.5 aar-u-transition-colors aar-u-overflow-hidden"
+                      style={{ '--aar-preview-font': font.cssFamily } as React.CSSProperties}
                     >
-                      <div className="text-xl sm:text-2xl font-bold text-white tracking-tight break-words">
+                      <div className="aar-u-text-xl aar-u-sm-text-2xl aar-u-font-bold aar-u-text-text aar-u-tracking-tight aar-u-break-words">
                         {customPreviewText.trim() ? customPreviewText : font.sampleHeadline}
                       </div>
-                      <div className="text-xs sm:text-sm text-slate-300 opacity-90 leading-relaxed break-words">
+                      <div className="aar-u-text-xs aar-u-sm-text-sm aar-u-text-text aar-u-opacity-90 aar-u-leading-relaxed aar-u-break-words">
                         {customPreviewText.trim() ? '' : font.sampleBody}
                       </div>
                     </div>
                   </div>
 
                   {/* Actions: Copy Tailwind class and Insert Block */}
-                  <div className="pt-4 mt-3 border-t border-white/5 flex items-center justify-between gap-2">
+                  <div className="aar-u-pt-4 aar-u-mt-3 aar-u-border-t aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-between aar-u-gap-2">
                     <button
                       onClick={() => handleCopyClass(font)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-slate-200 text-xs font-mono transition-all"
-                      title="Copy Tailwind class"
+                      className="aar-button aar-u-flex aar-u-gap-1.5"
+                      title="Copy Tailwind class" data-size="sm"
                     >
                       {isCopied ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span className="text-emerald-300 font-bold">Copied!</span>
+                          <Check className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success" />
+                          <span className="aar-u-text-emerald-300 aar-u-font-bold">Copied!</span>
                         </>
                       ) : (
                         <>
-                          <Copy className="w-3.5 h-3.5 text-slate-400" />
+                          <Copy className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-text-muted" />
                           <span>.{font.tailwindClass}</span>
                         </>
                       )}
@@ -212,10 +212,10 @@ export const FontsModal: React.FC<Props> = ({
                     {onInsertSnippet && (
                       <button
                         onClick={() => handleInsertFontBlock(font)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/30 text-xs font-semibold transition-all"
-                        title="Insert ready-made styled element into code"
+                        className="aar-button aar-u-flex aar-u-gap-1.5" data-variant="primary"
+                        title="Insert ready-made styled element into code" data-size="sm"
                       >
-                        <Code2 className="w-3.5 h-3.5" />
+                        <Code2 className="aar-u-w-3.5 aar-u-h-3.5" />
                         <span>+ Insert Block</span>
                       </button>
                     )}
@@ -226,16 +226,16 @@ export const FontsModal: React.FC<Props> = ({
           </div>
 
           {filteredFonts.length === 0 && (
-            <div className="text-center py-12 text-slate-400 text-sm">
+            <div className="aar-u-text-center aar-u-py-12 aar-u-text-text-muted aar-u-text-sm">
               No fonts matched your search query.
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-white/10 bg-studio-950/80 flex items-center justify-between text-xs text-slate-400 shrink-0">
-          <span>All 10 fonts are loaded via Google Fonts with <code className="font-mono text-slate-300">font-display: swap</code>.</span>
-          <span className="text-indigo-400 font-mono text-[11px]">Usage: class="{OPEN_SOURCE_FONTS[0].tailwindClass}"</span>
+        <div className="aar-u-px-6 aar-u-py-3 aar-u-border-t aar-u-border-border aar-u-bg-background aar-u-flex aar-u-items-center aar-u-justify-between aar-u-text-xs aar-u-text-text-muted aar-u-shrink-0">
+          <span>All 10 fonts are loaded via Google Fonts with <code className="aar-u-font-mono aar-u-text-text">font-display: swap</code>.</span>
+          <span className="aar-u-text-primary aar-u-font-mono aar-u-text-sm">Usage: class="{OPEN_SOURCE_FONTS[0].tailwindClass}"</span>
         </div>
       </div>
     </div>
