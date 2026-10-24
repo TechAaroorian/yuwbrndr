@@ -154,24 +154,22 @@ const AiPromptModalDialog: React.FC<Props> = ({
 
   return (
     <div
-      className="aar-u-fixed aar-u-inset-0 aar-u-z--80 aar-u-bg-black-75  aar-u-p-3 aar-u-sm-p-6 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-animate-in aar-u-fade-in aar-u-duration-200 aar-u-select-none aar-u-overflow-y-auto"
+      className="aar-u-fixed aar-u-inset-0 aar-u-z--80 aar-u-bg-black-75 aar-u-p-3 aar-u-flex aar-u-items-center aar-u-justify-center aar-u-animate-in aar-u-fade-in aar-u-duration-200 aar-u-select-none"
       onMouseDown={onClose}
     >
       <section
-        className="aar-u-w-full aar-u-max-w-4xl aar-u-max-h--92vh aar-u-overflow-y-auto aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-surface  aar-u-flex aar-u-flex-col aar-u-text-text"
+        className="aar-u-w-full aar-u-max-w-5xl aar-u-max-h--90vh aar-u-overflow-hidden aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-surface aar-u-flex aar-u-flex-col aar-u-text-text"
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <header className="aar-u-sticky aar-u-top-0 aar-u-z-20 aar-u-flex aar-u-items-start aar-u-justify-between aar-u-gap-4 aar-u-border-b aar-u-border-border aar-u-bg-surface  aar-u-px-5 aar-u-sm-px-7 aar-u-py-4 aar-u-shrink-0">
+        <header className="aar-u-flex aar-u-items-start aar-u-justify-between aar-u-gap-4 aar-u-border-b aar-u-border-border aar-u-bg-surface aar-u-px-5 aar-u-py-4 aar-u-shrink-0">
           <div className="aar-u-flex aar-u-items-center aar-u-gap-3">
-            <div className="aar-u-w-10 aar-u-h-10 aar-u-rounded aar-u-bg-gradient-to-tr aar-u-from-indigo-600 aar-u-to-cyan-500 aar-u-p-0.5  aar-u-shadow-indigo-500-20 aar-u-flex aar-u-items-center aar-u-justify-center">
-              <div className="aar-u-w-full aar-u-h-full aar-u-bg-background aar-u-rounded--10px aar-u-flex aar-u-items-center aar-u-justify-center">
-                <Bot className="aar-u-w-5 aar-u-h-5 aar-u-text-primary" />
-              </div>
+            <div className="aar-u-w-10 aar-u-h-10 aar-u-rounded aar-u-bg-surface-subtle aar-u-border aar-u-border-border aar-u-flex aar-u-items-center aar-u-justify-center aar-u-text-primary aar-u-shrink-0">
+              <Bot className="aar-u-w-5 aar-u-h-5" />
             </div>
             <div>
               <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-flex-wrap">
-                <h2 className="aar-u-text-base aar-u-sm-text-lg aar-u-font-bold aar-u-text-text aar-u-tracking-tight">
+                <h2 className="aar-u-text-base aar-u-font-bold aar-u-text-text aar-u-tracking-tight">
                   Intent-Driven AI Prompts
                 </h2>
                 <span className="aar-u-px-2 aar-u-py-0.5 aar-u-text-xs aar-u-font-mono aar-u-font-semibold aar-u-rounded aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-30">
@@ -188,206 +186,41 @@ const AiPromptModalDialog: React.FC<Props> = ({
           </div>
           <button
             onClick={onClose}
-            className="aar-button "
-            aria-label="Close modal" data-size="sm"
+            className="aar-button"
+            aria-label="Close modal"
+            data-variant="flat"
+            data-size="sm"
           >
             <X className="aar-u-w-5 aar-u-h-5" />
           </button>
         </header>
 
-        {/* Modal Body */}
-        <div className="aar-u-p-5 aar-u-sm-p-7 aar-u-space-y-6">
-          {/* STEP 1: Core Configuration Grid */}
-          <div className="aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-gap-5">
-            {/* Left Column: Ratio & Engine */}
-            <div className="aar-u-space-y-4">
-              {/* Screen Ratio & Platform */}
-              <div>
-                <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-mb-2">
-                  <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text">
-                    <Layout className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
-                    <span>1. Target Screen Ratio & Safe Zone</span>
-                  </label>
-                  <span className="aar-u-text-xs aar-u-font-mono aar-u-text-primary">
-                    {activePreset.aspectRatio} · {activePreset.width}×{activePreset.height}px
-                  </span>
-                </div>
-
-                <div className="aar-u-grid aar-u-grid-cols-1 aar-u-sm-grid-cols-2 aar-u-gap-2">
-                  {ASPECT_PRESETS.map((p) => {
-                    const isSelected = p.id === selectedPresetId;
-                    return (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => setSelectedPresetId(p.id)}
-                        className={`aar-button aar-u-relative ${
-                          isSelected
-                            ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-indigo-500-50'
-                            : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle aar-u-hover-border-border'
-                        }`} data-variant="primary" data-size="sm"
-                      >
-                        <div className="aar-u-flex aar-u-items-center aar-u-justify-between">
-                          <span className="aar-u-text-xs aar-u-font-semibold aar-u-truncate">{p.name}</span>
-                          <span className="aar-u-text-xs aar-u-font-mono aar-u-px-1.5 aar-u-py-0.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-text-primary aar-u-shrink-0">
-                            {p.aspectRatio}
-                          </span>
-                        </div>
-                        <div className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-mt-1">
-                          {p.width} × {p.height} px
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Platform Safe Zone Notice */}
-                {activePreset.safeZone && (
-                  <div className="aar-u-mt-2 aar-u-flex aar-u-items-start aar-u-gap-2 aar-u-p-2 aar-u-rounded aar-u-bg-indigo-950-40 aar-u-border aar-u-border-indigo-500-30 aar-u-text-sm aar-u-text-primary">
-                    <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0 aar-u-mt-0.5" />
-                    <span>
-                      <strong className="aar-u-font-semibold aar-u-text-primary">Safe-Zone:</strong> {activePreset.safeZone}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Rendering Engine: HTML vs Canvas */}
-              <div>
-                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
-                  <Code2 className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
-                  <span>2. Rendering Engine</span>
-                </label>
-                <div className="aar-u-grid aar-u-grid-cols-2 aar-u-gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEngine('html')}
-                    className={`aar-button ${
-                      selectedEngine === 'html'
-                        ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-cyan-500-40'
-                        : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
-                    }`} data-size="sm"
-                  >
-                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
-                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-cyan-400" />
-                      HTML + Tailwind CSS
-                    </div>
-                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
-                      UnoCSS Wind4 runtime utilities, flex/grid layouts, inline SVGs. (No &lt;script&gt;).
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedEngine('canvas')}
-                    className={`aar-button ${
-                      selectedEngine === 'canvas'
-                        ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text  aar-u-ring-1 aar-u-ring-indigo-500-40'
-                        : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
-                    }`} data-size="sm"
-                  >
-                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
-                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-indigo-400" />
-                      Canvas 2D JS (Advanced)
-                    </div>
-                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
-                      Runs in isolated sandbox via (canvas, ctx, width, height). Geometric & isometric graphics.
-                    </p>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Style Archetype, Theme Palette, and Idea Presets */}
-            <div className="aar-u-space-y-4">
-              {/* Style Archetype */}
-              <div>
-                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
-                  <Layers className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
-                  <span>3. Design Layout Archetype</span>
-                </label>
-                <div className="aar-u-space-y-1.5">
-                  {(Object.keys(ARCHETYPE_LABELS) as DesignArchetype[]).map((arch) => {
-                    const info = ARCHETYPE_LABELS[arch];
-                    const isSelected = selectedArchetype === arch;
-                    return (
-                      <button
-                        key={arch}
-                        type="button"
-                        onClick={() => setSelectedArchetype(arch)}
-                        className={`aar-button aar-u-w-full aar-u-flex aar-u-justify-between ${
-                          isSelected
-                            ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text aar-u-font-medium'
-                            : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
-                        }`} data-size="sm"
-                      >
-                        <div>
-                          <div className="aar-u-font-semibold aar-u-text-text">{info.name}</div>
-                          <div className="aar-u-text-xs aar-u-text-text-muted aar-u-truncate aar-u-max-w--280px">
-                            {info.description}
-                          </div>
-                        </div>
-                        {isSelected && <Check className="aar-u-w-4 aar-u-h-4 aar-u-text-primary aar-u-shrink-0" />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Color Palette */}
-              <div>
-                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
-                  <Palette className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
-                  <span>4. Color Palette</span>
-                </label>
-                <div className="aar-u-flex aar-u-flex-wrap aar-u-gap-2">
-                  {Object.values(COLOR_THEMES).map((th) => (
-                    <button
-                      key={th.id}
-                      type="button"
-                      onClick={() => setSelectedThemeId(th.id)}
-                      className={`aar-button aar-u-flex aar-u-gap-2 ${
-                        selectedThemeId === th.id
-                          ? 'aar-u-border-border aar-u-bg-surface-subtle aar-u-text-text'
-                          : 'aar-u-border-border aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
-                      }`} data-size="sm"
-                    >
-                      <span
-                        className="aar-swatch aar-u-w-3 aar-u-h-3 aar-u-rounded-full aar-u-border aar-u-border-border aar-u-shrink-0"
-                        style={{ '--aar-swatch-color': th.primary } as React.CSSProperties}
-                      />
-                      <span>{th.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* STEP 2: Intent Selection & User Input */}
+        {/* Modal Scrollable Body */}
+        <div className="aar-u-p-5 aar-u-space-y-5 aar-u-flex-1 aar-u-overflow-y-auto aar-u-min-h-0">
+          {/* Section 1: Intent & Content Input at Top */}
           <div className="aar-u-space-y-3 aar-u-rounded aar-u-border aar-u-border-border aar-u-bg-background aar-u-p-4">
             <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-flex-wrap aar-u-gap-2">
               <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text">
                 <Lightbulb className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-amber-400" />
-                <span>5. Intent Translation & Input</span>
+                <span>Intent & Content Input</span>
               </label>
 
               {/* Real-time Format Badge */}
               <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
                 {isUrl ? (
-                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-cyan-500-20 aar-u-text-primary aar-u-border aar-u-border-cyan-500-40">
+                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-surface-subtle aar-u-text-primary aar-u-border aar-u-border-border">
                     <Link2 className="aar-u-w-3 aar-u-h-3" /> URL Mode
                   </span>
                 ) : isBullets ? (
-                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-indigo-500-20 aar-u-text-primary aar-u-border aar-u-border-indigo-500-40">
-                    <ListFilter className="aar-u-w-3 aar-u-h-3" /> Bullet Points Mode
+                  <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-surface-subtle aar-u-text-primary aar-u-border aar-u-border-border">
+                    <ListFilter className="aar-u-w-3 aar-u-h-3" /> Bullets Mode
                   </span>
                 ) : (
                   <span className="aar-u-flex aar-u-items-center aar-u-gap-1 aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-surface-subtle aar-u-text-text aar-u-border aar-u-border-border">
-                    <FileText className="aar-u-w-3 aar-u-h-3" /> Plain Text Mode
+                    <FileText className="aar-u-w-3 aar-u-h-3" /> Plain Text
                   </span>
                 )}
-                <span className="aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-bg-emerald-500-15 aar-u-text-emerald-300 aar-u-border aar-u-border-emerald-500-30">
+                <span className="aar-u-px-2 aar-u-py-0.5 aar-u-rounded aar-u-text-xs aar-u-font-mono aar-u-font-semibold aar-u-bg-surface-subtle aar-u-text-success aar-u-border aar-u-border-border">
                   {detected.label}
                 </span>
               </div>
@@ -403,11 +236,10 @@ const AiPromptModalDialog: React.FC<Props> = ({
                     key={item.id}
                     type="button"
                     onClick={() => setSelectedIntent(item.id)}
-                    className={`aar-button ${
-                      isActive
-                        ? 'aar-u-bg-surface-subtle aar-u-text-text '
-                        : 'aar-u-bg-background aar-u-hover-bg-surface-subtle aar-u-text-text aar-u-border aar-u-border-border'
-                    }`} data-variant="primary" data-size="sm"
+                    className="aar-button"
+                    data-variant={isActive ? 'primary' : 'flat'}
+                    data-size="sm"
+                    aria-pressed={isActive}
                   >
                     {item.label}
                   </button>
@@ -424,56 +256,225 @@ const AiPromptModalDialog: React.FC<Props> = ({
               className="aar-textarea"
             />
 
-            {/* Quick Sample Prompts */}
-            <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-flex-wrap aar-u-pt-1">
-              <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted aar-u-uppercase">Try quick format:</span>
-              {SAMPLE_IDEAS.map((sample, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setInstruction(sample.text)}
-                  className="aar-button " data-size="sm"
-                >
-                  {sample.label}
-                </button>
-              ))}
-            </div>
+            {/* Quick Sample Prompts & Guarantees bar */}
+            <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-gap-2 aar-u-flex-wrap aar-u-pt-1">
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5 aar-u-flex-wrap">
+                <span className="aar-u-text-xs aar-u-font-mono aar-u-text-text-muted aar-u-uppercase">Try quick format:</span>
+                {SAMPLE_IDEAS.map((sample, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setInstruction(sample.text)}
+                    className="aar-button"
+                    data-variant="flat"
+                    data-size="sm"
+                  >
+                    {sample.label}
+                  </button>
+                ))}
+              </div>
 
-            {/* Built-in Guarantees Pill Bar */}
-            <div className="aar-u-grid aar-u-grid-cols-1 aar-u-sm-grid-cols-3 aar-u-gap-2 aar-u-pt-2 aar-u-border-t aar-u-border-border aar-u-text-sm aar-u-text-text-muted">
-              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
-                <Zap className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-amber-400 aar-u-shrink-0" />
-                <span><strong>Visual Hierarchy:</strong> 5 strict levels</span>
-              </div>
-              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
-                <Scale className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success aar-u-shrink-0" />
-                <span><strong>Contrast:</strong> WCAG 4.5:1+ guaranteed</span>
-              </div>
-              <div className="aar-u-flex aar-u-items-center aar-u-gap-1.5">
-                <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0" />
-                <span><strong>Safe Zones:</strong> Platform overlay proof</span>
+              <div className="aar-u-flex aar-u-items-center aar-u-gap-3 aar-u-text-xs aar-u-text-text-muted aar-u-flex-wrap">
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-1">
+                  <Zap className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-amber-400 aar-u-shrink-0" />
+                  <span>5 Levels</span>
+                </div>
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-1">
+                  <Scale className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-success aar-u-shrink-0" />
+                  <span>WCAG 4.5:1+</span>
+                </div>
+                <div className="aar-u-flex aar-u-items-center aar-u-gap-1">
+                  <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0" />
+                  <span>Safe Zones</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* GENERATE BUTTON */}
-          <button
-            type="button"
-            onClick={handleGeneratePrompt}
-            className="aar-button aar-u-w-full aar-u-flex aar-u-justify-center aar-u-gap-2" data-size="sm"
-          >
-            <Bot className="aar-u-w-4 aar-u-h-4 aar-u-text-primary" />
-            <span>Generate Structured Code Instruction for AI</span>
-            <ArrowRight className="aar-u-w-4 aar-u-h-4" />
-          </button>
+          {/* Section 2: Specifications 2-Column Grid */}
+          <div className="aar-u-grid aar-u-grid-cols-1 aar-u-md-grid-cols-2 aar-u-gap-5 aar-u-items-start">
+            {/* Left Column: Screen Ratio & Rendering Engine */}
+            <div className="aar-u-space-y-4 aar-u-min-w-0">
+              {/* Target Screen Ratio */}
+              <div>
+                <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-mb-2">
+                  <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text">
+                    <Layout className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
+                    <span>Target Screen Ratio & Safe Zone</span>
+                  </label>
+                  <span className="aar-u-text-xs aar-u-font-mono aar-u-text-primary">
+                    {activePreset.aspectRatio} · {activePreset.width}×{activePreset.height}px
+                  </span>
+                </div>
 
-          {/* STEP 3: Generated Output Card */}
+                <div className="aar-u-grid aar-u-grid-cols-2 aar-u-gap-2">
+                  {ASPECT_PRESETS.map((p) => {
+                    const isSelected = p.id === selectedPresetId;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setSelectedPresetId(p.id)}
+                        className={`aar-button aar-u-w-full aar-u-flex aar-u-flex-col aar-u-items-stretch aar-u-text-left aar-u-p-2 aar-u-border aar-u-border-border ${
+                          isSelected
+                            ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-ring-1 aar-u-ring-indigo-500-50'
+                            : 'aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                        }`}
+                        data-size="sm"
+                      >
+                        <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-gap-1 aar-u-w-full">
+                          <span className="aar-u-text-xs aar-u-font-semibold aar-u-truncate">{p.name}</span>
+                          <span className="aar-u-text-xs aar-u-font-mono aar-u-px-1.5 aar-u-py-0.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-text-primary aar-u-shrink-0">
+                            {p.aspectRatio}
+                          </span>
+                        </div>
+                        <div className="aar-u-text-xs aar-u-text-text-muted aar-u-font-mono aar-u-mt-1">
+                          {p.width} × {p.height} px
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Platform Safe Zone Notice */}
+                {activePreset.safeZone && (
+                  <div className="aar-u-mt-2 aar-u-flex aar-u-items-start aar-u-gap-2 aar-u-p-2.5 aar-u-rounded aar-u-bg-surface-subtle aar-u-border aar-u-border-border aar-u-text-xs aar-u-text-text">
+                    <Shield className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary aar-u-shrink-0 aar-u-mt-0.5" />
+                    <span className="aar-u-leading-relaxed">
+                      <strong className="aar-u-font-semibold aar-u-text-text">Safe-Zone:</strong>{' '}
+                      <span className="aar-u-text-text-muted">{activePreset.safeZone}</span>
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Rendering Engine: HTML vs Canvas */}
+              <div>
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Code2 className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
+                  <span>Rendering Engine</span>
+                </label>
+                <div className="aar-u-grid aar-u-grid-cols-2 aar-u-gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEngine('html')}
+                    className={`aar-button aar-u-w-full aar-u-flex aar-u-flex-col aar-u-items-stretch aar-u-text-left aar-u-p-2.5 aar-u-border aar-u-border-border ${
+                      selectedEngine === 'html'
+                        ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-ring-1 aar-u-ring-cyan-500-40'
+                        : 'aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                    }`}
+                    data-size="sm"
+                  >
+                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-cyan-400 aar-u-shrink-0" />
+                      <span>HTML + Tailwind CSS</span>
+                    </div>
+                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
+                      UnoCSS Wind4 runtime utilities, flex/grid layouts, inline SVGs.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedEngine('canvas')}
+                    className={`aar-button aar-u-w-full aar-u-flex aar-u-flex-col aar-u-items-stretch aar-u-text-left aar-u-p-2.5 aar-u-border aar-u-border-border ${
+                      selectedEngine === 'canvas'
+                        ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-ring-1 aar-u-ring-indigo-500-40'
+                        : 'aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                    }`}
+                    data-size="sm"
+                  >
+                    <div className="aar-u-font-bold aar-u-text-xs aar-u-flex aar-u-items-center aar-u-gap-1.5">
+                      <span className="aar-u-w-2 aar-u-h-2 aar-u-rounded-full aar-u-bg-indigo-400 aar-u-shrink-0" />
+                      <span>Canvas 2D JS</span>
+                    </div>
+                    <p className="aar-u-text-xs aar-u-text-text-muted aar-u-mt-1 aar-u-leading-snug">
+                      Runs in isolated sandbox via (canvas, ctx, width, height).
+                    </p>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Style Archetype & Color Palette */}
+            <div className="aar-u-space-y-4 aar-u-min-w-0">
+              {/* Style Archetype */}
+              <div>
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Layers className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
+                  <span>Design Layout Archetype</span>
+                </label>
+                <div className="aar-u-space-y-1.5">
+                  {(Object.keys(ARCHETYPE_LABELS) as DesignArchetype[]).map((arch) => {
+                    const info = ARCHETYPE_LABELS[arch];
+                    const isSelected = selectedArchetype === arch;
+                    return (
+                      <button
+                        key={arch}
+                        type="button"
+                        onClick={() => setSelectedArchetype(arch)}
+                        className={`aar-button aar-u-w-full aar-u-flex aar-u-items-center aar-u-justify-between aar-u-text-left aar-u-p-2 aar-u-border aar-u-border-border ${
+                          isSelected
+                            ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-font-medium aar-u-ring-1 aar-u-ring-indigo-500-50'
+                            : 'aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                        }`}
+                        data-size="sm"
+                      >
+                        <div className="aar-u-flex-1 aar-u-min-w-0 aar-u-pr-2">
+                          <div className="aar-u-font-semibold aar-u-text-xs aar-u-text-text aar-u-truncate">{info.name}</div>
+                          <div className="aar-u-text-xs aar-u-text-text-muted aar-u-truncate">
+                            {info.description}
+                          </div>
+                        </div>
+                        {isSelected && <Check className="aar-u-w-4 aar-u-h-4 aar-u-text-primary aar-u-shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Color Palette */}
+              <div>
+                <label className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-text-text aar-u-mb-2">
+                  <Palette className="aar-u-w-3.5 aar-u-h-3.5 aar-u-text-primary" />
+                  <span>Color Palette</span>
+                </label>
+                <div className="aar-u-flex aar-u-flex-wrap aar-u-gap-2">
+                  {Object.values(COLOR_THEMES).map((th) => {
+                    const isSelected = selectedThemeId === th.id;
+                    return (
+                      <button
+                        key={th.id}
+                        type="button"
+                        onClick={() => setSelectedThemeId(th.id)}
+                        className={`aar-button aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-border aar-u-border-border ${
+                          isSelected
+                            ? 'aar-u-bg-surface-subtle aar-u-text-text aar-u-ring-1 aar-u-ring-indigo-500-50'
+                            : 'aar-u-bg-background aar-u-text-text aar-u-hover-bg-surface-subtle'
+                        }`}
+                        data-size="sm"
+                        aria-pressed={isSelected}
+                      >
+                        <span
+                          className="aar-swatch aar-u-w-3 aar-u-h-3 aar-u-rounded-full aar-u-border aar-u-border-border aar-u-shrink-0"
+                          style={{ '--aar-swatch-color': th.primary } as React.CSSProperties}
+                        />
+                        <span className="aar-u-text-xs aar-u-font-medium">{th.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Generated Output Card */}
           {generatedPrompt && (
             <div
               ref={outputRef}
-              className="aar-u-rounded aar-u-border aar-u-border-cyan-500-30 aar-u-bg-background aar-u-p-4 aar-u-sm-p-5 aar-u-space-y-3 aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200"
+              className="aar-u-rounded aar-u-border aar-u-border-cyan-500-30 aar-u-bg-background aar-u-p-4 aar-u-space-y-3 aar-u-animate-in aar-u-fade-in aar-u-slide-in-from-bottom-2 aar-u-duration-200"
             >
-              <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-border-b aar-u-border-border aar-u-pb-3">
+              <div className="aar-u-flex aar-u-items-center aar-u-justify-between aar-u-border-b aar-u-border-border aar-u-pb-3 aar-u-flex-wrap aar-u-gap-2">
                 <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
                   <span className="aar-u-w-2.5 aar-u-h-2.5 aar-u-rounded-full aar-u-bg-emerald-400 aar-u-animate-pulse" />
                   <span className="aar-u-text-xs aar-u-font-mono aar-u-font-bold aar-u-uppercase aar-u-tracking-wider aar-u-text-success">
@@ -484,33 +485,29 @@ const AiPromptModalDialog: React.FC<Props> = ({
                   </span>
                 </div>
 
-                <div className="aar-u-flex aar-u-items-center aar-u-gap-2">
-                  <button
-                    type="button"
-                    onClick={handleCopyPrompt}
-                    className={`aar-button aar-u-flex aar-u-gap-1.5 ${
-                      copied
-                        ? 'aar-u-bg-emerald-500 aar-u-text-text '
-                        : 'aar-u-bg-surface-subtle aar-u-hover-bg-surface-subtle aar-u-text-text '
-                    }`} data-variant="primary" data-size="sm"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="aar-u-w-3.5 aar-u-h-3.5" />
-                        <span>Copied to Clipboard!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="aar-u-w-3.5 aar-u-h-3.5" />
-                        <span>Copy Prompt for AI</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={handleCopyPrompt}
+                  className="aar-button aar-u-flex aar-u-items-center aar-u-gap-1.5"
+                  data-variant={copied ? 'quiet' : 'primary'}
+                  data-size="sm"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="aar-u-w-3.5 aar-u-h-3.5" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="aar-u-w-3.5 aar-u-h-3.5" />
+                      <span>Copy Prompt for AI</span>
+                    </>
+                  )}
+                </button>
               </div>
 
               {/* Instructions notice */}
-              <p className="aar-u-text-sm aar-u-text-text aar-u-leading-relaxed aar-u-bg-surface-subtle aar-u-p-2.5 aar-u-rounded aar-u-border aar-u-border-border">
+              <p className="aar-u-text-xs aar-u-text-text aar-u-leading-relaxed aar-u-bg-surface-subtle aar-u-p-2 aar-u-rounded aar-u-border aar-u-border-border">
                 💡 <strong>How to use:</strong> Copy the text below and paste it into <strong>ChatGPT, Claude, Gemini, Cursor, or v0</strong>. The generated code can be pasted back into Yuwbrndr&apos;s code editor or tested below.
               </p>
 
@@ -518,7 +515,7 @@ const AiPromptModalDialog: React.FC<Props> = ({
               <div className="aar-u-relative">
                 <textarea
                   readOnly
-                  rows={8}
+                  rows={7}
                   value={generatedPrompt}
                   className="aar-textarea"
                 />
@@ -542,13 +539,15 @@ const AiPromptModalDialog: React.FC<Props> = ({
                     value={testCode}
                     onChange={(e) => setTestCode(e.target.value)}
                     placeholder="Paste AI response code here (or snippet)..."
-                    className="aar-input" data-size="sm"
+                    className="aar-input"
+                    data-size="sm"
                   />
                   <button
                     type="button"
                     onClick={handleApplyCode}
                     disabled={!testCode.trim()}
-                    className="aar-button aar-u-shrink-0" data-size="sm"
+                    className="aar-button aar-u-shrink-0"
+                    data-size="sm"
                   >
                     Apply to Canvas
                   </button>
@@ -557,6 +556,53 @@ const AiPromptModalDialog: React.FC<Props> = ({
             </div>
           )}
         </div>
+
+        {/* Section 4: Fixed Generate Text Button at Bottom */}
+        <footer className="aar-u-shrink-0 aar-u-border-t aar-u-border-border aar-u-bg-surface aar-u-px-5 aar-u-py-3 aar-u-flex aar-u-items-center aar-u-justify-between aar-u-gap-4 aar-u-z-20">
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-2 aar-u-text-xs aar-u-font-mono aar-u-text-text-muted aar-u-flex-wrap">
+            <span className="aar-u-font-semibold aar-u-text-text">{activePreset.name}</span>
+            <span>({activePreset.aspectRatio})</span>
+            <span>·</span>
+            <span className="aar-u-uppercase">{selectedEngine}</span>
+            <span>·</span>
+            <span>{activeTheme.name}</span>
+          </div>
+
+          <div className="aar-u-flex aar-u-items-center aar-u-gap-3 aar-u-shrink-0">
+            {generatedPrompt && (
+              <button
+                type="button"
+                onClick={handleCopyPrompt}
+                className="aar-button aar-u-flex aar-u-items-center aar-u-gap-1.5"
+                data-variant={copied ? 'quiet' : 'flat'}
+                data-size="sm"
+              >
+                {copied ? (
+                  <>
+                    <Check className="aar-u-w-3.5 aar-u-h-3.5" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="aar-u-w-3.5 aar-u-h-3.5" />
+                    <span>Copy Prompt</span>
+                  </>
+                )}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleGeneratePrompt}
+              className="aar-button aar-u-flex aar-u-items-center aar-u-gap-2"
+              data-variant="primary"
+              data-size="sm"
+            >
+              <Bot className="aar-u-w-4 aar-u-h-4" />
+              <span>Generate Structured Code Instruction</span>
+              <ArrowRight className="aar-u-w-4 aar-u-h-4" />
+            </button>
+          </div>
+        </footer>
       </section>
     </div>
   );
