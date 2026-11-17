@@ -200,7 +200,7 @@ export const FullCodeEditor: React.FC<Props> = ({
 
   return (
     <div style={{ '--aar-editor-font-size': `${fontSize}px` } as React.CSSProperties} className="aar-editor-codemirror aar-u-flex aar-u-flex-col aar-u-h-full aar-u-w-full aar-u-bg-surface aar-u-overflow-hidden aar-u-select-none aar-u-relative">
-      {/* 1. Left Edge Resizer Strip */}
+      {/* 1. Full-Height Left Edge Resizer Strip */}
       {onStartResize && (
         <div
           className="aar-inspector-resizer-strip"
@@ -210,50 +210,6 @@ export const FullCodeEditor: React.FC<Props> = ({
           aria-orientation="vertical"
           aria-label="Resize code panel"
         />
-      )}
-
-      {/* 2. Top-Left Corner Grabber (Prominent diagonal corner handle with textured grip dots) */}
-      {onStartResize && (
-        <div
-          className="aar-inspector-corner-grip"
-          onMouseDown={onStartResize}
-          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
-          title="Grab corner and drag to adjust code panel size (Double-click to expand/compact)"
-          role="button"
-          tabIndex={0}
-          aria-label="Grab corner to adjust code panel"
-        >
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <circle cx="3.5" cy="3.5" r="1.5" />
-            <circle cx="8" cy="3.5" r="1.5" />
-            <circle cx="3.5" cy="8" r="1.5" />
-            <circle cx="12.5" cy="3.5" r="1.5" />
-            <circle cx="8" cy="8" r="1.5" />
-            <circle cx="3.5" cy="12.5" r="1.5" />
-          </svg>
-        </div>
-      )}
-
-      {/* 3. Bottom-Left Corner Grabber */}
-      {onStartResize && (
-        <div
-          className="aar-inspector-corner-grip-bottom"
-          onMouseDown={onStartResize}
-          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
-          title="Grab bottom corner and drag to adjust code panel size"
-          role="button"
-          tabIndex={0}
-          aria-label="Grab bottom corner to adjust code panel"
-        >
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <circle cx="3.5" cy="12.5" r="1.5" />
-            <circle cx="8" cy="12.5" r="1.5" />
-            <circle cx="3.5" cy="8" r="1.5" />
-            <circle cx="12.5" cy="12.5" r="1.5" />
-            <circle cx="8" cy="8" r="1.5" />
-            <circle cx="3.5" cy="3.5" r="1.5" />
-          </svg>
-        </div>
       )}
       {/* MOBILE EXPANDED FULLSCREEN BAR (only show editor with minimize option on mobile) */}
       {isWide && (
@@ -280,8 +236,28 @@ export const FullCodeEditor: React.FC<Props> = ({
       <div className={`aar-u-flex aar-u-flex-wrap aar-u-items-center aar-u-justify-between aar-u-gap-2 aar-u-px-3 aar-u-py-1.5 aar-u-bg-surface-subtle aar-u-text-xs aar-u-shrink-0 ${
         isWide ? 'aar-u-hidden aar-u-lg-flex' : 'aar-u-flex'
       }`}>
-        {/* Left: Engine Switcher & Presets */}
+        {/* Left: Corner Drag Handle + Engine Switcher */}
         <div className="aar-toolbar-group aar-editor-commands">
+          {onStartResize && (
+            <button
+              type="button"
+              className="aar-inspector-corner-grip"
+              onMouseDown={onStartResize}
+              onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 380 : 720))}
+              title="Grab corner and drag horizontally to resize code panel (Double-click to toggle width)"
+              aria-label="Grab corner to adjust code panel size"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor">
+                <circle cx="4" cy="4" r="1.5" />
+                <circle cx="8" cy="4" r="1.5" />
+                <circle cx="4" cy="8" r="1.5" />
+                <circle cx="12" cy="4" r="1.5" />
+                <circle cx="8" cy="8" r="1.5" />
+                <circle cx="4" cy="12" r="1.5" />
+              </svg>
+            </button>
+          )}
+
           <div className="aar-segmented" aria-label="Code language">
             <button
               onClick={() => setCodeType('html')} aria-pressed={codeType === 'html'}
