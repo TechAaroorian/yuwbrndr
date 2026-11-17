@@ -9,6 +9,8 @@
     "build": "npm run check:styles && npm run loom:check && tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
+    "test:engines": "vitest run colorEngine layoutEngine",
+    "demo:engines": "vite-node src/utils/engineDemo.ts",
     "test:watch": "vitest",
     "preview": "vite preview",
     "loom:local": "node scripts/loom-development.mjs local",

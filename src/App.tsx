@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import { 
   AspectPreset, 
@@ -69,6 +69,54 @@ export function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isEditorOpen, setIsEditorOpen] = useState(true);
   const [isLayoutGuideOpen, setIsLayoutGuideOpen] = useState(false);
+  const [editorWidth, setEditorWidth] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('yuwbrndr-editor-width');
+        if (saved) {
+          const parsed = parseInt(saved, 10);
+          if (!isNaN(parsed) && parsed >= 320 && parsed <= 1200) return parsed;
+        }
+      } catch (_) {}
+    }
+    return 480;
+  });
+  const [isEditorWide, setIsEditorWide] = useState<boolean>(false);
+  const [isResizingEditor, setIsResizingEditor] = useState<boolean>(false);
+
+  const handleStartResizeEditor = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizingEditor(true);
+    const startX = e.clientX;
+    const startWidth = editorWidth;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = startX - moveEvent.clientX; // Dragging left increases inspector width
+      const maxWidth = Math.max(400, window.innerWidth - 280);
+      const newWidth = Math.min(Math.max(320, startWidth + deltaX), maxWidth);
+      setEditorWidth(Math.round(newWidth));
+    };
+
+    const handleMouseUp = () => {
+      setIsResizingEditor(false);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      try {
+        localStorage.setItem('yuwbrndr-editor-width', String(editorWidth));
+      } catch (_) {}
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  }, [editorWidth]);
+
+  const handleSetEditorWidth = useCallback((w: number) => {
+    setIsEditorWide(false);
+    setEditorWidth(w);
+    try {
+      localStorage.setItem('yuwbrndr-editor-width', String(w));
+    } catch (_) {}
+  }, []);
 
   // Global keyboard shortcuts (Ctrl+B / Cmd+B for sidebar)
   useEffect(() => {
@@ -710,7 +758,13 @@ export function App() {
         onToggleEditor={() => setIsEditorOpen((prev) => !prev)}
       />
 
-      <div className="aar-workspace-body aar-studio-body" data-layout="studio">
+      <div
+        className={`aar-workspace-body aar-studio-body ${isResizingEditor ? 'aar-u-select-none' : ''}`}
+        data-layout="studio"
+        style={{
+          '--aar-inspector-width': isEditorWide ? 'calc(100vw - 4.5rem)' : `${editorWidth}px`,
+        } as React.CSSProperties}
+      >
         {/* 1. LEFT NAVIGATION REGION: Tools, Templates & Assets Sidebar */}
         <aside
           className="aar-workspace-region aar-studio-sidebar"
@@ -791,7 +845,7 @@ export function App() {
 
         {/* 3. RIGHT INSPECTOR REGION: Code Editor */}
         <aside
-          className="aar-workspace-region aar-studio-inspector"
+          className="aar-workspace-region aar-studio-inspector aar-u-relative"
           data-region="inspector"
           data-collapsed={!isEditorOpen}
           aria-hidden={!isEditorOpen}
@@ -809,6 +863,11 @@ export function App() {
             onInsertImage={handleInsertImageToCode}
             onOpenAiPrompt={() => setIsAiPromptOpen(true)}
             onToggleCollapse={() => setIsEditorOpen(false)}
+            isWide={isEditorWide}
+            onToggleWide={() => setIsEditorWide((prev) => !prev)}
+            editorWidth={editorWidth}
+            onSetEditorWidth={handleSetEditorWidth}
+            onStartResize={handleStartResizeEditor}
           />
         </aside>
       </div>

@@ -1,3 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400..700&family=Cinzel:wght@600;700;800;900&family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
 @import "@techaaroorian-ui/aar-loom/tailwind-v3.css";
 @import "@techaaroorian-ui/aar-loom/codemirror.css";
+@import "./styles/editor.css";

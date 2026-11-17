@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Yuwbrndr Code Panel Resizing & CodeMirror High-Contrast Selection Engine
+   ========================================================================== */
+
+/* 1. Full-Height Left Edge Resizer Strip */
+.aar-inspector-resizer-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  margin-left: -4px;
+  cursor: col-resize;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+  transition: background-color 0.15s ease;
+}
+
+.aar-inspector-resizer-strip:hover,
+.aar-inspector-resizer-strip:active {
+  background-color: rgba(56, 189, 248, 0.2);
+}
+
+.aar-inspector-resizer-strip::before {
+  content: '';
+  width: 2px;
+  height: 48px;
+  border-radius: 9999px;
+  background-color: var(--aar-border, rgba(255, 255, 255, 0.2));
+  transition: all 0.15s ease;
+}
+
+.aar-inspector-resizer-strip:hover::before,
+.aar-inspector-resizer-strip:active::before {
+  height: 72px;
+  width: 3px;
+  background-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.85);
+}
+
+/* 2. Top-Left Corner Grab Handle (Cleanly docked in toolbar, never overlaps buttons) */
+.aar-inspector-corner-grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--aar-surface, #0f172a);
+  border: 1px solid var(--aar-border, rgba(255, 255, 255, 0.15));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  flex-shrink: 0;
+  padding: 0;
+  margin-right: 2px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aar-inspector-corner-grip:hover,
+.aar-inspector-corner-grip:active {
+  background: var(--aar-surface-subtle, #1e293b);
+  border-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  transform: scale(1.05);
+}
+
+.aar-inspector-corner-grip svg {
+  width: 14px;
+  height: 14px;
+  color: var(--aar-text-muted, #94a3b8);
+  transition: color 0.15s ease;
+}
+
+.aar-inspector-corner-grip:hover svg,
+.aar-inspector-corner-grip:active svg {
+  color: #38bdf8;
+}
+
+/* 3. Global CodeMirror High-Contrast Selection Guarantee */
+.aar-editor-codemirror .cm-editor .cm-selectionBackground,
+.aar-editor-codemirror .cm-editor.cm-focused .cm-selectionBackground,
+.aar-editor-codemirror .cm-scroller .cm-selectionBackground,
+.aar-editor-codemirror .cm-editor ::selection,
+.aar-editor-codemirror .cm-content ::selection {
+  background-color: rgba(14, 165, 233, 0.45) !important;
+}
+
+.aar-editor-codemirror .cm-editor .cm-selectionMatch {
+  background-color: rgba(56, 189, 248, 0.28) !important;
+  outline: 1px solid rgba(56, 189, 248, 0.55) !important;
+  border-radius: 2px;
+}
