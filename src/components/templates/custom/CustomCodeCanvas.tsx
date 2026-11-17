@@ -94,12 +94,16 @@ export const CustomCodeCanvas: React.FC<Props> = ({
 
     const csp = `<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob: https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src * data: blob:; media-src * data: blob:; script-src 'unsafe-inline' 'unsafe-eval' blob: data:; connect-src 'none'; worker-src 'none'; child-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; manifest-src 'none';">`;
 
+    const parentOrigin = typeof window !== 'undefined' && window.location.origin && window.location.origin !== 'null'
+      ? window.location.origin
+      : '*';
+
     const securityPreamble = `
       const frameId = ${escapeScriptValue(frameId)};
       const host = window.parent;
-      const targetOrigin = window.location.origin;
+      const parentOrigin = ${escapeScriptValue(parentOrigin)};
       const send = (type, payload = {}) => {
-        try { host.postMessage({ source: 'yuwbrndr-preview', frameId, type, ...(payload || {}) }, targetOrigin || '*'); } catch (_) {}
+        try { host.postMessage({ source: 'yuwbrndr-preview', frameId, type, ...(payload || {}) }, parentOrigin || '*'); } catch (_) {}
       };
       (function() {
         const neutralize = (target, prop, getter) => {
@@ -205,11 +209,16 @@ export const CustomCodeCanvas: React.FC<Props> = ({
           output.height=height*scale;
           const outputCtx=output.getContext('2d');
           const finish=()=>{
-            outputCtx.drawImage(canvas,0,0,output.width,output.height);
-            send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')});
+            try {
+              outputCtx.drawImage(canvas,0,0,output.width,output.height);
+              send('export-result',{requestId:event.data.requestId,dataUrl:output.toDataURL('image/png')});
+            } catch(finishError) {
+              send('export-error',{requestId:event.data.requestId,message:finishError instanceof Error?finishError.message:String(finishError)});
+            }
           };
           if(${escapeScriptValue(useAsBackground && !!userImage)}){
             const bgImg=new Image();
+            bgImg.crossOrigin='anonymous';
             bgImg.onload=()=>{
               try{ outputCtx.drawImage(bgImg,0,0,output.width,output.height); }catch(e){}
               finish();
@@ -226,7 +235,7 @@ export const CustomCodeCanvas: React.FC<Props> = ({
             finish();
           }
         }
-        catch(error){ send('export-error',{requestId:event.data.requestId,message:String(error)}); }
+        catch(error){ send('export-error',{requestId:event.data.requestId,message:error instanceof Error?error.message:String(error)}); }
       }});
     </script></body></html>`;
   }, [code, codeType, fontScale, frameId, height, runtimeCss, theme.background, theme.id, theme.text, useAsBackground, userImage, width]);
