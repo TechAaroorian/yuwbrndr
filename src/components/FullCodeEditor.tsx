@@ -43,6 +43,9 @@ interface Props {
   onToggleCollapse?: () => void;
   isWide?: boolean;
   onToggleWide?: () => void;
+  editorWidth?: number;
+  onSetEditorWidth?: (width: number) => void;
+  onStartResize?: (e: React.MouseEvent) => void;
   onOpenAiPrompt?: () => void;
 }
 
@@ -59,6 +62,9 @@ export const FullCodeEditor: React.FC<Props> = ({
   onToggleCollapse,
   isWide,
   onToggleWide,
+  editorWidth = 480,
+  onSetEditorWidth,
+  onStartResize,
   onOpenAiPrompt,
 }) => {
   const [fontSize, setFontSize] = useState<number>(13);
@@ -102,6 +108,52 @@ export const FullCodeEditor: React.FC<Props> = ({
       { tag: [tags.number, tags.attributeName], class: 'aar-syntax-value' },
     ])));
 
+    // High-visibility CodeMirror theme with vibrant selection styling
+    list.push(EditorView.theme({
+      "&": {
+        height: "100%",
+        fontSize: "var(--aar-editor-font-size, 13px)",
+      },
+      ".cm-scroller": {
+        fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+        lineHeight: "1.6",
+      },
+      "&.cm-focused": {
+        outline: "none",
+      },
+      // 1. Crystal-clear, high-contrast text selection (both focused and unfocused)
+      "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection": {
+        backgroundColor: "rgba(14, 165, 233, 0.45) !important",
+      },
+      "&.cm-focused .cm-content ::selection, .cm-content ::selection": {
+        backgroundColor: "rgba(14, 165, 233, 0.45) !important",
+      },
+      ".cm-selectionMatch": {
+        backgroundColor: "rgba(56, 189, 248, 0.28) !important",
+        outline: "1px solid rgba(56, 189, 248, 0.55) !important",
+        borderRadius: "2px",
+      },
+      // 2. High-visibility cursor
+      "&.cm-focused .cm-cursor": {
+        borderLeftColor: "#38bdf8 !important",
+        borderLeftWidth: "2.5px !important",
+      },
+      // 3. Active line highlight
+      ".cm-activeLine": {
+        backgroundColor: "rgba(255, 255, 255, 0.05) !important",
+      },
+      ".cm-activeLineGutter": {
+        backgroundColor: "rgba(255, 255, 255, 0.07) !important",
+        color: "#38bdf8 !important",
+        fontWeight: "bold",
+      },
+      // 4. Gutters
+      ".cm-gutters": {
+        backgroundColor: "transparent !important",
+        color: "var(--aar-text-muted, #94a3b8) !important",
+        borderRight: "1px solid var(--aar-border, rgba(255, 255, 255, 0.08)) !important",
+      }
+    }, { dark: true }));
 
     // Soft word wrap
     if (wordWrap) {
@@ -147,7 +199,19 @@ export const FullCodeEditor: React.FC<Props> = ({
   }, [code]);
 
   return (
-    <div style={{ '--aar-editor-font-size': `${fontSize}px` } as React.CSSProperties} className="aar-editor-codemirror aar-u-flex aar-u-flex-col aar-u-h-full aar-u-w-full aar-u-bg-surface aar-u-overflow-hidden aar-u-select-none">
+    <div style={{ '--aar-editor-font-size': `${fontSize}px` } as React.CSSProperties} className="aar-editor-codemirror aar-u-flex aar-u-flex-col aar-u-h-full aar-u-w-full aar-u-bg-surface aar-u-overflow-hidden aar-u-select-none aar-u-relative">
+      {/* Draggable Resizer Handle on Left Edge */}
+      {onStartResize && (
+        <div
+          className="aar-inspector-resize-handle"
+          onMouseDown={onStartResize}
+          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
+          title="Drag horizontally to resize code panel (Double click to toggle wide/compact)"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize code panel"
+        />
+      )}
       {/* MOBILE EXPANDED FULLSCREEN BAR (only show editor with minimize option on mobile) */}
       {isWide && (
         <div className="aar-u-lg-hidden aar-u-flex aar-u-items-center aar-u-justify-between aar-u-px-4 aar-u-py-2.5 aar-u-bg-background aar-u-border-b aar-u-border-border aar-u-select-none aar-u-shrink-0">
@@ -371,6 +435,44 @@ export const FullCodeEditor: React.FC<Props> = ({
           >
             <Trash2 className="aar-u-w-3.5 aar-u-h-3.5" />
           </button>
+
+          {/* Width Presets Selector */}
+          {onSetEditorWidth && (
+            <div className="aar-toolbar-group aar-u-hidden aar-u-sm-flex" title="Code panel width">
+              <div className="aar-segmented" aria-label="Editor width">
+                <button
+                  type="button"
+                  onClick={() => onSetEditorWidth(380)}
+                  aria-pressed={!isWide && editorWidth === 380}
+                  className="aar-segmented-item"
+                  data-size="sm"
+                  title="Compact Width (380px)"
+                >
+                  380px
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSetEditorWidth(520)}
+                  aria-pressed={!isWide && editorWidth === 520}
+                  className="aar-segmented-item"
+                  data-size="sm"
+                  title="Balanced Width (520px)"
+                >
+                  520px
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onSetEditorWidth(720)}
+                  aria-pressed={!isWide && editorWidth === 720}
+                  className="aar-segmented-item"
+                  data-size="sm"
+                  title="Wide View (720px)"
+                >
+                  720px
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Width Expand / Fullscreen Toggle */}
           {onToggleWide && (
