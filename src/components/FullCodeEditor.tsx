@@ -200,17 +200,60 @@ export const FullCodeEditor: React.FC<Props> = ({
 
   return (
     <div style={{ '--aar-editor-font-size': `${fontSize}px` } as React.CSSProperties} className="aar-editor-codemirror aar-u-flex aar-u-flex-col aar-u-h-full aar-u-w-full aar-u-bg-surface aar-u-overflow-hidden aar-u-select-none aar-u-relative">
-      {/* Draggable Resizer Handle on Left Edge */}
+      {/* 1. Left Edge Resizer Strip */}
       {onStartResize && (
         <div
-          className="aar-inspector-resize-handle"
+          className="aar-inspector-resizer-strip"
           onMouseDown={onStartResize}
-          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
-          title="Drag horizontally to resize code panel (Double click to toggle wide/compact)"
+          title="Drag horizontally to resize code panel"
           role="separator"
           aria-orientation="vertical"
           aria-label="Resize code panel"
         />
+      )}
+
+      {/* 2. Top-Left Corner Grabber (Prominent diagonal corner handle with textured grip dots) */}
+      {onStartResize && (
+        <div
+          className="aar-inspector-corner-grip"
+          onMouseDown={onStartResize}
+          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
+          title="Grab corner and drag to adjust code panel size (Double-click to expand/compact)"
+          role="button"
+          tabIndex={0}
+          aria-label="Grab corner to adjust code panel"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="3.5" cy="3.5" r="1.5" />
+            <circle cx="8" cy="3.5" r="1.5" />
+            <circle cx="3.5" cy="8" r="1.5" />
+            <circle cx="12.5" cy="3.5" r="1.5" />
+            <circle cx="8" cy="8" r="1.5" />
+            <circle cx="3.5" cy="12.5" r="1.5" />
+          </svg>
+        </div>
+      )}
+
+      {/* 3. Bottom-Left Corner Grabber */}
+      {onStartResize && (
+        <div
+          className="aar-inspector-corner-grip-bottom"
+          onMouseDown={onStartResize}
+          onDoubleClick={onToggleWide || (() => onSetEditorWidth?.(editorWidth > 550 ? 400 : 720))}
+          title="Grab bottom corner and drag to adjust code panel size"
+          role="button"
+          tabIndex={0}
+          aria-label="Grab bottom corner to adjust code panel"
+        >
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <circle cx="3.5" cy="12.5" r="1.5" />
+            <circle cx="8" cy="12.5" r="1.5" />
+            <circle cx="3.5" cy="8" r="1.5" />
+            <circle cx="12.5" cy="12.5" r="1.5" />
+            <circle cx="8" cy="8" r="1.5" />
+            <circle cx="3.5" cy="3.5" r="1.5" />
+          </svg>
+        </div>
       )}
       {/* MOBILE EXPANDED FULLSCREEN BAR (only show editor with minimize option on mobile) */}
       {isWide && (
